@@ -1,0 +1,16 @@
+[package]
+name = "astralinth-world"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+astralinth-core.workspace = true
+glam.workspace = true
+bytemuck.workspace = true
+log.workspace = true
+rayon = "1.12.0"
+crossbeam-channel = "0.5.17"
+
+[dev-dependencies]

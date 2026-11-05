@@ -1,0 +1,11 @@
+[package]
+name = "astralinth-server"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+astralinth-core.workspace = true
+astralinth-world.workspace = true
+astralinth-net.workspace = true

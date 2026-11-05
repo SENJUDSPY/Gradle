@@ -1,0 +1,38 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/astralinth-core",
+    "crates/astralinth-world",
+    "crates/astralinth-render",
+    "crates/astralinth-client",
+    "crates/astralinth-net",
+    "crates/astralinth-server",
+    "crates/astralinth-mods",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Astralinth Contributors"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/astralinth/astralinth"
+
+[workspace.dependencies]
+astralinth-core = { path = "crates/astralinth-core" }
+astralinth-world = { path = "crates/astralinth-world" }
+astralinth-render = { path = "crates/astralinth-render" }
+astralinth-net = { path = "crates/astralinth-net" }
+astralinth-server = { path = "crates/astralinth-server" }
+astralinth-mods = { path = "crates/astralinth-mods" }
+
+wgpu = "24.0"
+winit = "0.30"
+glam = "0.29"
+image = "0.25"
+bytemuck = { version = "1.21", features = ["derive"] }
+pollster = "0.4"
+log = "0.4"
+env_logger = "0.11"
+thiserror = "2.0"
+bitvec = "1.0"
+raw-window-handle = "0.6"

@@ -1,0 +1,9 @@
+[package]
+name = "astralinth-mods"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+astralinth-core.workspace = true
