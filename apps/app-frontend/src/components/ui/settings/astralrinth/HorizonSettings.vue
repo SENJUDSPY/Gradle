@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { CompassIcon, GamepadIcon, SparklesIcon } from '@modrinth/assets'
 import {
+	BotIcon,
+	CheckIcon,
+	CompassIcon,
+	CopyIcon,
+	GamepadIcon,
+	SparklesIcon,
+	SpinnerIcon,
+} from '@modrinth/assets'
+import {
+	Button,
 	defineMessages,
 	injectNotificationManager,
 	Slider,
@@ -12,7 +21,15 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import AstralRinthSettingsPage from '@/components/ui/settings/astralrinth/AstralRinthSettingsPage.vue'
 import { injectAppSettingsModal } from '@/features/settings/app-settings-modal/context'
-import { getHorizonSettings, type HorizonSettings, saveHorizonSettings } from '@/helpers/horizon'
+import {
+	type AgentControlStatus,
+	getHorizonAgentControlStatus,
+	getHorizonSettings,
+	type HorizonSettings,
+	type McpTestReport,
+	saveHorizonSettings,
+	testHorizonMcpServer,
+} from '@/helpers/horizon'
 
 const settingsModal = injectAppSettingsModal()
 const { formatMessage } = useVIntl()
@@ -172,6 +189,60 @@ const messages = defineMessages({
 		defaultMessage:
 			'Lowers power draw on laptops and handhelds by throttling background frames and thread workers.',
 	},
+	agentSectionTitle: {
+		id: 'astralrinth.app.settings.horizon.agent.title',
+		defaultMessage: 'AI Agent Control & MCP Server',
+	},
+	agentSectionDesc: {
+		id: 'astralrinth.app.settings.horizon.agent.desc',
+		defaultMessage:
+			'Expose Horizon as a Model Context Protocol (MCP) server so AI coding assistants (Claude Code, Cursor, Codex) can observe the world and play the game.',
+	},
+	allowAiAgentsTitle: {
+		id: 'astralrinth.app.settings.horizon.agent.allow-ai-agents.title',
+		defaultMessage: 'Allow AI agents',
+	},
+	allowAiAgentsDesc: {
+		id: 'astralrinth.app.settings.horizon.agent.allow-ai-agents.desc',
+		defaultMessage:
+			'Off by default. When enabled, Horizon starts with a local control socket and horizon-ctl exposes 80+ tools over stdio JSON-RPC.',
+	},
+	ctlInstalled: {
+		id: 'astralrinth.app.settings.horizon.agent.ctl-installed',
+		defaultMessage: 'Installed & Ready',
+	},
+	ctlMissing: {
+		id: 'astralrinth.app.settings.horizon.agent.ctl-missing',
+		defaultMessage: 'Missing binary',
+	},
+	testMcpBtn: {
+		id: 'astralrinth.app.settings.horizon.agent.test-mcp-btn',
+		defaultMessage: 'Test MCP Server',
+	},
+	connectAgentTitle: {
+		id: 'astralrinth.app.settings.horizon.agent.connect.title',
+		defaultMessage: 'Connect an AI Agent',
+	},
+	connectAgentDesc: {
+		id: 'astralrinth.app.settings.horizon.agent.connect.desc',
+		defaultMessage: 'Add the Horizon MCP server to your AI assistant configuration.',
+	},
+	oneClickCli: {
+		id: 'astralrinth.app.settings.horizon.agent.one-click-cli',
+		defaultMessage: 'Terminal command (one-step add)',
+	},
+	copyConfig: {
+		id: 'astralrinth.app.settings.horizon.agent.copy-config',
+		defaultMessage: 'Copy Configuration',
+	},
+	copyCommand: {
+		id: 'astralrinth.app.settings.horizon.agent.copy-command',
+		defaultMessage: 'Copy Command',
+	},
+	copied: {
+		id: 'astralrinth.app.settings.horizon.agent.copied',
+		defaultMessage: 'Copied!',
+	},
 })
 
 const initialLoaded = ref(false)
@@ -201,6 +272,7 @@ const rawSettings = ref<HorizonSettings>({
 	minimap_enabled: false,
 	performance_overlay: 'none',
 	battery_mode: false,
+	allow_ai_agents: false,
 })
 
 const { saved, current, changes, saving, hasChanges, reset, save } = useSavable(
@@ -217,6 +289,7 @@ async function loadData() {
 		rawSettings.value = s
 		reset()
 		initialLoaded.value = true
+		void loadAgentStatus()
 	} catch (e: unknown) {
 		handleError(e)
 	}
@@ -260,6 +333,59 @@ const maxFpsDisplay = computed(() => {
 const lodDistanceDisplay = computed(() => {
 	return `${current.value.lod_distance} chunks (${Math.round((current.value.lod_distance * 16) / 1000)} km)`
 })
+
+const agentStatus = ref<AgentControlStatus | null>(null)
+const testingMcp = ref(false)
+const mcpTestReport = ref<McpTestReport | null>(null)
+const mcpTestError = ref<string | null>(null)
+const selectedClientId = ref<string>('claude-code')
+const copiedField = ref<'config' | 'command' | null>(null)
+
+const agentConfigs = computed(() => agentStatus.value?.configs ?? [])
+const selectedClient = computed(() => {
+	return (
+		agentConfigs.value.find((c) => c.id === selectedClientId.value) ?? agentConfigs.value[0] ?? null
+	)
+})
+
+async function loadAgentStatus() {
+	try {
+		agentStatus.value = await getHorizonAgentControlStatus()
+	} catch (e: unknown) {
+		console.error('Failed to load agent control status:', e)
+	}
+}
+
+async function handleTestMcp() {
+	testingMcp.value = true
+	mcpTestReport.value = null
+	mcpTestError.value = null
+	try {
+		const rep = await testHorizonMcpServer()
+		mcpTestReport.value = rep
+	} catch (e: unknown) {
+		mcpTestError.value = e instanceof Error ? e.message : String(e)
+	} finally {
+		testingMcp.value = false
+	}
+}
+
+async function copyText(text: string, field: 'config' | 'command') {
+	await navigator.clipboard.writeText(text)
+	copiedField.value = field
+	setTimeout(() => {
+		if (copiedField.value === field) {
+			copiedField.value = null
+		}
+	}, 2000)
+}
+
+function toggleAgentControl(val: boolean) {
+	current.value.allow_ai_agents = val
+	if (val && !agentStatus.value) {
+		void loadAgentStatus()
+	}
+}
 </script>
 
 <template>
@@ -641,6 +767,197 @@ const lodDistanceDisplay = computed(() => {
 					:disabled="saving"
 					@update:model-value="current.battery_mode = $event ?? false"
 				/>
+			</div>
+		</section>
+
+		<!-- Section 4: AI Agent Control & MCP Server -->
+		<section
+			class="glass-surface glass-surface--strong rounded-2xl border border-solid border-surface-5 bg-surface-3 p-5 flex flex-col gap-5"
+		>
+			<div class="flex items-start gap-3">
+				<div
+					class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400"
+				>
+					<BotIcon class="size-5" />
+				</div>
+				<div>
+					<div class="flex flex-wrap items-center gap-2">
+						<h2 class="m-0 text-lg font-semibold text-contrast">
+							{{ formatMessage(messages.agentSectionTitle) }}
+						</h2>
+						<span
+							class="shrink-0 rounded-full bg-purple-500/10 px-2 py-0.5 text-xs font-bold text-purple-400"
+						>
+							Model Context Protocol (MCP)
+						</span>
+					</div>
+					<p class="m-0 mt-1 text-sm text-secondary">
+						{{ formatMessage(messages.agentSectionDesc) }}
+					</p>
+				</div>
+			</div>
+
+			<!-- Main Toggle: Allow AI Agents -->
+			<div
+				class="flex items-center justify-between gap-2 rounded-xl bg-surface-2 p-3.5 border border-solid border-surface-5"
+			>
+				<div class="flex flex-col">
+					<span class="text-sm font-semibold text-contrast">
+						{{ formatMessage(messages.allowAiAgentsTitle) }}
+					</span>
+					<span class="text-xs text-secondary mt-0.5">
+						{{ formatMessage(messages.allowAiAgentsDesc) }}
+					</span>
+				</div>
+				<Toggle
+					id="horizon-allow-ai-agents"
+					:model-value="current.allow_ai_agents"
+					:disabled="saving"
+					@update:model-value="toggleAgentControl($event ?? false)"
+				/>
+			</div>
+
+			<!-- Subpanel when Allow AI Agents is ON -->
+			<div v-if="current.allow_ai_agents" class="flex flex-col gap-4 pt-1">
+				<!-- Binary Status & Verification Card -->
+				<div
+					class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-solid border-surface-5 bg-surface-2 p-4"
+				>
+					<div class="flex flex-col gap-1">
+						<div class="flex items-center gap-2">
+							<span class="text-xs font-bold text-contrast">horizon-ctl:</span>
+							<span
+								v-if="agentStatus?.horizon_ctl_installed"
+								class="rounded bg-green-500/20 px-2 py-0.5 text-[11px] font-semibold text-green-400"
+							>
+								{{ formatMessage(messages.ctlInstalled) }}
+							</span>
+							<span
+								v-else
+								class="rounded bg-orange/20 px-2 py-0.5 text-[11px] font-semibold text-orange"
+							>
+								{{ formatMessage(messages.ctlMissing) }}
+							</span>
+						</div>
+						<span class="font-mono text-[11px] text-secondary break-all">
+							{{
+								agentStatus?.horizon_ctl_path ||
+								'Default: ~/.gemini/antigravity/horizon/bin/horizon-ctl'
+							}}
+						</span>
+					</div>
+
+					<Button size="sm" type="outlined" :disabled="testingMcp" @click="handleTestMcp">
+						<SpinnerIcon v-if="testingMcp" class="size-4 animate-spin" />
+						<CheckIcon v-else class="size-4 text-green-400" />
+						<span>{{ formatMessage(messages.testMcpBtn) }}</span>
+					</Button>
+				</div>
+
+				<!-- Test Results Banner -->
+				<div
+					v-if="mcpTestReport"
+					class="flex items-center gap-2 rounded-xl bg-green-500/10 p-3 text-xs text-green-400 font-medium"
+				>
+					<CheckIcon class="size-4 shrink-0" />
+					<span>{{ mcpTestReport.message }} (protocol {{ mcpTestReport.protocol_version }})</span>
+				</div>
+				<div
+					v-else-if="mcpTestError"
+					class="rounded-xl bg-red-500/10 p-3 text-xs text-red-400 font-medium"
+				>
+					{{ mcpTestError }}
+				</div>
+
+				<!-- Connect an Agent: Client Picker -->
+				<div
+					class="flex flex-col gap-3 rounded-xl border border-solid border-surface-5 bg-surface-2 p-4"
+				>
+					<div class="flex flex-col gap-0.5">
+						<span class="text-sm font-semibold text-contrast">
+							{{ formatMessage(messages.connectAgentTitle) }}
+						</span>
+						<span class="text-xs text-secondary">
+							{{ formatMessage(messages.connectAgentDesc) }}
+						</span>
+					</div>
+
+					<!-- Client tabs -->
+					<div class="flex flex-wrap gap-2">
+						<button
+							v-for="c in agentConfigs"
+							:key="c.id"
+							type="button"
+							:class="[
+								'rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer border border-solid',
+								selectedClient?.id === c.id
+									? 'border-brand bg-brand/10 text-brand'
+									: 'border-surface-5 bg-surface-3 text-secondary hover:text-contrast',
+							]"
+							@click="selectedClientId = c.id"
+						>
+							{{ c.name }}
+						</button>
+					</div>
+
+					<!-- Selected Client Details -->
+					<div
+						v-if="selectedClient"
+						class="flex flex-col gap-3 pt-2 border-t border-solid border-surface-4"
+					>
+						<div class="flex items-center justify-between text-xs">
+							<span class="text-secondary">
+								Target configuration file:
+								<span class="font-mono text-contrast">{{ selectedClient.target_file }}</span>
+							</span>
+							<Button
+								size="xs"
+								type="quiet"
+								@click="copyText(selectedClient.config_snippet, 'config')"
+							>
+								<CheckIcon v-if="copiedField === 'config'" class="size-3 text-green-400" />
+								<CopyIcon v-else class="size-3" />
+								<span>{{
+									copiedField === 'config'
+										? formatMessage(messages.copied)
+										: formatMessage(messages.copyConfig)
+								}}</span>
+							</Button>
+						</div>
+
+						<pre
+							class="m-0 rounded-xl bg-surface-1 p-3 font-mono text-[11px] text-contrast overflow-x-auto border border-solid border-surface-5"
+							>{{ selectedClient.config_snippet }}</pre
+						>
+
+						<!-- CLI Command (if available) -->
+						<div v-if="selectedClient.add_command" class="flex flex-col gap-1.5 mt-1">
+							<div class="flex items-center justify-between text-xs">
+								<span class="font-semibold text-contrast">{{
+									formatMessage(messages.oneClickCli)
+								}}</span>
+								<Button
+									size="xs"
+									type="quiet"
+									@click="copyText(selectedClient.add_command, 'command')"
+								>
+									<CheckIcon v-if="copiedField === 'command'" class="size-3 text-green-400" />
+									<CopyIcon v-else class="size-3" />
+									<span>{{
+										copiedField === 'command'
+											? formatMessage(messages.copied)
+											: formatMessage(messages.copyCommand)
+									}}</span>
+								</Button>
+							</div>
+							<div
+								class="flex items-center justify-between rounded-xl bg-surface-1 px-3 py-2 font-mono text-[11px] text-brand border border-solid border-surface-5"
+							>
+								<span class="truncate">{{ selectedClient.add_command }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</section>
 	</AstralRinthSettingsPage>

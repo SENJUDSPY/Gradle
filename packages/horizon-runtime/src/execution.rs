@@ -45,6 +45,12 @@ pub fn build_client_command(
         );
     }
 
+    // Enable agent control socket if Allow AI agents is toggled on
+    let settings = crate::settings::load_horizon_settings(Some(instance_home));
+    if settings.allow_ai_agents {
+        cmd.arg("--control");
+    }
+
     for arg in extra_args {
         cmd.arg(arg);
     }

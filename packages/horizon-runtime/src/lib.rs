@@ -5,6 +5,7 @@
 //!
 //! Copyright (c) 2026 AstralRinth contributors / Horizon authors (MIT License).
 
+pub mod agent;
 pub mod execution;
 pub mod modpack;
 pub mod preparation;
@@ -13,6 +14,7 @@ pub mod requirements;
 pub mod server;
 pub mod settings;
 
+pub use agent::*;
 pub use execution::*;
 pub use modpack::*;
 pub use preparation::*;

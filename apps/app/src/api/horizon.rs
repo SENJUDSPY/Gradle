@@ -1,12 +1,15 @@
 use crate::api::Result;
 use horizon_runtime::{
 	analyze_modpack_file, backup_server, check_system_requirements,
-	create_server, delete_server, extract_compatible_assets_to_dir,
-	fetch_releases, fetch_releases_for, get_installed_versions, has_sounds,
-	install_version, is_prepared, list_servers, load_horizon_settings,
-	remove_version, run_preparation, save_horizon_settings, start_server,
-	stop_server, update_server, HorizonRelease, HorizonServerInfo,
-	HorizonSettings, ModpackAnalysis, SystemRequirementsReport,
+	create_server, delete_server, ensure_horizon_ctl,
+	extract_compatible_assets_to_dir, fetch_releases, fetch_releases_for,
+	get_agent_configs, get_agent_control_status, get_installed_versions,
+	has_sounds, install_version, is_prepared, list_servers,
+	load_horizon_settings, remove_version, run_preparation,
+	save_horizon_settings, set_agent_control_enabled, start_server, stop_server,
+	test_mcp_server, update_server, AgentClientConfig, AgentControlStatus,
+	HorizonRelease, HorizonServerInfo, HorizonSettings, McpTestReport,
+	ModpackAnalysis, SystemRequirementsReport,
 };
 use std::path::{Path, PathBuf};
 use tauri::Emitter;
@@ -191,6 +194,41 @@ pub async fn horizon_save_settings(
 	Ok(())
 }
 
+#[tauri::command]
+pub async fn horizon_get_agent_control_status(
+	instance_path: Option<String>,
+) -> Result<AgentControlStatus> {
+	let path = instance_path.map(PathBuf::from);
+	Ok(tokio::task::spawn_blocking(move || {
+		get_agent_control_status(path.as_deref())
+	})
+	.await??)
+}
+
+#[tauri::command]
+pub async fn horizon_set_agent_control_enabled(
+	enabled: bool,
+	instance_path: Option<String>,
+) -> Result<HorizonSettings> {
+	let path = instance_path.map(PathBuf::from);
+	Ok(tokio::task::spawn_blocking(move || {
+		set_agent_control_enabled(enabled, path.as_deref())
+	})
+	.await??)
+}
+
+#[tauri::command]
+pub async fn horizon_test_mcp_server() -> Result<McpTestReport> {
+	Ok(tokio::task::spawn_blocking(test_mcp_server).await??)
+}
+
+#[tauri::command]
+pub async fn horizon_get_agent_configs() -> Result<Vec<AgentClientConfig>> {
+	let ctl = tokio::task::spawn_blocking(ensure_horizon_ctl).await??;
+	let path_str = ctl.to_string_lossy().to_string();
+	Ok(get_agent_configs(&path_str))
+}
+
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 	tauri::plugin::Builder::new("horizon")
 		.invoke_handler(tauri::generate_handler![
@@ -214,6 +252,10 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 			horizon_extract_modpack_assets,
 			horizon_get_settings,
 			horizon_save_settings,
+			horizon_get_agent_control_status,
+			horizon_set_agent_control_enabled,
+			horizon_test_mcp_server,
+			horizon_get_agent_configs,
 		])
 		.build()
 }

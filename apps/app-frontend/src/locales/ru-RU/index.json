@@ -944,6 +944,45 @@
   "astralrinth.app.settings.horizon.battery.desc": {
     "message": "Снижает энергопотребление на ноутбуках и портативных консолях."
   },
+  "astralrinth.app.settings.horizon.agent.title": {
+    "message": "Управление ИИ-агентами и MCP-сервер"
+  },
+  "astralrinth.app.settings.horizon.agent.desc": {
+    "message": "Предоставление доступа к Horizon по протоколу Model Context Protocol (MCP) для ассистентов (Claude Code, Cursor, Codex) для наблюдения и управления игрой."
+  },
+  "astralrinth.app.settings.horizon.agent.allow-ai-agents.title": {
+    "message": "Разрешить ИИ-агентов"
+  },
+  "astralrinth.app.settings.horizon.agent.allow-ai-agents.desc": {
+    "message": "По умолчанию отключено. При включении Horizon запускается с локальным сокетом управления, а horizon-ctl предоставляет более 80 инструментов через stdio JSON-RPC."
+  },
+  "astralrinth.app.settings.horizon.agent.ctl-installed": {
+    "message": "Установлен и готов"
+  },
+  "astralrinth.app.settings.horizon.agent.ctl-missing": {
+    "message": "Бинарный файл не найден"
+  },
+  "astralrinth.app.settings.horizon.agent.test-mcp-btn": {
+    "message": "Проверить MCP-сервер"
+  },
+  "astralrinth.app.settings.horizon.agent.connect.title": {
+    "message": "Подключение ИИ-агента"
+  },
+  "astralrinth.app.settings.horizon.agent.connect.desc": {
+    "message": "Добавьте MCP-сервер Horizon в настройки вашего ИИ-ассистента."
+  },
+  "astralrinth.app.settings.horizon.agent.one-click-cli": {
+    "message": "Команда для терминала (в один шаг)"
+  },
+  "astralrinth.app.settings.horizon.agent.copy-config": {
+    "message": "Скопировать конфиг"
+  },
+  "astralrinth.app.settings.horizon.agent.copy-command": {
+    "message": "Скопировать команду"
+  },
+  "astralrinth.app.settings.horizon.agent.copied": {
+    "message": "Скопировано!"
+  },
   "astralrinth.app.settings.visual.description": {
     "message": "Настройте визуальные эффекты AstralRinth, не изменяя выбранную тему."
   },

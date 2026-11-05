@@ -884,6 +884,45 @@
   "astralrinth.app.settings.horizon.battery.desc": {
     "message": "Lowers power draw on laptops and handhelds by throttling background frames and thread workers."
   },
+  "astralrinth.app.settings.horizon.agent.title": {
+    "message": "AI Agent Control & MCP Server"
+  },
+  "astralrinth.app.settings.horizon.agent.desc": {
+    "message": "Expose Horizon as a Model Context Protocol (MCP) server so AI coding assistants (Claude Code, Cursor, Codex) can observe the world and play the game."
+  },
+  "astralrinth.app.settings.horizon.agent.allow-ai-agents.title": {
+    "message": "Allow AI agents"
+  },
+  "astralrinth.app.settings.horizon.agent.allow-ai-agents.desc": {
+    "message": "Off by default. When enabled, Horizon starts with a local control socket and horizon-ctl exposes 80+ tools over stdio JSON-RPC."
+  },
+  "astralrinth.app.settings.horizon.agent.ctl-installed": {
+    "message": "Installed & Ready"
+  },
+  "astralrinth.app.settings.horizon.agent.ctl-missing": {
+    "message": "Missing binary"
+  },
+  "astralrinth.app.settings.horizon.agent.test-mcp-btn": {
+    "message": "Test MCP Server"
+  },
+  "astralrinth.app.settings.horizon.agent.connect.title": {
+    "message": "Connect an AI Agent"
+  },
+  "astralrinth.app.settings.horizon.agent.connect.desc": {
+    "message": "Add the Horizon MCP server to your AI assistant configuration."
+  },
+  "astralrinth.app.settings.horizon.agent.one-click-cli": {
+    "message": "Terminal command (one-step add)"
+  },
+  "astralrinth.app.settings.horizon.agent.copy-config": {
+    "message": "Copy Configuration"
+  },
+  "astralrinth.app.settings.horizon.agent.copy-command": {
+    "message": "Copy Command"
+  },
+  "astralrinth.app.settings.horizon.agent.copied": {
+    "message": "Copied!"
+  },
   "astralrinth.app.settings.visual.description": {
     "message": "Customize the visual effects used by AstralRinth without changing the selected theme."
   },

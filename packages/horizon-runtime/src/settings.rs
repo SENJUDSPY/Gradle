@@ -33,6 +33,10 @@ pub struct HorizonSettings {
     pub minimap_enabled: bool,
     pub performance_overlay: String, // "none", "fps", "fps_and_graph"
     pub battery_mode: bool,
+
+    // AI Agents / MCP
+    #[serde(default)]
+    pub allow_ai_agents: bool,
 }
 
 impl Default for HorizonSettings {
@@ -63,6 +67,8 @@ impl Default for HorizonSettings {
             minimap_enabled: false,
             performance_overlay: "none".to_string(),
             battery_mode: false,
+
+            allow_ai_agents: false,
         }
     }
 }

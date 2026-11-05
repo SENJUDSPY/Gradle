@@ -213,6 +213,33 @@ export interface HorizonSettings {
 	minimap_enabled: boolean
 	performance_overlay: string
 	battery_mode: boolean
+
+	allow_ai_agents: boolean
+}
+
+export interface AgentClientConfig {
+	id: string
+	name: string
+	target_file: string
+	config_snippet: string
+	add_command: string | null
+}
+
+export interface McpTestReport {
+	success: boolean
+	protocol_version: string
+	server_name: string
+	server_version: string
+	tool_count: number
+	tools: string[]
+	message: string
+}
+
+export interface AgentControlStatus {
+	allow_ai_agents: boolean
+	horizon_ctl_installed: boolean
+	horizon_ctl_path: string
+	configs: AgentClientConfig[]
 }
 
 export async function getHorizonSettings(instanceDir?: string): Promise<HorizonSettings> {
@@ -229,4 +256,30 @@ export async function saveHorizonSettings(
 		instanceDir: instanceDir ?? null,
 		settings,
 	})
+}
+
+export async function getHorizonAgentControlStatus(
+	instancePath?: string | null,
+): Promise<AgentControlStatus> {
+	return await invoke('plugin:horizon|horizon_get_agent_control_status', {
+		instancePath: instancePath ?? null,
+	})
+}
+
+export async function setHorizonAgentControlEnabled(
+	enabled: boolean,
+	instancePath?: string | null,
+): Promise<HorizonSettings> {
+	return await invoke('plugin:horizon|horizon_set_agent_control_enabled', {
+		enabled,
+		instancePath: instancePath ?? null,
+	})
+}
+
+export async function testHorizonMcpServer(): Promise<McpTestReport> {
+	return await invoke('plugin:horizon|horizon_test_mcp_server')
+}
+
+export async function getHorizonAgentConfigs(): Promise<AgentClientConfig[]> {
+	return await invoke('plugin:horizon|horizon_get_agent_configs')
 }
