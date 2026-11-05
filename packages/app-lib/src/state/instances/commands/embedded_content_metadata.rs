@@ -27,6 +27,7 @@ pub(crate) struct ArchiveInspection {
 
 #[derive(Clone, Copy)]
 enum ModMetadataKind {
+    Horizon,
     Fabric,
     Quilt,
     NeoForge,
@@ -37,6 +38,9 @@ enum ModMetadataKind {
 pub(crate) async fn infer_project_type_path(
     path: &Path,
 ) -> crate::Result<ProjectType> {
+    if path.extension().map(|e| e.eq_ignore_ascii_case("wasm")).unwrap_or(false) {
+        return Ok(ProjectType::Mod);
+    }
     let path = path.to_path_buf();
     tokio::task::spawn_blocking(move || {
         let mut archive = ZipArchive::new(File::open(path)?).context(
@@ -64,6 +68,17 @@ fn inspect_content_file(
     path: &Path,
     loader: ModLoader,
 ) -> crate::Result<ArchiveInspection> {
+    if path.extension().map(|e| e.eq_ignore_ascii_case("wasm")).unwrap_or(false) {
+        let name = path.file_stem().and_then(|s| s.to_str()).map(|s| s.to_string());
+        return Ok(ArchiveInspection {
+            metadata: Some(EmbeddedContentMetadata {
+                name,
+                version: None,
+                icon_path: None,
+            }),
+            icon: None,
+        });
+    }
     let file = File::open(path).context(format!(
         "could not open content archive {}",
         path.display()
@@ -99,6 +114,7 @@ fn infer_project_type<R: Read + Seek>(
         || has_entry(archive, "META-INF/neoforge.mods.toml")
         || has_entry(archive, "META-INF/mods.toml")
         || has_entry(archive, "mcmod.info")
+        || has_entry(archive, "horizon-mod.toml")
     {
         Ok(ProjectType::Mod)
     } else if has_entry(archive, "pack.mcmeta") {
@@ -140,6 +156,7 @@ fn inspect_mod<R: Read + Seek>(
     let manifest = read_manifest(archive);
     let order = metadata_order(loader);
     let parsed = order.iter().find_map(|kind| match kind {
+        ModMetadataKind::Horizon => parse_horizon_metadata(archive),
         ModMetadataKind::Fabric => parse_fabric_metadata(archive),
         ModMetadataKind::Quilt => parse_quilt_metadata(archive),
         ModMetadataKind::NeoForge => parse_toml_metadata(
@@ -176,44 +193,85 @@ fn inspect_mod<R: Read + Seek>(
     }
 }
 
-fn metadata_order(loader: Option<ModLoader>) -> [ModMetadataKind; 5] {
+fn metadata_order(loader: Option<ModLoader>) -> &'static [ModMetadataKind] {
     match loader {
-        Some(ModLoader::Fabric) => [
+        Some(ModLoader::Horizon) => &[
+            ModMetadataKind::Horizon,
             ModMetadataKind::Fabric,
             ModMetadataKind::Quilt,
             ModMetadataKind::NeoForge,
             ModMetadataKind::Forge,
             ModMetadataKind::LegacyForge,
         ],
-        Some(ModLoader::Quilt) => [
-            ModMetadataKind::Quilt,
+        Some(ModLoader::Fabric) => &[
             ModMetadataKind::Fabric,
+            ModMetadataKind::Quilt,
             ModMetadataKind::NeoForge,
             ModMetadataKind::Forge,
             ModMetadataKind::LegacyForge,
+            ModMetadataKind::Horizon,
         ],
-        Some(ModLoader::Forge) => [
+        Some(ModLoader::Quilt) => &[
+            ModMetadataKind::Quilt,
+            ModMetadataKind::Fabric,
+            ModMetadataKind::NeoForge,
             ModMetadataKind::Forge,
             ModMetadataKind::LegacyForge,
-            ModMetadataKind::NeoForge,
-            ModMetadataKind::Fabric,
-            ModMetadataKind::Quilt,
+            ModMetadataKind::Horizon,
         ],
-        Some(ModLoader::NeoForge) => [
-            ModMetadataKind::NeoForge,
+        Some(ModLoader::Forge) => &[
             ModMetadataKind::Forge,
             ModMetadataKind::LegacyForge,
+            ModMetadataKind::NeoForge,
             ModMetadataKind::Fabric,
             ModMetadataKind::Quilt,
+            ModMetadataKind::Horizon,
         ],
-        Some(ModLoader::Vanilla) | Some(ModLoader::Horizon) | None => [
+        Some(ModLoader::NeoForge) => &[
+            ModMetadataKind::NeoForge,
+            ModMetadataKind::Forge,
+            ModMetadataKind::LegacyForge,
+            ModMetadataKind::Fabric,
+            ModMetadataKind::Quilt,
+            ModMetadataKind::Horizon,
+        ],
+        Some(ModLoader::Vanilla) | None => &[
             ModMetadataKind::Fabric,
             ModMetadataKind::Quilt,
             ModMetadataKind::NeoForge,
             ModMetadataKind::Forge,
             ModMetadataKind::LegacyForge,
+            ModMetadataKind::Horizon,
         ],
     }
+}
+
+fn parse_horizon_metadata<R: Read + Seek>(
+    archive: &mut ZipArchive<R>,
+) -> Option<(EmbeddedContentMetadata, Option<String>)> {
+    let text = read_text_entry(archive, "horizon-mod.toml")?;
+    let root = toml::from_str::<TomlValue>(&text).ok()?;
+    let name = root
+        .get("name")
+        .or_else(|| root.get("id"))
+        .and_then(toml_scalar_string)
+        .and_then(|value| clean_string(&value, MAX_NAME_CHARS));
+    let version = root
+        .get("version")
+        .and_then(toml_scalar_string)
+        .and_then(|value| clean_string(&value, MAX_VERSION_CHARS));
+    let icon = root
+        .get("icon")
+        .and_then(TomlValue::as_str)
+        .and_then(safe_archive_path);
+    Some((
+        EmbeddedContentMetadata {
+            name,
+            version,
+            ..Default::default()
+        },
+        icon,
+    ))
 }
 
 fn parse_fabric_metadata<R: Read + Seek>(
@@ -626,3 +684,52 @@ pub(crate) async fn resolve_embedded_content_metadata(
 fn metadata_cache_key(hash: &str, loader: ModLoader) -> String {
     format!("{hash}-{}", loader.as_str())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+    use zip::write::SimpleFileOptions;
+
+    #[test]
+    fn test_horizon_mod_metadata_and_infer() {
+        let mut buffer = Cursor::new(Vec::new());
+        {
+            let mut writer = zip::ZipWriter::new(&mut buffer);
+            writer
+                .start_file(
+                    "horizon-mod.toml",
+                    SimpleFileOptions::default()
+                        .compression_method(zip::CompressionMethod::Stored),
+                )
+                .unwrap();
+            let manifest = r#"
+id = "minimap_hmod"
+name = "Horizon Minimap"
+version = "1.0.0"
+description = "A native wgpu minimap"
+api = "0.1"
+"#;
+            writer.write_all(manifest.as_bytes()).unwrap();
+            writer.finish().unwrap();
+        }
+
+        buffer.set_position(0);
+        let mut archive = ZipArchive::new(buffer).unwrap();
+
+        let inferred = infer_project_type(&mut archive).unwrap();
+        assert_eq!(inferred, ProjectType::Mod);
+
+        let (meta, _icon) = parse_horizon_metadata(&mut archive).unwrap();
+        assert_eq!(meta.name.as_deref(), Some("Horizon Minimap"));
+        assert_eq!(meta.version.as_deref(), Some("1.0.0"));
+    }
+
+    #[tokio::test]
+    async fn test_infer_wasm_mod() {
+        let wasm_path = Path::new("test_mod.wasm");
+        let inferred = infer_project_type_path(wasm_path).await.unwrap();
+        assert_eq!(inferred, ProjectType::Mod);
+    }
+}
+

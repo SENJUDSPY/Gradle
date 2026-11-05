@@ -7,6 +7,7 @@ import {
 	GlobeIcon,
 	PlusIcon,
 	ServerStackIcon,
+	SparklesIcon,
 	SpinnerIcon,
 } from '@modrinth/assets'
 import type { BrowseInstallContentType, CardAction, ProjectType, Tags } from '@modrinth/ui'
@@ -401,9 +402,10 @@ const instanceFilters = computed(() => {
 	const filters = []
 
 	if (instance.value && projectType.value !== 'resourcepack') {
+		const isHorizon = instance.value.loader === 'horizon'
 		const isVanillaShader = projectType.value === 'shader' && instance.value.loader === 'vanilla'
 		const gameVersion = instance.value.game_version
-		if (gameVersion && !isVanillaShader) {
+		if (gameVersion && !isVanillaShader && !isHorizon) {
 			filters.push({ type: 'game_version', option: gameVersion })
 		}
 
@@ -545,6 +547,20 @@ onBeforeUnmount(() => {
 })
 
 const messages = defineMessages({
+	horizonActiveInstanceNoticeTitle: {
+		id: 'app.browse.horizon.notice-title',
+		defaultMessage: 'Horizon Profile Active',
+	},
+	horizonJavaModsNotice: {
+		id: 'app.browse.horizon.java-mods-notice',
+		defaultMessage:
+			'Horizon runs native WebAssembly mods (.wasm, .hmod) and data/asset packs. Standard Java mod JARs (.jar) require JVM (Fabric/NeoForge) and will not execute.',
+	},
+	horizonAssetsCompatibleNotice: {
+		id: 'app.browse.horizon.assets-compatible-notice',
+		defaultMessage:
+			'Horizon natively supports resource packs, shaders (wgpu/Vulkan), and data packs from AstralRinth.',
+	},
 	addServersToInstance: {
 		id: 'app.browse.add-servers-to-instance',
 		defaultMessage: 'Adding server to instance',
@@ -671,17 +687,22 @@ const selectableProjectTypes = computed(() => {
 		modpacks = false
 
 	if (instance.value) {
-		if (
-			availableGameVersions.value &&
-			availableGameVersions.value.findIndex((x) => x.version === instance.value?.game_version) <=
-				availableGameVersions.value.findIndex((x) => x.version === '1.13') &&
-			!isServerInstance.value
-		) {
+		if (instance.value.loader === 'horizon') {
 			dataPacks = true
-		}
-
-		if (instance.value.loader !== 'vanilla') {
 			mods = true
+		} else {
+			if (
+				availableGameVersions.value &&
+				availableGameVersions.value.findIndex((x) => x.version === instance.value?.game_version) <=
+					availableGameVersions.value.findIndex((x) => x.version === '1.13') &&
+				!isServerInstance.value
+			) {
+				dataPacks = true
+			}
+
+			if (instance.value.loader !== 'vanilla') {
+				mods = true
+			}
 		}
 	} else {
 		dataPacks = true
@@ -1331,6 +1352,24 @@ provideBrowseManager({
 
 <template>
 	<div class="flex flex-col gap-2 p-6">
+		<div
+			v-if="instance?.loader === 'horizon'"
+			class="flex items-center gap-3 rounded-2xl border border-solid border-brand/20 bg-brand/10 p-4 text-xs text-contrast mb-1"
+		>
+			<SparklesIcon class="size-5 shrink-0 text-brand" />
+			<div class="flex flex-col">
+				<span class="font-bold text-brand">
+					{{ formatMessage(messages.horizonActiveInstanceNoticeTitle) }}
+				</span>
+				<span class="text-secondary">
+					{{
+						projectType === 'mod'
+							? formatMessage(messages.horizonJavaModsNotice)
+							: formatMessage(messages.horizonAssetsCompatibleNotice)
+					}}
+				</span>
+			</div>
+		</div>
 		<BrowsePageLayout>
 			<template #after>
 				<ContextMenu ref="contextMenuRef" :label="formatMessage(messages.projectActionsLabel)">

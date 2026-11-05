@@ -1,96 +1,120 @@
 <template>
 	<ReadyTransition :pending="loading">
-		<ContentPageLayout :highlighted-item-id="highlightedItemId">
-			<template #modals>
-				<SyncedContentModal ref="syncedContentModal" />
-				<UnknownFileWarningModal
-					ref="unknownFileWarningModal"
-					mode="mod"
-					:file-name="unknownFileName"
-					@cancel="resolveUnknownFileWarning(false)"
-					@continue="handleUnknownFileContinue"
-				/>
-				<ShareModalWrapper
-					ref="shareModal"
-					:share-title="formatMessage(messages.shareTitle)"
-					:share-text="formatMessage(messages.shareText)"
-					:open-in-new-tab="false"
-				/>
-				<ManagedContentModal
-					ref="managedContentModal"
-					:header="managedContentModalHeader"
-					:source-name="managedContent?.card.manager.name"
-					:source-icon-url="managedContent?.card.manager.iconUrl"
-					:enable-toggle="!isServerInstance && !isSharedMember && !isQuarantined"
-					:action-disabled="isBulkOperating || isInstanceBusy"
-					:get-overflow-options="getOverflowOptions"
-					:switch-version="
-						isServerInstance || isSharedMember || isQuarantined ? undefined : handleSwitchVersion
-					"
-					@update:enabled="handleManagedContentToggle"
-					@bulk:enable="(items) => handleManagedContentBulkToggle(items, true)"
-					@bulk:disable="(items) => handleManagedContentBulkToggle(items, false)"
-				/>
-				<ConfirmDisableModal
-					ref="sharedDisableConfirmModal"
-					:count="pendingManagedContentDisableItems.length"
-					:item-type="formatMessage(messages.contentTypeProject)"
-					:warning="managedContentPolicy.disableWarning(pendingManagedContentDisableItems)"
-					:action-disabled="isInstanceBusy"
-					@disable="confirmPendingManagedContentDisable"
-				/>
-				<ConfirmModpackUpdateModal
-					ref="modpackUpdateConfirmModal"
-					:downgrade="isModpackUpdateDowngrade"
-					:backup-tip="
-						[displayedModpackProject?.title, pendingModpackUpdateVersion?.version_number]
-							.filter(Boolean)
-							.join(' ')
-					"
-					@confirm="handleModpackUpdateConfirm"
-					@cancel="handleModpackUpdateCancel"
-				/>
-				<ExportModal
-					v-if="projects.length > 0 && !instance.quarantined"
-					ref="exportModal"
-					:instance="instance"
-				/>
-				<ContentUpdaterModal
-					v-if="updatingProject || updatingModpack"
-					ref="contentUpdaterModal"
-					:versions="updatingProjectVersions"
-					:current-game-version="instance.game_version"
-					:current-loader="instance.loader"
-					:current-version-id="
-						updatingModpack
-							? (instance.link?.version_id ?? '')
-							: (updatingProject?.version?.id ?? '')
-					"
-					:is-app="true"
-					:project-type="updatingModpack ? 'modpack' : updatingProject?.project_type"
-					:project-icon-url="
-						updatingModpack ? displayedModpackProject?.icon_url : updatingProject?.project?.icon_url
-					"
-					:project-name="
-						updatingModpack
-							? (displayedModpackProject?.title ?? formatMessage(commonMessages.modpackLabel))
-							: (updatingProject?.project?.title ?? updatingProject?.file_name)
-					"
-					:loading="loadingVersions"
-					:loading-changelog="loadingChangelog"
-					@update="handleModalUpdate"
-					@cancel="resetUpdateState"
-					@version-select="handleVersionSelect"
-					@version-hover="handleVersionHover"
-				/>
-			</template>
-		</ContentPageLayout>
+		<div class="flex flex-col gap-3">
+			<div
+				v-if="instance?.loader === 'horizon'"
+				class="flex items-center gap-3 rounded-2xl border border-solid border-brand/20 bg-brand/10 p-4 text-xs text-contrast"
+			>
+				<SparklesIcon class="size-5 shrink-0 text-brand" />
+				<div class="flex flex-col">
+					<span class="font-bold text-brand">
+						{{ formatMessage(messages.horizonProfileNoticeTitle) }}
+					</span>
+					<span class="text-secondary">
+						{{ formatMessage(messages.horizonProfileNoticeDesc) }}
+					</span>
+				</div>
+			</div>
+			<ContentPageLayout :highlighted-item-id="highlightedItemId">
+				<template #modals>
+					<SyncedContentModal ref="syncedContentModal" />
+					<UnknownFileWarningModal
+						ref="unknownFileWarningModal"
+						mode="mod"
+						:file-name="unknownFileName"
+						@cancel="resolveUnknownFileWarning(false)"
+						@continue="handleUnknownFileContinue"
+					/>
+					<ShareModalWrapper
+						ref="shareModal"
+						:share-title="formatMessage(messages.shareTitle)"
+						:share-text="formatMessage(messages.shareText)"
+						:open-in-new-tab="false"
+					/>
+					<ManagedContentModal
+						ref="managedContentModal"
+						:header="managedContentModalHeader"
+						:source-name="managedContent?.card.manager.name"
+						:source-icon-url="managedContent?.card.manager.iconUrl"
+						:enable-toggle="!isServerInstance && !isSharedMember && !isQuarantined"
+						:action-disabled="isBulkOperating || isInstanceBusy"
+						:get-overflow-options="getOverflowOptions"
+						:switch-version="
+							isServerInstance || isSharedMember || isQuarantined ? undefined : handleSwitchVersion
+						"
+						@update:enabled="handleManagedContentToggle"
+						@bulk:enable="(items) => handleManagedContentBulkToggle(items, true)"
+						@bulk:disable="(items) => handleManagedContentBulkToggle(items, false)"
+					/>
+					<ConfirmDisableModal
+						ref="sharedDisableConfirmModal"
+						:count="pendingManagedContentDisableItems.length"
+						:item-type="formatMessage(messages.contentTypeProject)"
+						:warning="managedContentPolicy.disableWarning(pendingManagedContentDisableItems)"
+						:action-disabled="isInstanceBusy"
+						@disable="confirmPendingManagedContentDisable"
+					/>
+					<ConfirmModpackUpdateModal
+						ref="modpackUpdateConfirmModal"
+						:downgrade="isModpackUpdateDowngrade"
+						:backup-tip="
+							[displayedModpackProject?.title, pendingModpackUpdateVersion?.version_number]
+								.filter(Boolean)
+								.join(' ')
+						"
+						@confirm="handleModpackUpdateConfirm"
+						@cancel="handleModpackUpdateCancel"
+					/>
+					<ExportModal
+						v-if="projects.length > 0 && !instance.quarantined"
+						ref="exportModal"
+						:instance="instance"
+					/>
+					<ContentUpdaterModal
+						v-if="updatingProject || updatingModpack"
+						ref="contentUpdaterModal"
+						:versions="updatingProjectVersions"
+						:current-game-version="instance.game_version"
+						:current-loader="instance.loader"
+						:current-version-id="
+							updatingModpack
+								? (instance.link?.version_id ?? '')
+								: (updatingProject?.version?.id ?? '')
+						"
+						:is-app="true"
+						:project-type="updatingModpack ? 'modpack' : updatingProject?.project_type"
+						:project-icon-url="
+							updatingModpack
+								? displayedModpackProject?.icon_url
+								: updatingProject?.project?.icon_url
+						"
+						:project-name="
+							updatingModpack
+								? (displayedModpackProject?.title ?? formatMessage(commonMessages.modpackLabel))
+								: (updatingProject?.project?.title ?? updatingProject?.file_name)
+						"
+						:loading="loadingVersions"
+						:loading-changelog="loadingChangelog"
+						@update="handleModalUpdate"
+						@cancel="resetUpdateState"
+						@version-select="handleVersionSelect"
+						@version-hover="handleVersionHover"
+					/>
+				</template>
+			</ContentPageLayout>
+		</div>
 	</ReadyTransition>
 </template>
 
 <script setup lang="ts">
 import type { Labrinth } from '@modrinth/api-client'
-import { ClipboardCopyIcon, FolderOpenIcon, LockIcon, LockOpenIcon } from '@modrinth/assets'
+import {
+	ClipboardCopyIcon,
+	FolderOpenIcon,
+	LockIcon,
+	LockOpenIcon,
+	SparklesIcon,
+} from '@modrinth/assets'
 import {
 	type ButtonMenuOption,
 	commonMessages,
@@ -159,6 +183,15 @@ import { instanceContentQueryOptions, instanceKeys } from '../query-options'
 import { injectSharedInstance } from '../shared-instance-context'
 
 const messages = defineMessages({
+	horizonProfileNoticeTitle: {
+		id: 'app.instance.content.horizon.notice-title',
+		defaultMessage: 'Horizon Native Profile (Minecraft 26.3)',
+	},
+	horizonProfileNoticeDesc: {
+		id: 'app.instance.content.horizon.notice-desc',
+		defaultMessage:
+			'Horizon runs natively in Rust (wgpu/Vulkan). It supports WebAssembly mods (.wasm, .hmod), data packs, resource packs, and shaders. Standard Java JAR bytecode mods are not supported.',
+	},
 	modpackContentHeader: {
 		id: 'app.instance.content.managed-content.modpack-header',
 		defaultMessage: 'Modpack content',
@@ -707,7 +740,11 @@ async function getUpdaterProjectVersions(projectId: string, pinnedVersionId?: st
 
 async function handleBrowseContent() {
 	if (!instance.value || instance.value.quarantined) return
-	await instancePage.browseContent(instance.value.loader === 'vanilla' ? 'resourcepack' : 'mod')
+	if (instance.value.loader === 'horizon') {
+		await instancePage.browseContent('datapack')
+	} else {
+		await instancePage.browseContent(instance.value.loader === 'vanilla' ? 'resourcepack' : 'mod')
+	}
 }
 
 async function handleUploadFiles() {

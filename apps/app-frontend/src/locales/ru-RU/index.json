@@ -1082,6 +1082,15 @@
   "app.browse.discover-servers": {
     "message": "Поиск серверов"
   },
+  "app.browse.horizon.notice-title": {
+    "message": "Активен профиль Horizon"
+  },
+  "app.browse.horizon.java-mods-notice": {
+    "message": "Horizon поддерживает нативные WebAssembly-моды (.wasm, .hmod) и датапаки/ресурспаки. Стандартные Java-моды (.jar) требуют JVM (Fabric/NeoForge) и не запускаются."
+  },
+  "app.browse.horizon.assets-compatible-notice": {
+    "message": "Horizon нативно поддерживает ресурспаки, шейдеры (wgpu/Vulkan) и датапаки из AstralRinth."
+  },
   "app.browse.hide-added-servers": {
     "message": "Скрывать добавленные"
   },
@@ -1516,6 +1525,12 @@
   },
   "app.instance.confirm-delete.instances-label": {
     "message": "{count, plural, one {Сборка} other {Сборки ({count})}}"
+  },
+  "app.instance.content.horizon.notice-title": {
+    "message": "Нативный профиль Horizon (Minecraft 26.3)"
+  },
+  "app.instance.content.horizon.notice-desc": {
+    "message": "Horizon работает нативно на Rust (wgpu/Vulkan). Поддерживаются WebAssembly-моды (.wasm, .hmod), датапаки, ресурспаки и шейдеры. Стандартные Java-моды (.jar) не поддерживаются."
   },
   "app.instance.content.managed-content.modpack-header": {
     "message": "Контент сборки"

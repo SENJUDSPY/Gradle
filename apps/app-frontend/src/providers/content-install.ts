@@ -64,7 +64,14 @@ type InstallingProjectDisplay = {
 	team?: string
 }
 const LOADER_ORDER = ['vanilla', 'fabric', 'quilt', 'neoforge', 'forge', 'horizon']
-const SUPPORTED_LOADERS: Set<string> = new Set(['vanilla', 'forge', 'fabric', 'quilt', 'neoforge', 'horizon'])
+const SUPPORTED_LOADERS: Set<string> = new Set([
+	'vanilla',
+	'forge',
+	'fabric',
+	'quilt',
+	'neoforge',
+	'horizon',
+])
 const VANILLA_COMPATIBLE_LOADERS: Set<string> = new Set(['minecraft', 'datapack'])
 const noCompatibleVersionsMessage = defineMessage({
 	id: 'app.content-install.no-compatible-versions',
@@ -90,6 +97,19 @@ function isVersionCompatible(
 	project: Labrinth.Projects.v2.Project,
 	instance: GameInstance,
 ) {
+	if (instance.loader === 'horizon') {
+		const projectType = project.project_type ?? 'mod'
+		if (projectType === 'resourcepack' || projectType === 'shader' || projectType === 'datapack') {
+			return true
+		}
+		if (projectType === 'mod') {
+			return (
+				version.loaders.includes('horizon') ||
+				version.loaders.includes('wasm') ||
+				version.loaders.includes('datapack')
+			)
+		}
+	}
 	return (
 		version.game_versions.includes(instance.game_version) &&
 		(project.project_type === 'mod'
@@ -104,6 +124,20 @@ function findPreferredVersion(
 	instance: GameInstance,
 ) {
 	const projectType = project.project_type ?? 'mod'
+
+	if (instance.loader === 'horizon') {
+		if (projectType === 'resourcepack' || projectType === 'shader' || projectType === 'datapack') {
+			return versions[0]
+		}
+		const compatible = versions.find(
+			(v) =>
+				v.loaders.includes('horizon') ||
+				v.loaders.includes('wasm') ||
+				v.loaders.includes('datapack'),
+		)
+		if (compatible) return compatible
+		return versions[0]
+	}
 
 	return (
 		versions.find(

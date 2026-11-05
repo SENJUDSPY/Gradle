@@ -1022,6 +1022,15 @@
   "app.browse.discover-servers": {
     "message": "Discover servers"
   },
+  "app.browse.horizon.notice-title": {
+    "message": "Horizon Profile Active"
+  },
+  "app.browse.horizon.java-mods-notice": {
+    "message": "Horizon runs native WebAssembly mods (.wasm, .hmod) and data/asset packs. Standard Java mod JARs (.jar) require JVM (Fabric/NeoForge) and will not execute."
+  },
+  "app.browse.horizon.assets-compatible-notice": {
+    "message": "Horizon natively supports resource packs, shaders (wgpu/Vulkan), and data packs from AstralRinth."
+  },
   "app.browse.hide-added-servers": {
     "message": "Hide servers already added"
   },
@@ -1471,6 +1480,12 @@
   },
   "app.instance.confirm-delete.instances-label": {
     "message": "{count, plural, one {Instance} other {Instances ({count})}}"
+  },
+  "app.instance.content.horizon.notice-title": {
+    "message": "Horizon Native Profile (Minecraft 26.3)"
+  },
+  "app.instance.content.horizon.notice-desc": {
+    "message": "Horizon runs natively in Rust (wgpu/Vulkan). It supports WebAssembly mods (.wasm, .hmod), data packs, resource packs, and shaders. Standard Java JAR bytecode mods are not supported."
   },
   "app.instance.content.managed-content.modpack-header": {
     "message": "Modpack content"

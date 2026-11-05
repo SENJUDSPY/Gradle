@@ -64,7 +64,11 @@ pub(crate) fn is_managed_content_path(path: &str) -> bool {
         .and_then(|ext| ext.to_str())
         .unwrap_or_default();
     match directory {
-        "mods" => extension.eq_ignore_ascii_case("jar"),
+        "mods" => {
+            extension.eq_ignore_ascii_case("jar")
+                || extension.eq_ignore_ascii_case("wasm")
+                || extension.eq_ignore_ascii_case("hmod")
+        }
         "resourcepacks" | "shaderpacks" | "datapacks" => {
             extension.eq_ignore_ascii_case("zip")
                 || extension.eq_ignore_ascii_case("jar")
