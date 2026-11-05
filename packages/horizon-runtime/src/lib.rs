@@ -71,4 +71,17 @@ mod tests {
         assert!(vdir.starts_with(&data_dir));
         assert_eq!(vdir.file_name().unwrap(), "v1.3.0");
     }
+
+    #[tokio::test]
+    async fn test_fetch_releases_fallback_and_cache() {
+        let releases = fetch_releases_for(Some("upstream")).await.unwrap();
+        assert!(!releases.is_empty());
+        let first = &releases[0];
+        assert!(!first.tag.is_empty());
+        assert!(!first.name.is_empty());
+        assert!(!first.body.is_empty());
+
+        let offline_releases = fetch_releases_for(None).await.unwrap();
+        assert!(!offline_releases.is_empty());
+    }
 }

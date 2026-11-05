@@ -141,7 +141,7 @@
 				<div v-else />
 
 				<div class="flex items-center gap-2">
-					<Button v-if="!isPreparing" type="transparent" @click="hide">
+					<Button v-if="!isPreparing" type="quiet" @click="hide">
 						{{ formatMessage(commonMessages.cancelButton) }}
 					</Button>
 					<Button type="colored" color="brand" :disabled="isPreparing" @click="handleMainAction">

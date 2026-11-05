@@ -118,7 +118,7 @@
 						<WrenchIcon />
 						{{ formatMessage(messages.prepareFiles) }}
 					</Button>
-					<Button type="transparent" @click="hide">
+					<Button type="quiet" @click="hide">
 						{{ formatMessage(commonMessages.closeButton) }}
 					</Button>
 				</div>

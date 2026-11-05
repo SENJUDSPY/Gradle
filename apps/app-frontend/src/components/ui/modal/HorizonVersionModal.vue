@@ -141,7 +141,7 @@
 							<Button
 								v-if="currentLoaderVersion !== rel.tag"
 								size="sm"
-								type="transparent"
+								type="quiet"
 								:disabled="!!installingTag || removingTag === rel.tag"
 								@click="uninstallVersion(rel.tag)"
 							>
@@ -179,12 +179,18 @@
 
 			<!-- Footer -->
 			<div class="flex items-center justify-between border-t border-solid border-surface-5 pt-3">
-				<Button type="outlined" :disabled="loading || !!installingTag" @click="loadReleases">
-					<RefreshCwIcon :class="{ 'animate-spin': loading }" />
-					{{ formatMessage(commonMessages.refreshButton) }}
-				</Button>
+				<div class="flex items-center gap-2">
+					<Button type="outlined" :disabled="loading || !!installingTag" @click="loadReleases">
+						<RefreshCwIcon :class="{ 'animate-spin': loading }" />
+						{{ formatMessage(commonMessages.refreshButton) }}
+					</Button>
+					<Button type="outlined" @click="openPatchNotes">
+						<NewspaperIcon class="size-4" />
+						{{ formatMessage(messages.viewPatchNotes) }}
+					</Button>
+				</div>
 
-				<Button type="transparent" :disabled="!!installingTag" @click="hide">
+				<Button type="quiet" :disabled="!!installingTag" @click="hide">
 					{{ formatMessage(commonMessages.closeButton) }}
 				</Button>
 			</div>
@@ -196,6 +202,7 @@
 import {
 	CheckIcon,
 	DownloadIcon,
+	NewspaperIcon,
 	RefreshCwIcon,
 	SparklesIcon,
 	SpinnerIcon,
@@ -204,6 +211,7 @@ import {
 import { Button, commonMessages, defineMessages, NewModal, useVIntl } from '@modrinth/ui'
 import { useQueryClient } from '@tanstack/vue-query'
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import {
 	getHorizonReleases,
@@ -279,10 +287,15 @@ const messages = defineMessages({
 		id: 'app.horizon.version.required-prompt',
 		defaultMessage: 'Please install a Horizon build before launching this instance.',
 	},
+	viewPatchNotes: {
+		id: 'app.horizon.version.view-patch-notes',
+		defaultMessage: 'Patch Notes',
+	},
 })
 
 const { formatMessage } = useVIntl()
 const queryClient = useQueryClient()
+const router = useRouter()
 const modalRef = ref<InstanceType<typeof NewModal>>()
 
 const releases = ref<HorizonRelease[]>([])
@@ -379,6 +392,11 @@ function show(onCompleteLaunch?: () => void) {
 function hide() {
 	if (installingTag.value) return
 	modalRef.value?.hide()
+}
+
+function openPatchNotes() {
+	hide()
+	void router.push('/patch-notes')
 }
 
 defineExpose({

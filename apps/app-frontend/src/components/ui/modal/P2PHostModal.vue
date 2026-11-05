@@ -55,14 +55,14 @@
 					<div class="grid grid-cols-2 gap-3">
 						<label class="flex flex-col gap-1.5 text-xs text-secondary">
 							<span class="font-semibold text-contrast">{{ formatMessage(messages.port) }}</span>
-							<Input v-model.number="serverPort" type="number" min="1024" max="65535" />
+							<Input v-model.number="serverPort" type="number" :min="1024" :max="65535" />
 						</label>
 
 						<label class="flex flex-col gap-1.5 text-xs text-secondary">
 							<span class="font-semibold text-contrast">{{
 								formatMessage(messages.maxPeers)
 							}}</span>
-							<Input v-model.number="maxPeers" type="number" min="1" max="64" />
+							<Input v-model.number="maxPeers" type="number" :min="1" :max="64" />
 						</label>
 					</div>
 
@@ -86,7 +86,7 @@
 				</div>
 
 				<div class="flex justify-end gap-2">
-					<Button type="transparent" @click="hide">
+					<Button type="quiet" @click="hide">
 						{{ formatMessage(commonMessages.cancelButton) }}
 					</Button>
 					<Button type="colored" color="brand" :disabled="loading" @click="handleStartHost">

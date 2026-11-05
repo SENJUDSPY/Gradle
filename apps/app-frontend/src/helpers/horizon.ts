@@ -69,8 +69,8 @@ export async function onHorizonPrepareProgress(
 	})
 }
 
-export async function getHorizonReleases(): Promise<HorizonRelease[]> {
-	return await invoke('plugin:horizon|horizon_get_releases')
+export async function getHorizonReleases(repo?: string | null): Promise<HorizonRelease[]> {
+	return await invoke('plugin:horizon|horizon_get_releases', { repo: repo ?? null })
 }
 
 export async function getInstalledHorizonVersions(): Promise<string[]> {

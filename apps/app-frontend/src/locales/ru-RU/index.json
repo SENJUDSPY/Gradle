@@ -122,6 +122,72 @@
   "app.horizon.version.required-prompt": {
     "message": "Пожалуйста, установите сборку Horizon для запуска игры."
   },
+  "app.horizon.version.view-patch-notes": {
+    "message": "Патч-ноты"
+  },
+  "app.nav.patch-notes": {
+    "message": "Примечания к патчам"
+  },
+  "patch-notes.page.title": {
+    "message": "Примечания к патчам Horizon"
+  },
+  "patch-notes.page.subtitle": {
+    "message": "Списки изменений, новые функции и исправления релизов нативного движка Horizon."
+  },
+  "patch-notes.page.channel-engine": {
+    "message": "Движок Horizon"
+  },
+  "patch-notes.page.channel-offline": {
+    "message": "Офлайн-сборки"
+  },
+  "patch-notes.page.search-placeholder": {
+    "message": "Фильтр по релизам или заметкам..."
+  },
+  "patch-notes.page.filter-all": {
+    "message": "Все"
+  },
+  "patch-notes.page.filter-stable": {
+    "message": "Стабильные"
+  },
+  "patch-notes.page.filter-prerelease": {
+    "message": "Пре-релизы"
+  },
+  "patch-notes.page.filter-installed": {
+    "message": "Установленные"
+  },
+  "patch-notes.page.install-build": {
+    "message": "Установить сборку"
+  },
+  "patch-notes.page.uninstall": {
+    "message": "Удалить"
+  },
+  "patch-notes.page.installed": {
+    "message": "Установлено"
+  },
+  "patch-notes.page.latest": {
+    "message": "Последний"
+  },
+  "patch-notes.page.prerelease": {
+    "message": "Пре-релиз"
+  },
+  "patch-notes.page.view-github": {
+    "message": "Открыть на GitHub"
+  },
+  "patch-notes.page.no-notes": {
+    "message": "Для этой версии нет описания изменений."
+  },
+  "patch-notes.page.loading": {
+    "message": "Загрузка примечаний к патчам..."
+  },
+  "patch-notes.page.retry": {
+    "message": "Повторить"
+  },
+  "patch-notes.page.no-releases": {
+    "message": "Релизы не найдены"
+  },
+  "patch-notes.page.no-releases-subtitle": {
+    "message": "Попробуйте изменить поисковый запрос или фильтры."
+  },
   "p2p.host.title": {
     "message": "Поделиться сервером через P2P"
   },

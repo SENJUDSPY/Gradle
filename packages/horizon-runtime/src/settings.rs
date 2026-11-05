@@ -20,12 +20,12 @@ pub struct HorizonSettings {
     pub controller_enabled: bool,
     pub vibration: bool,
     pub adaptive_triggers: bool,
-    pub lightbar: String,        // "health", "dimension", "off"
-    pub look_sensitivity: f32,   // 0.1 to 2.0 (default 1.0)
+    pub lightbar: String, // "health", "dimension", "off"
+    pub look_sensitivity: f32, // 0.1 to 2.0 (default 1.0)
     pub invert_look_y: bool,
-    pub move_deadzone: f32,      // 0.05 to 0.5 (default 0.15)
-    pub look_deadzone: f32,      // 0.05 to 0.5 (default 0.15)
-    pub button_glyphs: String,   // "auto", "xbox", "playstation", "nintendo"
+    pub move_deadzone: f32, // 0.05 to 0.5 (default 0.15)
+    pub look_deadzone: f32, // 0.05 to 0.5 (default 0.15)
+    pub button_glyphs: String, // "auto", "xbox", "playstation", "nintendo"
     pub menu_navigation: String, // "focus", "pointer"
 
     // Extras
@@ -80,7 +80,9 @@ pub fn load_horizon_settings(instance_dir: Option<&Path>) -> HorizonSettings {
         let instance_settings = dir.join("horizon-settings.json");
         if instance_settings.is_file() {
             if let Ok(content) = fs::read_to_string(&instance_settings) {
-                if let Ok(settings) = serde_json::from_str::<HorizonSettings>(&content) {
+                if let Ok(settings) =
+                    serde_json::from_str::<HorizonSettings>(&content)
+                {
                     return settings;
                 }
             }
@@ -91,7 +93,9 @@ pub fn load_horizon_settings(instance_dir: Option<&Path>) -> HorizonSettings {
     let global_path = global_settings_path();
     if global_path.is_file() {
         if let Ok(content) = fs::read_to_string(&global_path) {
-            if let Ok(settings) = serde_json::from_str::<HorizonSettings>(&content) {
+            if let Ok(settings) =
+                serde_json::from_str::<HorizonSettings>(&content)
+            {
                 return settings;
             }
         }

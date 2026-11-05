@@ -24,6 +24,11 @@ export default new createRouter({
 			component: () => import('@/pages/Modpacks.vue'),
 		},
 		{
+			path: '/patch-notes',
+			name: 'PatchNotes',
+			component: () => import('@/pages/PatchNotes.vue'),
+		},
+		{
 			path: '/hosting/manage/:id',
 			name: 'ServerManage',
 			component: () => import('@/pages/hosting/manage/Index.vue'),

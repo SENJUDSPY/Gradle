@@ -6,6 +6,7 @@ import {
 	ImageIcon,
 	LogInIcon,
 	LogOutIcon,
+	NewspaperIcon,
 	PackageIcon,
 	PlayIcon,
 	PlusIcon,
@@ -510,6 +511,10 @@ const messages = defineMessages({
 	modpacks: {
 		id: 'app.nav.modpacks',
 		defaultMessage: 'Modpacks',
+	},
+	patchNotes: {
+		id: 'app.nav.patch-notes',
+		defaultMessage: 'Patch notes',
 	},
 	screenshots: {
 		id: 'app.nav.screenshots',
@@ -1641,6 +1646,9 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 			</NavButton>
 			<NavButton v-tooltip.right="formatMessage(messages.modpacks)" to="/modpacks">
 				<PackageIcon />
+			</NavButton>
+			<NavButton v-tooltip.right="formatMessage(messages.patchNotes)" to="/patch-notes">
+				<NewspaperIcon />
 			</NavButton>
 			<suspense>
 				<QuickInstanceSwitcher>

@@ -122,6 +122,72 @@
   "app.horizon.version.required-prompt": {
     "message": "Please install a Horizon build before launching this instance."
   },
+  "app.horizon.version.view-patch-notes": {
+    "message": "Patch Notes"
+  },
+  "app.nav.patch-notes": {
+    "message": "Patch notes"
+  },
+  "patch-notes.page.title": {
+    "message": "Horizon Patch Notes"
+  },
+  "patch-notes.page.subtitle": {
+    "message": "Changelogs, new features, and fixes across native Horizon runtime releases."
+  },
+  "patch-notes.page.channel-engine": {
+    "message": "Engine Changelog"
+  },
+  "patch-notes.page.channel-offline": {
+    "message": "Offline Builds"
+  },
+  "patch-notes.page.search-placeholder": {
+    "message": "Filter releases or notes..."
+  },
+  "patch-notes.page.filter-all": {
+    "message": "All"
+  },
+  "patch-notes.page.filter-stable": {
+    "message": "Stable"
+  },
+  "patch-notes.page.filter-prerelease": {
+    "message": "Pre-releases"
+  },
+  "patch-notes.page.filter-installed": {
+    "message": "Installed"
+  },
+  "patch-notes.page.install-build": {
+    "message": "Install Build"
+  },
+  "patch-notes.page.uninstall": {
+    "message": "Uninstall"
+  },
+  "patch-notes.page.installed": {
+    "message": "Installed"
+  },
+  "patch-notes.page.latest": {
+    "message": "Latest"
+  },
+  "patch-notes.page.prerelease": {
+    "message": "Pre-release"
+  },
+  "patch-notes.page.view-github": {
+    "message": "View on GitHub"
+  },
+  "patch-notes.page.no-notes": {
+    "message": "No release notes provided for this version."
+  },
+  "patch-notes.page.loading": {
+    "message": "Loading patch notes..."
+  },
+  "patch-notes.page.retry": {
+    "message": "Retry"
+  },
+  "patch-notes.page.no-releases": {
+    "message": "No releases found"
+  },
+  "patch-notes.page.no-releases-subtitle": {
+    "message": "Try adjusting your search query or filters."
+  },
   "p2p.host.title": {
     "message": "Share Server via P2P"
   },

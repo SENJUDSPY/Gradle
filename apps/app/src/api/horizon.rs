@@ -2,11 +2,11 @@ use crate::api::Result;
 use horizon_runtime::{
 	analyze_modpack_file, backup_server, check_system_requirements,
 	create_server, delete_server, extract_compatible_assets_to_dir,
-	fetch_releases, get_installed_versions, has_sounds, install_version,
-	is_prepared, list_servers, load_horizon_settings, remove_version,
-	run_preparation, save_horizon_settings, start_server, stop_server,
-	update_server, HorizonRelease, HorizonServerInfo, HorizonSettings,
-	ModpackAnalysis, SystemRequirementsReport,
+	fetch_releases, fetch_releases_for, get_installed_versions, has_sounds,
+	install_version, is_prepared, list_servers, load_horizon_settings,
+	remove_version, run_preparation, save_horizon_settings, start_server,
+	stop_server, update_server, HorizonRelease, HorizonServerInfo,
+	HorizonSettings, ModpackAnalysis, SystemRequirementsReport,
 };
 use std::path::{Path, PathBuf};
 use tauri::Emitter;
@@ -54,8 +54,10 @@ pub async fn horizon_prepare_resources(
 }
 
 #[tauri::command]
-pub async fn horizon_get_releases() -> Result<Vec<HorizonRelease>> {
-	let releases = fetch_releases().await?;
+pub async fn horizon_get_releases(
+	repo: Option<String>,
+) -> Result<Vec<HorizonRelease>> {
+	let releases = fetch_releases_for(repo.as_deref()).await?;
 	Ok(releases)
 }
 
