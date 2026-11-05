@@ -27,6 +27,7 @@ pub mod cache;
 pub mod files;
 pub mod friends;
 pub mod horizon;
+pub mod p2p;
 pub mod worlds;
 
 mod oauth_utils;

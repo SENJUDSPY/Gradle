@@ -9,11 +9,13 @@ pub mod execution;
 pub mod preparation;
 pub mod releases;
 pub mod requirements;
+pub mod server;
 
 pub use execution::*;
 pub use preparation::*;
 pub use releases::*;
 pub use requirements::*;
+pub use server::*;
 
 #[cfg(test)]
 mod tests {

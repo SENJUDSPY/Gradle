@@ -42,6 +42,7 @@ tauri-plugin-window-state = { workspace = true }
 tempfile = { workspace = true }
 theseus = { workspace = true, features = ["tauri"] }
 horizon-runtime = { path = "../../packages/horizon-runtime" }
+p2p-invite = { path = "../../packages/p2p-invite" }
 tokio = { workspace = true, features = ["time"] }
 tokio-util = { workspace = true, features = ["rt"] }
 tracing = { workspace = true }

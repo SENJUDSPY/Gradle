@@ -313,6 +313,7 @@ fn main() {
         .plugin(api::friends::init())
         .plugin(api::worlds::init())
         .plugin(api::horizon::init())
+        .plugin(api::p2p::init())
         .manage(PendingUpdateData::default())
         .manage(RestartAfterPendingUpdate::default())
         .invoke_handler(tauri::generate_handler![

@@ -122,6 +122,222 @@
   "app.horizon.version.required-prompt": {
     "message": "Please install a Horizon build before launching this instance."
   },
+  "p2p.host.title": {
+    "message": "Share Server via P2P"
+  },
+  "p2p.host.subtitle": {
+    "message": "Tunnel your local Minecraft/Horizon server over peer-to-peer QUIC with automatic NAT hole punching and relay fallback."
+  },
+  "p2p.host.port": {
+    "message": "Local Server Port"
+  },
+  "p2p.host.max-peers": {
+    "message": "Max Friends"
+  },
+  "p2p.host.require-approval-label": {
+    "message": "Require Friend Approval"
+  },
+  "p2p.host.require-approval-desc": {
+    "message": "Prompt to allow or deny each incoming friend connection"
+  },
+  "p2p.host.start-hosting": {
+    "message": "Start P2P Host"
+  },
+  "p2p.host.active-hosting": {
+    "message": "Hosting active (Port {port})"
+  },
+  "p2p.host.stop-hosting": {
+    "message": "Stop Host"
+  },
+  "p2p.host.invite-code-label": {
+    "message": "Connection Invite Code"
+  },
+  "p2p.host.security-note": {
+    "message": "Memory only · Never logged"
+  },
+  "p2p.host.copy-code": {
+    "message": "Copy Code"
+  },
+  "p2p.host.copied": {
+    "message": "Copied!"
+  },
+  "p2p.host.regenerate": {
+    "message": "Regenerate Code"
+  },
+  "p2p.host.revoke": {
+    "message": "Revoke Code & Disconnect All"
+  },
+  "p2p.host.connected-friends": {
+    "message": "Connected Friends"
+  },
+  "p2p.host.no-connected-friends": {
+    "message": "No friends connected yet. Send them your invite code!"
+  },
+  "p2p.host.direct": {
+    "message": "Direct (P2P)"
+  },
+  "p2p.host.relayed": {
+    "message": "Relayed"
+  },
+  "p2p.host.join-request-prompt": {
+    "message": "Friend Join Request"
+  },
+  "p2p.host.allow": {
+    "message": "Allow"
+  },
+  "p2p.host.deny": {
+    "message": "Deny"
+  },
+  "p2p.host.remember-approval": {
+    "message": "Remember approval for this session"
+  },
+  "p2p.join.title": {
+    "message": "Join Server via Invite Code"
+  },
+  "p2p.join.subtitle": {
+    "message": "Paste your friend’s invite code to establish an encrypted peer-to-peer game tunnel directly to their server."
+  },
+  "p2p.join.invite-code-prompt": {
+    "message": "P2P Invite Code"
+  },
+  "p2p.join.code-placeholder": {
+    "message": "Paste gmc1_... invite code here"
+  },
+  "p2p.join.connect-button": {
+    "message": "Connect to Server"
+  },
+  "p2p.join.connecting": {
+    "message": "Connecting..."
+  },
+  "p2p.join.local-address-label": {
+    "message": "Forwarded Minecraft Address"
+  },
+  "p2p.join.tunnel-ready": {
+    "message": "P2P Tunnel Ready"
+  },
+  "p2p.join.copy-address": {
+    "message": "Copy Address"
+  },
+  "p2p.join.copied": {
+    "message": "Copied!"
+  },
+  "p2p.join.connection-hint": {
+    "message": "Connect inside Minecraft via Direct Connect or Add Server to 127.0.0.1:{port}"
+  },
+  "p2p.join.disconnect-button": {
+    "message": "Disconnect Tunnel"
+  },
+  "p2p.join.direct-status": {
+    "message": "Connected directly via NAT hole punching ({addr})"
+  },
+  "p2p.join.relayed-status": {
+    "message": "Connected via encrypted Iroh relay fallback"
+  },
+  "p2p.join.failed-status": {
+    "message": "Connection failed: {reason}"
+  },
+  "p2p.join.disconnected-status": {
+    "message": "Tunnel disconnected"
+  },
+  "p2p.join.connecting-status": {
+    "message": "Establishing QUIC connection with host..."
+  },
+  "tailscale.modal.title": {
+    "message": "Tailscale Server Sharing"
+  },
+  "tailscale.modal.subtitle": {
+    "message": "Invite friends through your Tailscale private mesh network (tailnet) with zero configuration or port forwarding."
+  },
+  "tailscale.modal.active": {
+    "message": "Tailscale VPN Connected"
+  },
+  "tailscale.modal.address-label": {
+    "message": "Your Tailscale Minecraft Server IP"
+  },
+  "tailscale.modal.connect-hint": {
+    "message": "Any friend connected to your Tailscale network can enter this IP directly into their Minecraft multiplayer menu."
+  },
+  "tailscale.modal.setup-guide-title": {
+    "message": "How to use Tailscale with Horizon"
+  },
+  "tailscale.modal.step-1": {
+    "message": "Install Tailscale on your PC and invite friends to your tailnet (tailscale.com)."
+  },
+  "tailscale.modal.step-2": {
+    "message": "Run `tailscale up` to connect to your private mesh."
+  },
+  "tailscale.modal.step-3": {
+    "message": "Friends on your tailnet can connect to your 100.x.y.z IP on port {port}."
+  },
+  "tailscale.modal.copy-address": {
+    "message": "Copy Tailscale Address"
+  },
+  "tailscale.modal.copied": {
+    "message": "Copied!"
+  },
+  "servers.page.tab.horizon": {
+    "message": "Horizon Dedicated Servers"
+  },
+  "servers.page.tab.cloud": {
+    "message": "Modrinth Cloud Hosting"
+  },
+  "servers.page.horizon-title": {
+    "message": "Native Rust Dedicated Servers"
+  },
+  "servers.page.horizon-subtitle": {
+    "message": "Run standalone Minecraft servers natively in Rust with zero JVM overhead. Invite friends via P2P invite codes (no port forwarding required) or Tailscale."
+  },
+  "servers.page.join-with-code": {
+    "message": "Join via Invite Code"
+  },
+  "servers.page.create-server": {
+    "message": "Create Horizon Server"
+  },
+  "servers.page.create-modal-title": {
+    "message": "Create Native Horizon Server"
+  },
+  "servers.page.server-name-label": {
+    "message": "Server Name"
+  },
+  "servers.page.server-port-label": {
+    "message": "Server Port"
+  },
+  "servers.page.no-servers-title": {
+    "message": "No Horizon servers yet"
+  },
+  "servers.page.no-servers-desc": {
+    "message": "Create a native Minecraft 26.3 server that starts instantly, uses under 150MB of RAM, and can be shared over peer-to-peer invite tunnels."
+  },
+  "servers.page.start-server": {
+    "message": "Start Server"
+  },
+  "servers.page.stop-server": {
+    "message": "Stop Server"
+  },
+  "servers.page.share-p2p": {
+    "message": "Share via P2P"
+  },
+  "servers.page.tailscale": {
+    "message": "Tailscale"
+  },
+  "servers.page.backup-world": {
+    "message": "Backup"
+  },
+  "servers.page.delete-server": {
+    "message": "Delete"
+  },
+  "servers.page.running": {
+    "message": "Running (Port {port})"
+  },
+  "servers.page.stopped": {
+    "message": "Stopped"
+  },
+  "servers.page.backups-count": {
+    "message": "{count} backups"
+  },
+  "servers.page.backup-success": {
+    "message": "World backup saved successfully!"
+  },
   "app.action-bar.downloading-java": {
     "message": "Downloading Java {version}"
   },

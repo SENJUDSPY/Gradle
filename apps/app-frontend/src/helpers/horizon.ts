@@ -84,3 +84,62 @@ export async function installHorizonVersion(tag: string): Promise<string> {
 export async function removeHorizonVersion(tag: string): Promise<void> {
 	return await invoke('plugin:horizon|horizon_remove_version', { tag })
 }
+
+export interface HorizonServerConfig {
+	name: string
+	tag: string
+	port: number
+	motd: string
+	max_players: number
+	auto_backup: boolean
+	tailscale_enabled: boolean
+}
+
+export interface HorizonServerInfo {
+	name: string
+	path: string
+	config: HorizonServerConfig
+	is_running: boolean
+	pid: number | null
+	backup_count: number
+}
+
+export async function listHorizonServers(): Promise<HorizonServerInfo[]> {
+	return await invoke('plugin:horizon|horizon_list_servers')
+}
+
+export async function createHorizonServer(
+	name: string,
+	tag?: string | null,
+	port?: number | null,
+): Promise<HorizonServerInfo> {
+	return await invoke('plugin:horizon|horizon_create_server', {
+		name,
+		tag: tag ?? null,
+		port: port ?? null,
+	})
+}
+
+export async function startHorizonServer(name: string): Promise<number> {
+	return await invoke('plugin:horizon|horizon_start_server', { name })
+}
+
+export async function stopHorizonServer(name: string): Promise<void> {
+	await invoke('plugin:horizon|horizon_stop_server', { name })
+}
+
+export async function backupHorizonServer(name: string): Promise<string> {
+	return await invoke('plugin:horizon|horizon_backup_server', { name })
+}
+
+export async function updateHorizonServer(name: string, newTag: string): Promise<void> {
+	await invoke('plugin:horizon|horizon_update_server', { name, newTag })
+}
+
+export async function deleteHorizonServer(name: string): Promise<void> {
+	await invoke('plugin:horizon|horizon_delete_server', { name })
+}
+
+export async function getTailscaleIp(): Promise<string | null> {
+	return await invoke('plugin:horizon|horizon_get_tailscale_ip')
+}

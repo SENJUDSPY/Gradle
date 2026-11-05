@@ -1,8 +1,10 @@
 use crate::api::Result;
 use horizon_runtime::{
-	HorizonRelease, SystemRequirementsReport, check_system_requirements,
-	fetch_releases, get_installed_versions, install_version, is_prepared,
-	has_sounds, remove_version, run_preparation,
+	backup_server, check_system_requirements, create_server, delete_server,
+	fetch_releases, get_installed_versions, has_sounds, install_version,
+	is_prepared, list_servers, remove_version, run_preparation, start_server,
+	stop_server, update_server, HorizonRelease, HorizonServerInfo,
+	SystemRequirementsReport,
 };
 use std::path::{Path, PathBuf};
 use tauri::Emitter;
@@ -73,6 +75,65 @@ pub async fn horizon_remove_version(tag: String) -> Result<()> {
 	Ok(())
 }
 
+#[tauri::command]
+pub async fn horizon_list_servers() -> Result<Vec<HorizonServerInfo>> {
+	Ok(tokio::task::spawn_blocking(list_servers).await??)
+}
+
+#[tauri::command]
+pub async fn horizon_create_server(
+	name: String,
+	tag: Option<String>,
+	port: Option<u16>,
+) -> Result<HorizonServerInfo> {
+	Ok(tokio::task::spawn_blocking(move || create_server(&name, tag.as_deref(), port)).await??)
+}
+
+#[tauri::command]
+pub async fn horizon_start_server(name: String) -> Result<u32> {
+	Ok(tokio::task::spawn_blocking(move || start_server(&name)).await??)
+}
+
+#[tauri::command]
+pub async fn horizon_stop_server(name: String) -> Result<()> {
+	Ok(tokio::task::spawn_blocking(move || stop_server(&name)).await??)
+}
+
+#[tauri::command]
+pub async fn horizon_backup_server(name: String) -> Result<String> {
+	let path = tokio::task::spawn_blocking(move || backup_server(&name)).await??;
+	Ok(path.to_string_lossy().to_string())
+}
+
+#[tauri::command]
+pub async fn horizon_update_server(name: String, new_tag: String) -> Result<()> {
+	Ok(tokio::task::spawn_blocking(move || update_server(&name, &new_tag)).await??)
+}
+
+#[tauri::command]
+pub async fn horizon_delete_server(name: String) -> Result<()> {
+	Ok(tokio::task::spawn_blocking(move || delete_server(&name)).await??)
+}
+
+#[tauri::command]
+pub async fn horizon_get_tailscale_ip() -> Result<Option<String>> {
+	let output = tokio::process::Command::new("tailscale")
+		.args(["ip", "-4"])
+		.output()
+		.await;
+	match output {
+		Ok(out) if out.status.success() => {
+			let ip = String::from_utf8_lossy(&out.stdout).trim().to_string();
+			if !ip.is_empty() {
+				Ok(Some(ip))
+			} else {
+				Ok(None)
+			}
+		}
+		_ => Ok(None),
+	}
+}
+
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 	tauri::plugin::Builder::new("horizon")
 		.invoke_handler(tauri::generate_handler![
@@ -84,6 +145,14 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 			horizon_get_installed_versions,
 			horizon_install_version,
 			horizon_remove_version,
+			horizon_list_servers,
+			horizon_create_server,
+			horizon_start_server,
+			horizon_stop_server,
+			horizon_backup_server,
+			horizon_update_server,
+			horizon_delete_server,
+			horizon_get_tailscale_ip,
 		])
 		.build()
 }

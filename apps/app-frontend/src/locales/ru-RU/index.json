@@ -122,6 +122,222 @@
   "app.horizon.version.required-prompt": {
     "message": "Пожалуйста, установите сборку Horizon для запуска игры."
   },
+  "p2p.host.title": {
+    "message": "Поделиться сервером через P2P"
+  },
+  "p2p.host.subtitle": {
+    "message": "Туннелирование вашего сервера Minecraft/Horizon через прямое P2P соединение QUIC с автоматическим обходом NAT и relay-серверами."
+  },
+  "p2p.host.port": {
+    "message": "Порт локального сервера"
+  },
+  "p2p.host.max-peers": {
+    "message": "Максимум друзей"
+  },
+  "p2p.host.require-approval-label": {
+    "message": "Требовать подтверждение друзей"
+  },
+  "p2p.host.require-approval-desc": {
+    "message": "Запрашивать разрешение на подключение для каждого нового друга"
+  },
+  "p2p.host.start-hosting": {
+    "message": "Запустить P2P хостинг"
+  },
+  "p2p.host.active-hosting": {
+    "message": "Хостинг активен (Порт {port})"
+  },
+  "p2p.host.stop-hosting": {
+    "message": "Остановить хостинг"
+  },
+  "p2p.host.invite-code-label": {
+    "message": "Код приглашения"
+  },
+  "p2p.host.security-note": {
+    "message": "Только в памяти · Никогда не логируется"
+  },
+  "p2p.host.copy-code": {
+    "message": "Скопировать код"
+  },
+  "p2p.host.copied": {
+    "message": "Скопировано!"
+  },
+  "p2p.host.regenerate": {
+    "message": "Сгенерировать новый код"
+  },
+  "p2p.host.revoke": {
+    "message": "Отозвать код и отключить всех"
+  },
+  "p2p.host.connected-friends": {
+    "message": "Подключенные друзья"
+  },
+  "p2p.host.no-connected-friends": {
+    "message": "Пока никто не подключен. Отправьте друзьям код приглашения!"
+  },
+  "p2p.host.direct": {
+    "message": "Прямое (P2P)"
+  },
+  "p2p.host.relayed": {
+    "message": "Через реле"
+  },
+  "p2p.host.join-request-prompt": {
+    "message": "Запрос на подключение"
+  },
+  "p2p.host.allow": {
+    "message": "Разрешить"
+  },
+  "p2p.host.deny": {
+    "message": "Отклонить"
+  },
+  "p2p.host.remember-approval": {
+    "message": "Запомнить выбор для этой сессии"
+  },
+  "p2p.join.title": {
+    "message": "Подключиться по коду приглашения"
+  },
+  "p2p.join.subtitle": {
+    "message": "Вставьте код приглашения друга, чтобы установить зашифрованный игровой P2P-туннель напрямую к его серверу."
+  },
+  "p2p.join.invite-code-prompt": {
+    "message": "Код приглашения P2P"
+  },
+  "p2p.join.code-placeholder": {
+    "message": "Вставьте сюда код gmc1_..."
+  },
+  "p2p.join.connect-button": {
+    "message": "Подключиться к серверу"
+  },
+  "p2p.join.connecting": {
+    "message": "Подключение..."
+  },
+  "p2p.join.local-address-label": {
+    "message": "Локальный адрес сервера"
+  },
+  "p2p.join.tunnel-ready": {
+    "message": "P2P туннель готов"
+  },
+  "p2p.join.copy-address": {
+    "message": "Скопировать адрес"
+  },
+  "p2p.join.copied": {
+    "message": "Скопировано!"
+  },
+  "p2p.join.connection-hint": {
+    "message": "В Minecraft подключитесь через Direct Connect или добавьте сервер с адресом 127.0.0.1:{port}"
+  },
+  "p2p.join.disconnect-button": {
+    "message": "Отключить туннель"
+  },
+  "p2p.join.direct-status": {
+    "message": "Прямое P2P подключение (обход NAT: {addr})"
+  },
+  "p2p.join.relayed-status": {
+    "message": "Подключено через зашифрованное Iroh реле"
+  },
+  "p2p.join.failed-status": {
+    "message": "Ошибка подключения: {reason}"
+  },
+  "p2p.join.disconnected-status": {
+    "message": "Туннель отключен"
+  },
+  "p2p.join.connecting-status": {
+    "message": "Установка соединения QUIC с хостом..."
+  },
+  "tailscale.modal.title": {
+    "message": "Общий доступ через Tailscale"
+  },
+  "tailscale.modal.subtitle": {
+    "message": "Приглашайте друзей через вашу приватную сеть Tailscale (tailnet) без проброса портов."
+  },
+  "tailscale.modal.active": {
+    "message": "Tailscale VPN подключен"
+  },
+  "tailscale.modal.address-label": {
+    "message": "Ваш адрес Minecraft сервера в Tailscale"
+  },
+  "tailscale.modal.connect-hint": {
+    "message": "Любой друг из вашей сети Tailscale может ввести этот IP в мультиплеере Minecraft."
+  },
+  "tailscale.modal.setup-guide-title": {
+    "message": "Как использовать Tailscale с Horizon"
+  },
+  "tailscale.modal.step-1": {
+    "message": "Установите Tailscale на свой ПК и пригласите друзей в свой tailnet (tailscale.com)."
+  },
+  "tailscale.modal.step-2": {
+    "message": "Выполните `tailscale up` для подключения к вашей сети."
+  },
+  "tailscale.modal.step-3": {
+    "message": "Друзья из вашего tailnet смогут подключиться к вашему 100.x.y.z IP на порту {port}."
+  },
+  "tailscale.modal.copy-address": {
+    "message": "Скопировать адрес Tailscale"
+  },
+  "tailscale.modal.copied": {
+    "message": "Скопировано!"
+  },
+  "servers.page.tab.horizon": {
+    "message": "Horizon серверы"
+  },
+  "servers.page.tab.cloud": {
+    "message": "Облачный хостинг Modrinth"
+  },
+  "servers.page.horizon-title": {
+    "message": "Нативные серверы на Rust"
+  },
+  "servers.page.horizon-subtitle": {
+    "message": "Запускайте серверы Minecraft нативно на Rust без нагрузки от JVM. Приглашайте друзей по P2P-кодам или через Tailscale."
+  },
+  "servers.page.join-with-code": {
+    "message": "Подключиться по коду"
+  },
+  "servers.page.create-server": {
+    "message": "Создать сервер Horizon"
+  },
+  "servers.page.create-modal-title": {
+    "message": "Создать сервер Horizon"
+  },
+  "servers.page.server-name-label": {
+    "message": "Имя сервера"
+  },
+  "servers.page.server-port-label": {
+    "message": "Порт сервера"
+  },
+  "servers.page.no-servers-title": {
+    "message": "Серверов Horizon пока нет"
+  },
+  "servers.page.no-servers-desc": {
+    "message": "Создайте нативный сервер Minecraft 26.3, который стартует мгновенно, потребляет менее 150 МБ ОЗУ и доступен для друзей через P2P."
+  },
+  "servers.page.start-server": {
+    "message": "Запустить сервер"
+  },
+  "servers.page.stop-server": {
+    "message": "Остановить сервер"
+  },
+  "servers.page.share-p2p": {
+    "message": "Поделиться по P2P"
+  },
+  "servers.page.tailscale": {
+    "message": "Tailscale"
+  },
+  "servers.page.backup-world": {
+    "message": "Бэкап"
+  },
+  "servers.page.delete-server": {
+    "message": "Удалить"
+  },
+  "servers.page.running": {
+    "message": "Работает (Порт {port})"
+  },
+  "servers.page.stopped": {
+    "message": "Остановлен"
+  },
+  "servers.page.backups-count": {
+    "message": "{count} бэкапов"
+  },
+  "servers.page.backup-success": {
+    "message": "Бэкап мира успешно создан!"
+  },
   "app.action-bar.downloading-java": {
     "message": "Скачивание Java {version}"
   },
