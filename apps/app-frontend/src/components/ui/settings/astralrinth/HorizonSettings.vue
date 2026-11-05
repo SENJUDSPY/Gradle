@@ -4,7 +4,7 @@ import {
 	CheckIcon,
 	CompassIcon,
 	CopyIcon,
-	GamepadIcon,
+	GameIcon,
 	SparklesIcon,
 	SpinnerIcon,
 } from '@modrinth/assets'
@@ -546,7 +546,7 @@ function toggleAgentControl(val: boolean) {
 				<div
 					class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand"
 				>
-					<GamepadIcon class="size-5" />
+					<GameIcon class="size-5" />
 				</div>
 				<div>
 					<h2 class="m-0 text-lg font-semibold text-contrast">

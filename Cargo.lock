@@ -11652,6 +11652,7 @@ dependencies = [
  "objc2-app-kit 0.3.2",
  "p256",
  "p2p-invite",
+ "parking_lot",
  "paste",
  "path-util",
  "rand 0.8.5",

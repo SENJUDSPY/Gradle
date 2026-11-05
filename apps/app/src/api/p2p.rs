@@ -33,11 +33,12 @@ pub enum P2PHostEventPayload {
 	PeerDisconnected { peer_id: String },
 	InviteRevoked,
 	InviteRegenerated { code: String },
+	Stopped,
 }
 
 #[tauri::command]
-pub async fn p2p_start_host(
-	app: tauri::AppHandle,
+pub async fn p2p_start_host<R: tauri::Runtime>(
+	app: tauri::AppHandle<R>,
 	state: tauri::State<'_, P2PState>,
 	server_port: Option<u16>,
 	max_peers: Option<usize>,
@@ -76,6 +77,7 @@ pub async fn p2p_start_host(
 						code: code.raw_code().to_string(),
 					}
 				}
+				HostEvent::Stopped => P2PHostEventPayload::Stopped,
 			};
 			let _ = app_clone.emit("p2p-host-event", payload);
 		}
@@ -106,7 +108,7 @@ pub async fn p2p_regenerate_invite(state: tauri::State<'_, P2PState>) -> Result<
 		let code = h.regenerate_invite()?;
 		Ok(code.raw_code().to_string())
 	} else {
-		anyhow::bail!("No active P2P host running")
+		Err(anyhow::anyhow!("No active P2P host running").into())
 	}
 }
 
@@ -117,7 +119,7 @@ pub async fn p2p_revoke_invite(state: tauri::State<'_, P2PState>) -> Result<()> 
 		h.revoke_invite();
 		Ok(())
 	} else {
-		anyhow::bail!("No active P2P host running")
+		Err(anyhow::anyhow!("No active P2P host running").into())
 	}
 }
 
@@ -132,7 +134,7 @@ pub async fn p2p_respond_join_request(
 	if let Some(ref h) = *lock {
 		Ok(h.respond_join_request(&peer_id, allow, remember))
 	} else {
-		anyhow::bail!("No active P2P host running")
+		Err(anyhow::anyhow!("No active P2P host running").into())
 	}
 }
 
@@ -155,8 +157,8 @@ pub async fn p2p_get_host_info(state: tauri::State<'_, P2PState>) -> Result<P2PH
 }
 
 #[tauri::command]
-pub async fn p2p_join(
-	app: tauri::AppHandle,
+pub async fn p2p_join<R: tauri::Runtime>(
+	app: tauri::AppHandle<R>,
 	state: tauri::State<'_, P2PState>,
 	invite_code: String,
 ) -> Result<u16> {

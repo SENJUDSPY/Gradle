@@ -2,7 +2,7 @@ use crate::api::Result;
 use horizon_runtime::{
 	analyze_modpack_file, backup_server, check_system_requirements,
 	create_server, delete_server, ensure_horizon_ctl,
-	extract_compatible_assets_to_dir, fetch_releases, fetch_releases_for,
+	extract_compatible_assets_to_dir, fetch_releases_for,
 	get_agent_configs, get_agent_control_status, get_installed_versions,
 	has_sounds, install_version, is_prepared, list_servers,
 	load_horizon_settings, remove_version, run_preparation,
@@ -37,8 +37,8 @@ pub async fn horizon_has_sounds() -> Result<bool> {
 }
 
 #[tauri::command]
-pub async fn horizon_prepare_resources(
-	app: tauri::AppHandle,
+pub async fn horizon_prepare_resources<R: tauri::Runtime>(
+	app: tauri::AppHandle<R>,
 	custom_jar: Option<String>,
 	custom_minecraft_dir: Option<String>,
 ) -> Result<String> {
@@ -156,7 +156,7 @@ pub async fn horizon_extract_modpack_assets(
 	let p_pack = PathBuf::from(pack_path);
 	let p_dest = if Path::new(&instance_dir).is_absolute() {
 		PathBuf::from(instance_dir)
-	} else if let Ok(state) = theseus::State::get() {
+	} else if let Ok(state) = theseus::State::get().await {
 		state.directories.instances_dir().join(&instance_dir)
 	} else {
 		PathBuf::from(instance_dir)

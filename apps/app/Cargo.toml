@@ -25,6 +25,7 @@ native-dialog = { workspace = true }
 p256 = { workspace = true, features = ["ecdh"] }
 paste = { workspace = true }
 path-util = { workspace = true }
+parking_lot = { workspace = true }
 rand = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
