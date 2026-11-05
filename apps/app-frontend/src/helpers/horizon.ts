@@ -186,3 +186,47 @@ export async function extractModpackAssets(packPath: string, instanceDir: string
 		instanceDir,
 	})
 }
+
+export interface HorizonSettings {
+	graphics_preset: string
+	render_distance: number
+	lod_distance: number
+	cave_culling: boolean
+	entity_culling: boolean
+	vsync: boolean
+	max_fps: number
+	fov: number
+	graphics_api: string
+
+	controller_enabled: boolean
+	vibration: boolean
+	adaptive_triggers: boolean
+	lightbar: string
+	look_sensitivity: number
+	invert_look_y: boolean
+	move_deadzone: number
+	look_deadzone: number
+	button_glyphs: string
+	menu_navigation: string
+
+	zoom_enabled: boolean
+	minimap_enabled: boolean
+	performance_overlay: string
+	battery_mode: boolean
+}
+
+export async function getHorizonSettings(instanceDir?: string): Promise<HorizonSettings> {
+	return await invoke('plugin:horizon|horizon_get_settings', {
+		instanceDir: instanceDir ?? null,
+	})
+}
+
+export async function saveHorizonSettings(
+	settings: HorizonSettings,
+	instanceDir?: string,
+): Promise<void> {
+	return await invoke('plugin:horizon|horizon_save_settings', {
+		instanceDir: instanceDir ?? null,
+		settings,
+	})
+}

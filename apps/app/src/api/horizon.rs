@@ -3,8 +3,9 @@ use horizon_runtime::{
 	analyze_modpack_file, backup_server, check_system_requirements,
 	create_server, delete_server, extract_compatible_assets_to_dir,
 	fetch_releases, get_installed_versions, has_sounds, install_version,
-	is_prepared, list_servers, remove_version, run_preparation, start_server,
-	stop_server, update_server, HorizonRelease, HorizonServerInfo,
+	is_prepared, list_servers, load_horizon_settings, remove_version,
+	run_preparation, save_horizon_settings, start_server, stop_server,
+	update_server, HorizonRelease, HorizonServerInfo, HorizonSettings,
 	ModpackAnalysis, SystemRequirementsReport,
 };
 use std::path::{Path, PathBuf};
@@ -163,6 +164,31 @@ pub async fn horizon_extract_modpack_assets(
 	Ok(count)
 }
 
+#[tauri::command]
+pub async fn horizon_get_settings(
+	instance_dir: Option<String>,
+) -> Result<HorizonSettings> {
+	let path = instance_dir.map(PathBuf::from);
+	let settings = tokio::task::spawn_blocking(move || {
+		load_horizon_settings(path.as_deref())
+	})
+	.await?;
+	Ok(settings)
+}
+
+#[tauri::command]
+pub async fn horizon_save_settings(
+	instance_dir: Option<String>,
+	settings: HorizonSettings,
+) -> Result<()> {
+	let path = instance_dir.map(PathBuf::from);
+	tokio::task::spawn_blocking(move || {
+		save_horizon_settings(path.as_deref(), &settings)
+	})
+	.await??;
+	Ok(())
+}
+
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 	tauri::plugin::Builder::new("horizon")
 		.invoke_handler(tauri::generate_handler![
@@ -184,6 +210,8 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 			horizon_get_tailscale_ip,
 			horizon_analyze_modpack,
 			horizon_extract_modpack_assets,
+			horizon_get_settings,
+			horizon_save_settings,
 		])
 		.build()
 }

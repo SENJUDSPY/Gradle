@@ -764,6 +764,120 @@
   "astralrinth.app.settings.tabs.visual": {
     "message": "Визуальные настройки"
   },
+  "astralrinth.app.settings.tabs.horizon": {
+    "message": "Движок Horizon"
+  },
+  "astralrinth.app.settings.horizon.title": {
+    "message": "Движок Horizon"
+  },
+  "astralrinth.app.settings.horizon.description": {
+    "message": "Настройка нативного клиента Horizon (Rust): пресеты графики, дальность прорисовки рельефа (LOD) до 1024 чанков, тактильная отдача геймпада и дополнительные возможности."
+  },
+  "astralrinth.app.settings.horizon.graphics.title": {
+    "message": "Графика и дальний рельеф"
+  },
+  "astralrinth.app.settings.horizon.graphics.desc": {
+    "message": "Horizon запускает Minecraft 26.3 нативно через wgpu/Vulkan. Дальний рельеф расширяет видимость миров далеко за пределы ванильных ограничений."
+  },
+  "astralrinth.app.settings.horizon.preset.title": {
+    "message": "Пресет графики"
+  },
+  "astralrinth.app.settings.horizon.preset.performance": {
+    "message": "Производительность"
+  },
+  "astralrinth.app.settings.horizon.preset.balanced": {
+    "message": "Сбалансированный"
+  },
+  "astralrinth.app.settings.horizon.preset.quality": {
+    "message": "Качество"
+  },
+  "astralrinth.app.settings.horizon.preset.ultra": {
+    "message": "Ультра"
+  },
+  "astralrinth.app.settings.horizon.render-distance.title": {
+    "message": "Дальность полной прорисовки"
+  },
+  "astralrinth.app.settings.horizon.lod-distance.title": {
+    "message": "Дальний рельеф LOD (до 1024 чанков)"
+  },
+  "astralrinth.app.settings.horizon.cave-culling.title": {
+    "message": "Отсечение пещер"
+  },
+  "astralrinth.app.settings.horizon.cave-culling.desc": {
+    "message": "Пропускает отрисовку скрытых подземных пещер при взгляде на поверхность."
+  },
+  "astralrinth.app.settings.horizon.entity-culling.title": {
+    "message": "Отсечение существ"
+  },
+  "astralrinth.app.settings.horizon.entity-culling.desc": {
+    "message": "Скрывает модели мобов за непрозрачными блоками для повышения FPS."
+  },
+  "astralrinth.app.settings.horizon.vsync.title": {
+    "message": "Вертикальная синхронизация"
+  },
+  "astralrinth.app.settings.horizon.max-fps.title": {
+    "message": "Максимальная частота кадров"
+  },
+  "astralrinth.app.settings.horizon.unlimited-fps": {
+    "message": "Без ограничений"
+  },
+  "astralrinth.app.settings.horizon.controller.title": {
+    "message": "Контроллер и тактильная отдача"
+  },
+  "astralrinth.app.settings.horizon.controller.desc": {
+    "message": "Встроенная поддержка геймпадов Xbox, PlayStation DualSense (адаптивные триггеры, тактильная отдача) и Nintendo Switch."
+  },
+  "astralrinth.app.settings.horizon.controller-enabled.title": {
+    "message": "Включить поддержку контроллера"
+  },
+  "astralrinth.app.settings.horizon.vibration.title": {
+    "message": "Вибрация и отдача"
+  },
+  "astralrinth.app.settings.horizon.adaptive-triggers.title": {
+    "message": "Адаптивные триггеры DualSense"
+  },
+  "astralrinth.app.settings.horizon.look-sensitivity.title": {
+    "message": "Чувствительность обзора"
+  },
+  "astralrinth.app.settings.horizon.invert-y.title": {
+    "message": "Инверсия по вертикали (ось Y)"
+  },
+  "astralrinth.app.settings.horizon.deadzone.title": {
+    "message": "Мертвая зона стиков"
+  },
+  "astralrinth.app.settings.horizon.glyphs.title": {
+    "message": "Обозначения кнопок"
+  },
+  "astralrinth.app.settings.horizon.menu-nav.title": {
+    "message": "Режим навигации в меню"
+  },
+  "astralrinth.app.settings.horizon.extras.title": {
+    "message": "Дополнения Horizon"
+  },
+  "astralrinth.app.settings.horizon.extras.desc": {
+    "message": "Дополнительные функции, встроенные в нативный Rust-клиент без затрат производительности на моды."
+  },
+  "astralrinth.app.settings.horizon.zoom.title": {
+    "message": "Приближение камеры (клавиша C)"
+  },
+  "astralrinth.app.settings.horizon.zoom.desc": {
+    "message": "Плавное нативное кинематографическое приближение с замедлением мыши."
+  },
+  "astralrinth.app.settings.horizon.minimap.title": {
+    "message": "Внутриигровая миникарта"
+  },
+  "astralrinth.app.settings.horizon.minimap.desc": {
+    "message": "Радар с отображением биомов, высот и меток в реальном времени."
+  },
+  "astralrinth.app.settings.horizon.overlay.title": {
+    "message": "Оверлей производительности"
+  },
+  "astralrinth.app.settings.horizon.battery.title": {
+    "message": "Энергосберегающий режим"
+  },
+  "astralrinth.app.settings.horizon.battery.desc": {
+    "message": "Снижает энергопотребление на ноутбуках и портативных консолях."
+  },
   "astralrinth.app.settings.visual.description": {
     "message": "Настройте визуальные эффекты AstralRinth, не изменяя выбранную тему."
   },

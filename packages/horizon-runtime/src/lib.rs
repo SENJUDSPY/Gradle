@@ -11,6 +11,7 @@ pub mod preparation;
 pub mod releases;
 pub mod requirements;
 pub mod server;
+pub mod settings;
 
 pub use execution::*;
 pub use modpack::*;
@@ -18,6 +19,7 @@ pub use preparation::*;
 pub use releases::*;
 pub use requirements::*;
 pub use server::*;
+pub use settings::*;
 
 #[cfg(test)]
 mod tests {

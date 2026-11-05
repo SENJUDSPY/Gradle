@@ -704,6 +704,120 @@
   "astralrinth.app.settings.tabs.visual": {
     "message": "Visual"
   },
+  "astralrinth.app.settings.tabs.horizon": {
+    "message": "Horizon Engine"
+  },
+  "astralrinth.app.settings.horizon.title": {
+    "message": "Horizon Engine"
+  },
+  "astralrinth.app.settings.horizon.description": {
+    "message": "Configure the native Horizon Rust game client: graphics presets, distant terrain LOD up to 1024 chunks, gamepad haptics, and gameplay extras."
+  },
+  "astralrinth.app.settings.horizon.graphics.title": {
+    "message": "Graphics & Distant Terrain"
+  },
+  "astralrinth.app.settings.horizon.graphics.desc": {
+    "message": "Horizon renders Minecraft 26.3 natively with wgpu/Vulkan shaders. Distant terrain extends local worlds far beyond vanilla limits."
+  },
+  "astralrinth.app.settings.horizon.preset.title": {
+    "message": "Graphics Preset"
+  },
+  "astralrinth.app.settings.horizon.preset.performance": {
+    "message": "Performance"
+  },
+  "astralrinth.app.settings.horizon.preset.balanced": {
+    "message": "Balanced"
+  },
+  "astralrinth.app.settings.horizon.preset.quality": {
+    "message": "Quality"
+  },
+  "astralrinth.app.settings.horizon.preset.ultra": {
+    "message": "Ultra"
+  },
+  "astralrinth.app.settings.horizon.render-distance.title": {
+    "message": "Full Detail Render Distance"
+  },
+  "astralrinth.app.settings.horizon.lod-distance.title": {
+    "message": "Distant Terrain LOD (Up to 1024 chunks)"
+  },
+  "astralrinth.app.settings.horizon.cave-culling.title": {
+    "message": "Cave Culling"
+  },
+  "astralrinth.app.settings.horizon.cave-culling.desc": {
+    "message": "Skips drawing hidden underground caves when viewing surface terrain."
+  },
+  "astralrinth.app.settings.horizon.entity-culling.title": {
+    "message": "Entity Culling"
+  },
+  "astralrinth.app.settings.horizon.entity-culling.desc": {
+    "message": "Hides mob models behind opaque blocks to maximize frame rates."
+  },
+  "astralrinth.app.settings.horizon.vsync.title": {
+    "message": "VSync"
+  },
+  "astralrinth.app.settings.horizon.max-fps.title": {
+    "message": "Max Frame Rate"
+  },
+  "astralrinth.app.settings.horizon.unlimited-fps": {
+    "message": "Unlimited"
+  },
+  "astralrinth.app.settings.horizon.controller.title": {
+    "message": "Controller & Haptics"
+  },
+  "astralrinth.app.settings.horizon.controller.desc": {
+    "message": "Built-in controller support for Xbox, PlayStation DualSense (adaptive triggers, haptics), and Nintendo Switch pads."
+  },
+  "astralrinth.app.settings.horizon.controller-enabled.title": {
+    "message": "Enable Controller Support"
+  },
+  "astralrinth.app.settings.horizon.vibration.title": {
+    "message": "Vibration & Rumble"
+  },
+  "astralrinth.app.settings.horizon.adaptive-triggers.title": {
+    "message": "DualSense Adaptive Triggers"
+  },
+  "astralrinth.app.settings.horizon.look-sensitivity.title": {
+    "message": "Look Sensitivity"
+  },
+  "astralrinth.app.settings.horizon.invert-y.title": {
+    "message": "Invert Vertical Look (Y Axis)"
+  },
+  "astralrinth.app.settings.horizon.deadzone.title": {
+    "message": "Stick Deadzone"
+  },
+  "astralrinth.app.settings.horizon.glyphs.title": {
+    "message": "Button Prompts"
+  },
+  "astralrinth.app.settings.horizon.menu-nav.title": {
+    "message": "Menu Navigation Mode"
+  },
+  "astralrinth.app.settings.horizon.extras.title": {
+    "message": "Horizon Extras"
+  },
+  "astralrinth.app.settings.horizon.extras.desc": {
+    "message": "Optional native additions engineered directly into the Rust game client with zero mod overhead."
+  },
+  "astralrinth.app.settings.horizon.zoom.title": {
+    "message": "Camera Zoom (C Key)"
+  },
+  "astralrinth.app.settings.horizon.zoom.desc": {
+    "message": "Smooth native cinematic zoom with smooth mouse deceleration."
+  },
+  "astralrinth.app.settings.horizon.minimap.title": {
+    "message": "In-Game Minimap"
+  },
+  "astralrinth.app.settings.horizon.minimap.desc": {
+    "message": "Real-time biome, elevation, and waypoint radar overlay."
+  },
+  "astralrinth.app.settings.horizon.overlay.title": {
+    "message": "Performance Overlay"
+  },
+  "astralrinth.app.settings.horizon.battery.title": {
+    "message": "Battery Saver / Efficient Mode"
+  },
+  "astralrinth.app.settings.horizon.battery.desc": {
+    "message": "Lowers power draw on laptops and handhelds by throttling background frames and thread workers."
+  },
   "astralrinth.app.settings.visual.description": {
     "message": "Customize the visual effects used by AstralRinth without changing the selected theme."
   },

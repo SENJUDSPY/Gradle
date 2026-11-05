@@ -13,6 +13,7 @@ import {
 	PaintbrushIcon,
 	RefreshCwIcon,
 	Settings2Icon,
+	SparklesIcon,
 	SpinnerIcon,
 	ToggleRightIcon,
 	UserIcon,
@@ -38,6 +39,7 @@ import { computed, ref } from 'vue'
 
 import LauncherUpdateModal from '@/components/ui/astralrinth/LauncherUpdateModal.vue'
 import ExternalAuthLibrarySettings from '@/components/ui/settings/astralrinth/ExternalAuthLibrarySettings.vue'
+import HorizonSettings from '@/components/ui/settings/astralrinth/HorizonSettings.vue'
 import UpdateSettings from '@/components/ui/settings/astralrinth/UpdateSettings.vue'
 import VisualSettings from '@/components/ui/settings/astralrinth/VisualSettings.vue'
 import { useAppSettings } from '@/composables/use-app-settings.ts'
@@ -234,6 +236,15 @@ const tabs = [
 		icon: PaintbrushIcon,
 		content: VisualSettings,
 		badge: commonMessages.beta,
+	},
+	{
+		name: defineMessage({
+			id: 'astralrinth.app.settings.tabs.horizon',
+			defaultMessage: 'Horizon Engine',
+		}),
+		category: tabCategories.astralrinth,
+		icon: SparklesIcon,
+		content: HorizonSettings,
 	},
 	{
 		name: defineMessage({
@@ -502,7 +513,11 @@ const messages = defineMessages({
 					</button>
 					<div v-if="appInfo" class="max-w-[200px]">
 						<p class="m-0">
-							{{ formatMessage(messages.appVersion, { version: appInfo.version + '+' + APP_SHORT_COMMIT }) }}
+							{{
+								formatMessage(messages.appVersion, {
+									version: appInfo.version + '+' + APP_SHORT_COMMIT,
+								})
+							}}
 						</p>
 						<p class="m-0">
 							<span v-if="appInfo.osPlatform === 'macos'">{{ formatMessage(messages.macos) }}</span>
