@@ -338,6 +338,72 @@
   "servers.page.backup-success": {
     "message": "World backup saved successfully!"
   },
+  "modpacks.page.title": {
+    "message": "Modpack Porter for Horizon"
+  },
+  "modpacks.page.subtitle": {
+    "message": "Import Modrinth (.mrpack) and CurseForge (.zip) modpacks. Horizon carries over compatible data packs, resource packs, shaders, configs, and assets into an instant native profile."
+  },
+  "modpacks.page.dropzone-title": {
+    "message": "Select or Drop a Modpack File"
+  },
+  "modpacks.page.dropzone-desc": {
+    "message": "Supports Modrinth (.mrpack) and CurseForge (.zip) archives. Analysis runs 100% locally on your machine."
+  },
+  "modpacks.page.select-button": {
+    "message": "Choose Modpack File"
+  },
+  "modpacks.page.analyzing-title": {
+    "message": "Analyzing Modpack Components..."
+  },
+  "modpacks.page.analyzing-desc": {
+    "message": "Classifying resource packs, data packs, shaders, configs, and Java bytecode mods."
+  },
+  "modpacks.page.choose-another": {
+    "message": "Choose Another File"
+  },
+  "modpacks.page.total-items": {
+    "message": "Total Pack Items"
+  },
+  "modpacks.page.compatible-items": {
+    "message": "Compatible with Horizon"
+  },
+  "modpacks.page.incompatible-items": {
+    "message": "Java Bytecode (Skipped)"
+  },
+  "modpacks.page.compatibility-explainer": {
+    "message": "Horizon runs Minecraft 26.3 natively in Rust with wgpu/Vulkan shaders. Data packs, resource packs, shaders, and configs run natively. Java code mods (.jar) require JVM and are excluded."
+  },
+  "modpacks.page.filter-all": {
+    "message": "All Components"
+  },
+  "modpacks.page.filter-compatible": {
+    "message": "Data & Assets"
+  },
+  "modpacks.page.filter-java-mods": {
+    "message": "Java Mods"
+  },
+  "modpacks.page.search-placeholder": {
+    "message": "Filter mods by name..."
+  },
+  "modpacks.page.status-carried-over": {
+    "message": "Carried Over"
+  },
+  "modpacks.page.status-skipped": {
+    "message": "Skipped (Java)"
+  },
+  "modpacks.page.profile-name-label": {
+    "message": "Horizon Profile Name"
+  },
+  "modpacks.page.create-profile-button": {
+    "message": "Create & Play Horizon Profile"
+  },
+  "modpacks.page.creating-profile-button": {
+    "message": "Creating Profile..."
+  },
+  "modpacks.page.your-profiles": {
+    "message": "Your Horizon Profiles"
+  },
   "app.action-bar.downloading-java": {
     "message": "Downloading Java {version}"
   },
@@ -2098,6 +2164,9 @@
   },
   "app.nav.modrinth-hosting": {
     "message": "Modrinth Hosting"
+  },
+  "app.nav.modpacks": {
+    "message": "Modpacks"
   },
   "app.nav.remove-account": {
     "message": "Remove account"

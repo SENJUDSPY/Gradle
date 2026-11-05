@@ -1,10 +1,11 @@
 use crate::api::Result;
 use horizon_runtime::{
-	backup_server, check_system_requirements, create_server, delete_server,
+	analyze_modpack_file, backup_server, check_system_requirements,
+	create_server, delete_server, extract_compatible_assets_to_dir,
 	fetch_releases, get_installed_versions, has_sounds, install_version,
 	is_prepared, list_servers, remove_version, run_preparation, start_server,
 	stop_server, update_server, HorizonRelease, HorizonServerInfo,
-	SystemRequirementsReport,
+	ModpackAnalysis, SystemRequirementsReport,
 };
 use std::path::{Path, PathBuf};
 use tauri::Emitter;
@@ -134,6 +135,34 @@ pub async fn horizon_get_tailscale_ip() -> Result<Option<String>> {
 	}
 }
 
+#[tauri::command]
+pub async fn horizon_analyze_modpack(path: String) -> Result<ModpackAnalysis> {
+	let pack_path = PathBuf::from(path);
+	let analysis = tokio::task::spawn_blocking(move || analyze_modpack_file(&pack_path)).await??;
+	Ok(analysis)
+}
+
+#[tauri::command]
+pub async fn horizon_extract_modpack_assets(
+	pack_path: String,
+	instance_dir: String,
+) -> Result<usize> {
+	let p_pack = PathBuf::from(pack_path);
+	let p_dest = if Path::new(&instance_dir).is_absolute() {
+		PathBuf::from(instance_dir)
+	} else if let Ok(state) = theseus::State::get() {
+		state.directories.instances_dir().join(&instance_dir)
+	} else {
+		PathBuf::from(instance_dir)
+	};
+
+	let count = tokio::task::spawn_blocking(move || {
+		extract_compatible_assets_to_dir(&p_pack, &p_dest)
+	})
+	.await??;
+	Ok(count)
+}
+
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 	tauri::plugin::Builder::new("horizon")
 		.invoke_handler(tauri::generate_handler![
@@ -153,6 +182,8 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 			horizon_update_server,
 			horizon_delete_server,
 			horizon_get_tailscale_ip,
+			horizon_analyze_modpack,
+			horizon_extract_modpack_assets,
 		])
 		.build()
 }

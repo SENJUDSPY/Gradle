@@ -338,6 +338,72 @@
   "servers.page.backup-success": {
     "message": "Бэкап мира успешно создан!"
   },
+  "modpacks.page.title": {
+    "message": "Перенос модпаков для Horizon"
+  },
+  "modpacks.page.subtitle": {
+    "message": "Импорт сборок Modrinth (.mrpack) и CurseForge (.zip). Horizon переносит совместимые датапаки, ресурспаки, шейдеры, конфиги и ресурсы в нативный профиль."
+  },
+  "modpacks.page.dropzone-title": {
+    "message": "Выберите или перетащите файл модпака"
+  },
+  "modpacks.page.dropzone-desc": {
+    "message": "Поддерживаются архивы Modrinth (.mrpack) и CurseForge (.zip). Анализ выполняется полностью локально."
+  },
+  "modpacks.page.select-button": {
+    "message": "Выбрать файл модпака"
+  },
+  "modpacks.page.analyzing-title": {
+    "message": "Анализ компонентов модпака..."
+  },
+  "modpacks.page.analyzing-desc": {
+    "message": "Классификация ресурспаков, датапаков, шейдеров, конфигов и Java-модов."
+  },
+  "modpacks.page.choose-another": {
+    "message": "Выбрать другой файл"
+  },
+  "modpacks.page.total-items": {
+    "message": "Всего компонентов"
+  },
+  "modpacks.page.compatible-items": {
+    "message": "Совместимо с Horizon"
+  },
+  "modpacks.page.incompatible-items": {
+    "message": "Байткод Java (пропущено)"
+  },
+  "modpacks.page.compatibility-explainer": {
+    "message": "Horizon запускает Minecraft 26.3 нативно на Rust с шейдерами wgpu/Vulkan. Датапаки, ресурспаки, шейдеры и конфиги работают из коробки. Моды Java (.jar) требуют JVM и не запускаются."
+  },
+  "modpacks.page.filter-all": {
+    "message": "Все компоненты"
+  },
+  "modpacks.page.filter-compatible": {
+    "message": "Данные и ресурсы"
+  },
+  "modpacks.page.filter-java-mods": {
+    "message": "Java-моды"
+  },
+  "modpacks.page.search-placeholder": {
+    "message": "Поиск модов по названию..."
+  },
+  "modpacks.page.status-carried-over": {
+    "message": "Перенесено"
+  },
+  "modpacks.page.status-skipped": {
+    "message": "Пропущено (Java)"
+  },
+  "modpacks.page.profile-name-label": {
+    "message": "Название профиля Horizon"
+  },
+  "modpacks.page.create-profile-button": {
+    "message": "Создать и запустить профиль Horizon"
+  },
+  "modpacks.page.creating-profile-button": {
+    "message": "Создание профиля..."
+  },
+  "modpacks.page.your-profiles": {
+    "message": "Ваши профили Horizon"
+  },
   "app.action-bar.downloading-java": {
     "message": "Скачивание Java {version}"
   },
@@ -2125,6 +2191,9 @@
   },
   "app.nav.modrinth-hosting": {
     "message": "Modrinth Hosting"
+  },
+  "app.nav.modpacks": {
+    "message": "Модпаки"
   },
   "app.nav.remove-account": {
     "message": "Удалить аккаунт"

@@ -19,6 +19,11 @@ export default new createRouter({
 			component: () => import('@/pages/Servers.vue'),
 		},
 		{
+			path: '/modpacks',
+			name: 'Modpacks',
+			component: () => import('@/pages/Modpacks.vue'),
+		},
+		{
 			path: '/hosting/manage/:id',
 			name: 'ServerManage',
 			component: () => import('@/pages/hosting/manage/Index.vue'),

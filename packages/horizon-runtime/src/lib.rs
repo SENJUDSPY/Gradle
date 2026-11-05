@@ -6,12 +6,14 @@
 //! Copyright (c) 2026 AstralRinth contributors / Horizon authors (MIT License).
 
 pub mod execution;
+pub mod modpack;
 pub mod preparation;
 pub mod releases;
 pub mod requirements;
 pub mod server;
 
 pub use execution::*;
+pub use modpack::*;
 pub use preparation::*;
 pub use releases::*;
 pub use requirements::*;

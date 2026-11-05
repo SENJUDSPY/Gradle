@@ -143,3 +143,46 @@ export async function deleteHorizonServer(name: string): Promise<void> {
 export async function getTailscaleIp(): Promise<string | null> {
 	return await invoke('plugin:horizon|horizon_get_tailscale_ip')
 }
+
+export type ModpackItemCategory =
+	| 'ResourcePack'
+	| 'DataPack'
+	| 'ShaderPack'
+	| 'Configuration'
+	| 'AssetMod'
+	| 'JavaBytecodeMod'
+	| 'Other'
+
+export interface ModpackAnalyzedItem {
+	name: string
+	path: string
+	category: ModpackItemCategory
+	is_compatible: boolean
+	file_size: number | null
+	details: string
+}
+
+export interface ModpackAnalysis {
+	pack_format: string
+	pack_name: string
+	pack_version: string
+	author: string | null
+	summary: string | null
+	original_game_version: string
+	original_loader: string
+	total_items: number
+	compatible_count: number
+	incompatible_count: number
+	items: ModpackAnalyzedItem[]
+}
+
+export async function analyzeModpackFile(path: string): Promise<ModpackAnalysis> {
+	return await invoke('plugin:horizon|horizon_analyze_modpack', { path })
+}
+
+export async function extractModpackAssets(packPath: string, instanceDir: string): Promise<number> {
+	return await invoke('plugin:horizon|horizon_extract_modpack_assets', {
+		packPath,
+		instanceDir,
+	})
+}

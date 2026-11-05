@@ -6,6 +6,7 @@ import {
 	ImageIcon,
 	LogInIcon,
 	LogOutIcon,
+	PackageIcon,
 	PlayIcon,
 	PlusIcon,
 	RefreshCwIcon,
@@ -505,6 +506,10 @@ const messages = defineMessages({
 	modrinthHosting: {
 		id: 'app.nav.modrinth-hosting',
 		defaultMessage: 'Modrinth Hosting',
+	},
+	modpacks: {
+		id: 'app.nav.modpacks',
+		defaultMessage: 'Modpacks',
 	},
 	screenshots: {
 		id: 'app.nav.screenshots',
@@ -1633,6 +1638,9 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 				"
 			>
 				<ServerStackIcon />
+			</NavButton>
+			<NavButton v-tooltip.right="formatMessage(messages.modpacks)" to="/modpacks">
+				<PackageIcon />
 			</NavButton>
 			<suspense>
 				<QuickInstanceSwitcher>
