@@ -7,7 +7,7 @@ import ts from 'typescript'
 
 const source = readFileSync(
 	new URL(
-		'../src/components/ui/settings/astralrinth/ExternalAuthLibrarySettings.vue',
+		'../src/components/ui/settings/gradle/ExternalAuthLibrarySettings.vue',
 		import.meta.url,
 	),
 	'utf8',

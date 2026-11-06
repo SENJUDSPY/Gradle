@@ -49,8 +49,8 @@ export default defineConfig({
 		],
 	},
 	define: {
-		__ASTRALRINTH_APP_SHORT_COMMIT__: JSON.stringify(process.env.ASTRALRINTH_APP_SHORT_COMMIT ?? 'unknown'),
-		__ASTRALRINTH_APP_COMMIT__: JSON.stringify(process.env.ASTRALRINTH_APP_COMMIT ?? 'unknown'),
+		__GRADLE_APP_SHORT_COMMIT__: JSON.stringify(process.env.GRADLE_APP_SHORT_COMMIT ?? 'unknown'),
+		__GRADLE_APP_COMMIT__: JSON.stringify(process.env.GRADLE_APP_COMMIT ?? 'unknown'),
 	},
 	plugins: [
 		vue(),

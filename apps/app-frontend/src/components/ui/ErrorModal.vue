@@ -47,7 +47,7 @@ const errorCollapsed = ref(false)
 
 const title = ref('An error occurred')
 const errorType = ref('unknown')
-const supportLink = ref('https://xorison.dev/product/astralrinth/support')
+const supportLink = ref('https://xorison.dev/product/gradle/support')
 const metadata = ref({})
 
 defineExpose({
@@ -87,10 +87,10 @@ defineExpose({
 		} else if (errorVal.code === 'external_auth_library_not_installed') {
 			title.value = 'Authentication library required'
 			errorType.value = 'external_auth_library_not_installed'
-			supportLink.value = 'https://xorison.dev/product/astralrinth/support'
+			supportLink.value = 'https://xorison.dev/product/gradle/support'
 			metadata.value = {}
 		} else if (source === 'state_init') {
-			title.value = 'Error initializing AstralRinth App'
+			title.value = 'Error initializing Gradle App'
 			errorType.value = 'state_init'
 			supportLink.value = 'https://support.modrinth.com'
 		} else {
@@ -183,7 +183,7 @@ async function copyToClipboard(text) {
 					<template v-if="metadata.network">
 						<h3>Network issues</h3>
 						<p>
-							It looks like there were issues with the AstralRinth App connecting to Microsoft's
+							It looks like there were issues with the Gradle App connecting to Microsoft's
 							servers. This is often the result of a poor connection, so we recommend trying again
 							to see if it works. If issues continue to persist, follow the steps in
 							<a
@@ -197,7 +197,7 @@ async function copyToClipboard(text) {
 					<template v-else-if="metadata.hostsFile">
 						<h3>Network issues</h3>
 						<p>
-							The AstralRinth App tried to connect to Microsoft / Xbox / Minecraft services, but the
+							The Gradle App tried to connect to Microsoft / Xbox / Minecraft services, but the
 							remote server rejected the connection. This may indicate that these services are
 							blocked by the hosts file. Please visit
 							<a
@@ -236,7 +236,7 @@ async function copyToClipboard(text) {
 					<template v-if="metadata.readOnly">
 						<h3>Change directory permissions</h3>
 						<p>
-							It looks like the AstralRinth App is unable to write to the directory you selected.
+							It looks like the Gradle App is unable to write to the directory you selected.
 							Please adjust the permissions of the directory and try again or cancel the directory
 							change.
 						</p>
@@ -250,7 +250,7 @@ async function copyToClipboard(text) {
 					</template>
 					<template v-else>
 						<p>
-							The AstralRinth App is unable to migrate to the new directory you selected. Please
+							The Gradle App is unable to migrate to the new directory you selected. Please
 							contact support for help or cancel the directory change.
 						</p>
 					</template>
@@ -266,7 +266,7 @@ async function copyToClipboard(text) {
 				</template>
 				<template v-else-if="errorType === 'state_init'">
 					<p>
-						AstralRinth App failed to load correctly. This may be because of a corrupted file, or
+						Gradle App failed to load correctly. This may be because of a corrupted file, or
 						because the app is missing crucial files.
 					</p>
 					<p>You may be able to fix it through one of the following ways:</p>
@@ -276,7 +276,7 @@ async function copyToClipboard(text) {
 					</ul>
 				</template>
 				<template v-else-if="errorType === 'no_loader_version'">
-					<p>The AstralRinth App failed to find the loader version for this instance.</p>
+					<p>The Gradle App failed to find the loader version for this instance.</p>
 					<p>To resolve this, you need to repair the instance. Click the button below to do so.</p>
 					<div class="cta-button">
 						<button class="btn btn-primary" :disabled="loadingRepair" @click="repairInstance">
@@ -287,7 +287,7 @@ async function copyToClipboard(text) {
 				<template v-else-if="errorType === 'external_auth_library_not_installed'">
 					<p>{{ debugInfo }}</p>
 					<p>
-						Choose and install a version under Settings → AstralRinth → Authentication libraries,
+						Choose and install a version under Settings → Gradle → Authentication libraries,
 						then launch the instance again.
 					</p>
 				</template>

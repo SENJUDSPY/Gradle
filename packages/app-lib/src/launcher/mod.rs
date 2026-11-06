@@ -26,7 +26,7 @@ use chrono::Utc;
 use daedalus as d;
 use daedalus::minecraft::{LoggingSide, RuleAction, VersionInfo};
 use daedalus::modded::{LoaderVersion, Manifest};
-use rand::seq::SliceRandom; // This code is modified by AstralRinth
+use rand::seq::SliceRandom; // This code is modified by Gradle
 use serde::Deserialize;
 use sqlx::SqlitePool;
 use std::future::Future;
@@ -1186,7 +1186,7 @@ pub async fn launch_minecraft(
         command.arg("--add-opens=jdk.internal/jdk.internal.misc=ALL-UNNAMED");
     }
 
-    crate::models::astralrinth::authentication::configure_minecraft_launch(
+    crate::models::gradle::authentication::configure_minecraft_launch(
         &mut command,
         credentials,
         &version_jar,
@@ -1310,7 +1310,7 @@ pub async fn launch_minecraft(
         }
     }
 
-    // This code is modified by AstralRinth
+    // This code is modified by Gradle
     let selected_phrase = ACTIVE_STATE.choose(&mut rand::thread_rng()).unwrap();
     let _ = state
         .presence

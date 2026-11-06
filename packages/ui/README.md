@@ -1,8 +1,8 @@
-![AstralRinth](../assets/icons/astralrinth/astralrinth-logo.svg)
+![Gradle](../assets/icons/gradle/gradle-logo.svg)
 
 # @modrinth/ui
 
-The shared Vue 3 component library used by the [AstralRinth frontend](../../apps/app-frontend). Upstream also uses it for the Modrinth website, which is intentionally absent from this checkout. Components are platform-agnostic, with platform-specific behavior provided through dependency injection.
+The shared Vue 3 component library used by the [Gradle frontend](../../apps/app-frontend). Upstream also uses it for the Modrinth website, which is intentionally absent from this checkout. Components are platform-agnostic, with platform-specific behavior provided through dependency injection.
 
 ## Structure
 

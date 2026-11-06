@@ -63,8 +63,8 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useRouteLoading } from '@/app/runtime/use-route-loading'
 import AppSidebar from '@/app/shell/sidebar/index.vue'
 import AppTitleBar from '@/app/shell/title-bar/index.vue'
-import LauncherUpdateModal from '@/components/ui/astralrinth/LauncherUpdateModal.vue'
 import ErrorModal from '@/components/ui/ErrorModal.vue'
+import LauncherUpdateModal from '@/components/ui/gradle/LauncherUpdateModal.vue'
 import AddServerToInstanceModal from '@/components/ui/install_flow/AddServerToInstanceModal.vue'
 import UnknownPackWarningModal from '@/components/ui/install_flow/UnknownPackWarningModal.vue'
 import IconEditorModal from '@/components/ui/instance_settings/icon-editor-modal/index.vue'
@@ -96,10 +96,10 @@ import { provideSettingsActions } from '@/features/settings/settings-actions'
 import NewUpdateModal from '@/features/updates/new-update-modal/index.vue'
 import { getAccountAppearance, rememberAccountAppearance } from '@/helpers/account-appearance.ts'
 import { trackEvent } from '@/helpers/analytics'
-import { APP_COMMIT, fetchRemote, isUpdateAvailable } from '@/helpers/astralrinth/update'
 import { check_reachable } from '@/helpers/auth.js'
 import { get_user, get_user_many, get_version } from '@/helpers/cache.js'
 import { gameSettingsQueryOptions } from '@/helpers/game-options'
+import { APP_COMMIT, fetchRemote, isUpdateAvailable } from '@/helpers/gradle/update'
 import { install_create_modpack_instance, install_get_modpack_preview } from '@/helpers/install'
 import {
 	can_current_user_use_shared_instances,
@@ -145,9 +145,9 @@ import {
 } from '@/pages/instance/query-options'
 import { createAppClient } from '@/platform/modrinth-client'
 import { appUpdateState } from '@/providers/app-update.ts'
-import { provideAstralRinthNews, useAstralRinthNews } from '@/providers/astralrinth-news'
 import { createContentInstall, provideContentInstall } from '@/providers/content-install'
 import { provideAppUpdateDownloadProgress } from '@/providers/download-progress.ts'
+import { provideGradleNews, useGradleNews } from '@/providers/gradle-news'
 import { createServerInstall, provideServerInstall } from '@/providers/server-install'
 import { setupProviders } from '@/providers/setup'
 import { setupAppEventsProvider } from '@/providers/setup/app-events'
@@ -165,8 +165,8 @@ debugStartup('App setup entered')
 const appSettings = useAppSettings()
 const appTheme = useTheme()
 const quickInstances = useQuickInstanceLimit()
-const astralRinthNews = useAstralRinthNews()
-provideAstralRinthNews(astralRinthNews)
+const gradleNews = useGradleNews()
+provideGradleNews(gradleNews)
 
 watch(
 	[() => appTheme.advancedRendering, () => appTheme.glassLevel],
@@ -428,7 +428,7 @@ onMounted(async () => {
 	}
 
 	await useCheckDisableMouseover()
-	// This code line modified by AstralRinth
+	// This code line modified by Gradle
 	await fetchRemote()
 	if (isUpdateAvailable.value) {
 		addPopupNotification({
@@ -481,24 +481,24 @@ const messages = defineMessages({
 			'Minecraft authentication servers may be down right now. Check your internet connection and try again later.',
 	},
 	launcherUpdateFetchUnavailableTitle: {
-		id: 'astralrinth.app.launcher-update.fetch-unavailable.title',
+		id: 'gradle.app.launcher-update.fetch-unavailable.title',
 		defaultMessage: 'Update fetch unavailable',
 	},
 	launcherUpdateFetchUnavailableText: {
-		id: 'astralrinth.app.launcher-update.fetch-unavailable.text',
+		id: 'gradle.app.launcher-update.fetch-unavailable.text',
 		defaultMessage:
 			'Could not verify the launcher build commit, so update availability cannot be checked.',
 	},
 	launcherUpdateAvailableTitle: {
-		id: 'astralrinth.app.launcher-update.available.title',
+		id: 'gradle.app.launcher-update.available.title',
 		defaultMessage: 'Launcher update available',
 	},
 	launcherUpdateAvailableText: {
-		id: 'astralrinth.app.launcher-update.available.text',
-		defaultMessage: 'New version of AstralRinth is available for download.',
+		id: 'gradle.app.launcher-update.available.text',
+		defaultMessage: 'New version of Gradle is available for download.',
 	},
 	launcherUpdateAvailableAction: {
-		id: 'astralrinth.app.launcher-update.available.action',
+		id: 'gradle.app.launcher-update.available.action',
 		defaultMessage: 'View update',
 	},
 	home: {
@@ -702,7 +702,7 @@ async function setupApp() {
 			)
 		})
 
-	void astralRinthNews.load()
+	void gradleNews.load()
 	traceStartupStep('Read opening command', get_opening_command).then(handleCommand)
 	traceStartupStep('Refresh startup credentials', fetchCredentials)
 
@@ -1288,6 +1288,22 @@ onMounted(() => {
 	setServerAddServerToInstanceModal(addServerToInstanceModal.value)
 	setServerInstallToPlayModal(installToPlayModal.value)
 	setServerUpdateToPlayModal(updateToPlayModal.value)
+
+	// Migrate legacy AstralRinth localStorage keys to Gradle
+	const legacyStorageKeys = [
+		['astralrinth-visual-settings', 'gradle-visual-settings'],
+		['astralrinth-global-default-runtime', 'gradle-global-default-runtime'],
+		['astralrinth-news-read-ids', 'gradle-news-read-ids'],
+		['astralrinth-icon-suggestion-dismissed', 'gradle-icon-suggestion-dismissed'],
+		['astralrinth-updater-dismissed', 'gradle-updater-dismissed'],
+	]
+	for (const [oldKey, newKey] of legacyStorageKeys) {
+		const val = localStorage.getItem(oldKey)
+		if (val !== null && localStorage.getItem(newKey) === null) {
+			localStorage.setItem(newKey, val)
+		}
+	}
+
 	void instanceRuntimeMigrationModal.value?.checkAndPromptMigration()
 })
 

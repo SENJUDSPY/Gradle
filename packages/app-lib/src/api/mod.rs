@@ -19,7 +19,7 @@ pub mod settings;
 pub mod tags;
 pub mod users;
 pub mod worlds;
-pub mod astralrinth;
+pub mod gradle;
 
 pub mod data {
     pub use crate::state::{

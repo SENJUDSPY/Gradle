@@ -34,8 +34,34 @@ impl DirectoryInfo {
     // Get the settings directory
     // init() is not needed for this function
     pub fn initial_settings_dir_path(app_identifier: &str) -> Option<PathBuf> {
-        Self::env_path("THESEUS_CONFIG_DIR")
-            .or_else(|| Some(dirs::data_dir()?.join(app_identifier)))
+        if let Some(path) = Self::env_path("THESEUS_CONFIG_DIR") {
+            return Some(path);
+        }
+
+        let data_dir = dirs::data_dir()?;
+        let target = data_dir.join(app_identifier);
+
+        // One-time data migration: If target does not exist, migrate legacy AstralRinthApp directory
+        if !target.exists() {
+            let legacy_dirs = [
+                data_dir.join("AstralRinthApp"),
+                data_dir.join("astralrinth"),
+                data_dir.join("AstralRinth"),
+            ];
+            for legacy in &legacy_dirs {
+                if legacy.exists() {
+                    tracing::info!(
+                        "Migrating legacy app data directory from {:?} to {:?}",
+                        legacy,
+                        target
+                    );
+                    let _ = std::fs::rename(legacy, &target);
+                    break;
+                }
+            }
+        }
+
+        Some(target)
     }
 
     /// Get all paths needed for Theseus to operate properly

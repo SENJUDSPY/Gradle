@@ -1614,7 +1614,7 @@
     "message": "Найстаріші"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Змінні середовища встановлюються, коли примірник запускається."
@@ -3462,7 +3462,7 @@
     "message": "Натисніть <shortcut>N</shortcut> для створення примірника"
   },
   "app.welcome-screen.title": {
-    "message": "Вітаємо в AstralRinth"
+    "message": "Вітаємо в Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "example.modrinth.gg"

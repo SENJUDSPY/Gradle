@@ -1623,7 +1623,7 @@
     "message": "En eski"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Ortam değişkenleri örnekler açılırken ayarlanır."
@@ -2793,7 +2793,7 @@
     "message": "Hızlıca bir kurulum oluşturmak için <shortcut>N</shortcut> tuşuna basın"
   },
   "app.welcome-screen.title": {
-    "message": "AstralRinth'e Hoş Geldiniz"
+    "message": "Gradle'e Hoş Geldiniz"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "example.modrinth.gg"

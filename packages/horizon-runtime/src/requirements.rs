@@ -161,7 +161,7 @@ pub fn check_java_25() -> CheckItem {
 		title: "Java 25 (Resource Preparation)".to_string(),
 		details: "Java 25 is required for one-time game file and bytecode preparation from your Minecraft copy.".to_string(),
 		path: None,
-		error: Some("Install Java 25 (Adoptium Temurin 25: adoptium.net) or download it in AstralRinth Java Settings.".to_string()),
+		error: Some("Install Java 25 (Adoptium Temurin 25: adoptium.net) or download it in Gradle Java Settings.".to_string()),
 	}
 }
 

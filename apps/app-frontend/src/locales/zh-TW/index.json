@@ -1623,7 +1623,7 @@
     "message": "由舊到新"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "啟動實例時設定的環境變數。"
@@ -3471,7 +3471,7 @@
     "message": "按 <shortcut>N</shortcut> 快速建立實例"
   },
   "app.welcome-screen.title": {
-    "message": "歡迎使用 AstralRinth"
+    "message": "歡迎使用 Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "example.modrinth.gg"

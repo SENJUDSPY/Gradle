@@ -617,7 +617,7 @@ export async function run(
 	})
 }
 
-export const GLOBAL_DEFAULT_RUNTIME_KEY = 'astralrinth-global-default-runtime'
+export const GLOBAL_DEFAULT_RUNTIME_KEY = 'gradle-global-default-runtime'
 
 export function getGlobalDefaultRuntime(): InstanceRuntime {
 	if (typeof window === 'undefined' || !window.localStorage) return 'horizon'

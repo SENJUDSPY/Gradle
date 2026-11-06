@@ -1,4 +1,4 @@
-![AstralRinth](../assets/icons/astralrinth/astralrinth-logo.svg)
+![Gradle](../assets/icons/gradle/gradle-logo.svg)
 
 # Daedalus
 

@@ -14,7 +14,7 @@ type NativeTheme = 'light' | 'dark'
 
 const PREFERRED_THEME_KEY = 'modrinth-theme'
 const PREFERRED_DARK_THEME_KEY = 'modrinth-preferred-dark-theme'
-const GLASS_LEVEL_KEY = 'astralrinth-glass-level'
+const GLASS_LEVEL_KEY = 'gradle-glass-level'
 
 export function isDarkTheme(theme: string): theme is DarkTheme {
 	return (DARK_THEMES as readonly string[]).includes(theme)

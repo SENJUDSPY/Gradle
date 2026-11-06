@@ -3,7 +3,7 @@ use serde::{Serialize, Serializer};
 use theseus::error_code;
 
 #[macro_use]
-pub mod astralrinth;
+pub mod gradle;
 pub mod auth;
 pub mod import;
 pub mod install;
@@ -65,7 +65,7 @@ mod tests {
 	use super::CommandError;
 
 	#[test]
-	fn astralrinth_external_library_error_retains_its_command_code() {
+	fn gradle_external_library_error_retains_its_command_code() {
 		let error = anyhow::Error::from(
 			theseus::ErrorKind::ExternalAuthLibraryNotInstalled {
 				provider_name: "Ely.by".to_string(),

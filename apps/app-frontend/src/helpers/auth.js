@@ -16,7 +16,7 @@ import { invoke } from '@tauri-apps/api/core'
 /**
  * Creates a local Minecraft account.
  * @param {string} name
- * @returns {Promise<import('@/models/astralrinth/authentication').MinecraftCredential>}
+ * @returns {Promise<import('@/models/gradle/authentication').MinecraftCredential>}
  */
 export async function offline_login(name) {
 	return await invoke('plugin:auth|offline_login', { name })
@@ -34,7 +34,7 @@ export async function check_reachable() {
  * Authenticate a user with Hydra - part 1.
  * This begins the authentication flow quasi-synchronously.
  *
- * @returns {Promise<import('@/models/astralrinth/authentication').MinecraftCredential | null>}
+ * @returns {Promise<import('@/models/gradle/authentication').MinecraftCredential | null>}
  */
 export async function login() {
 	return await invoke('plugin:auth|login')
@@ -66,7 +66,7 @@ export async function remove_user(user) {
 
 /**
  * Returns a list of users
- * @returns {Promise<import('@/models/astralrinth/authentication').MinecraftCredential[]>}
+ * @returns {Promise<import('@/models/gradle/authentication').MinecraftCredential[]>}
  */
 export async function users() {
 	return await invoke('plugin:auth|get_users')

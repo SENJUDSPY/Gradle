@@ -1,10 +1,10 @@
-# AstralRinth technical reference
+# Gradle technical reference
 
 ## Purpose
 
 This document describes the repository architecture, package responsibilities, development tooling, application entry points, fork-specific behavior, and shared integration contracts. AI working rules, upstream merge procedures, and maintenance instructions are in [`AGENTS.md`](AGENTS.md). User-facing installation and usage information is in [`README.md`](README.md) and its [Russian translation](readme/ru_ru/README.md).
 
-AstralRinth is a fork of Modrinth's codebase, not a separate launcher layered on top. Its desktop launcher shares the upstream app shell, frontend, and Rust app library. A change to an apparently generic Modrinth component, setting, API command, or database model can therefore break a fork-specific flow even when no file named `astralrinth` is edited.
+Gradle is a fork of Modrinth's codebase, not a separate launcher layered on top. Its desktop launcher shares the upstream app shell, frontend, and Rust app library. A change to an apparently generic Modrinth component, setting, API command, or database model can therefore break a fork-specific flow even when no file named `gradle` is edited.
 
 ## Architecture
 
@@ -22,12 +22,12 @@ The repository uses pnpm workspaces and Turborepo for JavaScript/TypeScript pack
 | `apps/app-frontend/` | Vue 3 + Vite frontend for the Tauri desktop launcher | Main product surface for account flows, launcher UI, skins, settings, and Xorison release updates. |
 | `apps/app/` | Tauri/Rust desktop host | Registers native plugins, commands, permissions, capabilities, window behavior, and desktop startup. |
 | `apps/app-gpui/` | Experimental GPUI desktop UI prototype | Side-by-side migration foundation only; it is not the production launcher and currently has no feature parity with the Tauri/Vue app. |
-| `packages/app-lib/` | Shared Rust launcher/backend library used by the desktop host | Owns settings persistence/migrations, Minecraft authentication and launching, process lifecycle, app events, and AstralRinth backend modules. |
-| `packages/assets/` | Shared icons, styles, and design assets | Contains AstralRinth logos, provider icons, and fork-specific visual styles. |
+| `packages/app-lib/` | Shared Rust launcher/backend library used by the desktop host | Owns settings persistence/migrations, Minecraft authentication and launching, process lifecycle, app events, and Gradle backend modules. |
+| `packages/assets/` | Shared icons, styles, and design assets | Contains Gradle logos, provider icons, and fork-specific visual styles. |
 | `packages/ui/` | Shared Modrinth Vue component library | The app frontend composes these components through shared props, exports, and layout contracts. |
 | `packages/api-client/` | Shared API client | Provides current API types/contracts; the utility package also contains older types. |
 | `packages/` (other) | Shared utilities, config, protocol, assets, analytics, and related libraries | Includes dependencies used by the desktop app and its frontend. |
-| `scripts/`, `.github/`, `standards/` | Repository automation, fork-owned CI, and engineering standards | Contains automation and policies for the AstralRinth checkout, distinct from upstream deployment infrastructure. |
+| `scripts/`, `.github/`, `standards/` | Repository automation, fork-owned CI, and engineering standards | Contains automation and policies for the Gradle checkout, distinct from upstream deployment infrastructure. |
 
 The working tree intentionally excludes upstream projects not needed to build the desktop launcher: `apps/frontend/`, `apps/labrinth/`, `apps/docs/`, `apps/daedalus_client/`, and `apps/app-playground/`. The root `docker-compose.yml` for backend-service development is also excluded. These deletions are a fork-maintenance policy, not evidence that upstream has removed those projects.
 
@@ -59,7 +59,7 @@ Retained packages include backend-oriented libraries, not only desktop launcher 
 ## Development tooling and commands
 
 - The desktop development entry point is `pnpm app:dev --cache=local:r` from the repository root. `local:r` uses the local Turborepo cache in read-only mode, but the `dev` task itself is uncached. Install the tools specified by `mise.toml` and make `mise` available: Tauri's frontend hooks invoke `mise exec`. The app library also invokes Gradle during compilation; the build workflow uses Java 21.
-- The GPUI prototype is an opt-in Cargo binary: `cargo run -p astralrinth-gpui`. It currently implements only an experimental application shell; it does not replace the Tauri/Vue entry point or provide launcher feature parity. Keep both clients available until migrated features and behavior have been verified.
+- The GPUI prototype is an opt-in Cargo binary: `cargo run -p gradle-gpui`. It currently implements only an experimental application shell; it does not replace the Tauri/Vue entry point or provide launcher feature parity. Keep both clients available until migrated features and behavior have been verified.
 - Before starting local app development, prepare `packages/app-lib/.env` from the appropriate checked-in environment variant (`.env.local` or `.env.prod`). Its `build.rs` reads the active `.env` through `dotenvy`; the development command does not create it automatically. The build workflow copies `.env.prod` to `.env`.
 - Frontend type checking without a build is `pnpm --filter @modrinth/app-frontend tsc:check` from the repository root, or `pnpm tsc:check` from `apps/app-frontend/`. The package script runs `vue-tsc --noEmit -p tsconfig.app.json`; the root TypeScript config is a reference container, not an application source check.
 - Account chooser and skin account-switch regression coverage is `node --test tests/account-skin-contracts.test.mjs` from `apps/app-frontend/`; it exercises component functions without Tauri.
@@ -68,25 +68,25 @@ Retained packages include backend-oriented libraries, not only desktop launcher 
 - Frontend ESLint and Prettier are available through the app frontend's package tooling. Its `lint` script checks the whole frontend; `pnpm exec eslint <file...>` and `pnpm exec prettier --check <file...>` from `apps/app-frontend/` support file-scoped checks.
 - Rust crate membership and features are defined in the root and package `Cargo.toml` files. Frontend tool versions and workspace dependencies are defined in `package.json`, `pnpm-workspace.yaml`, and `mise.toml`. Root tooling and mise specify pnpm 12.11.2 and Node 24.15.0 (the root engine permits newer Node versions). Turbo is pinned to 2.11.6 in mise, matching the lockfile resolution within the root dependency range `^2.11.5`. The frontend inherits the root package-manager version. Rust is pinned to 1.95.0 in both mise and `rust-toolchain.toml`; CMake uses the latest mise release.
 
-## AstralRinth changes over upstream Modrinth
+## Gradle changes over upstream Modrinth
 
 This section describes fork-specific behavior in the current checkout and relevant removals from the Modrinth App baseline. The feature map below lists implementation entry points for those behaviors.
 
 ### Product identity, branding, and visual presentation
 
-AstralRinth replaces the main desktop product identity with its own identity; some upstream wording and metadata remain (for example in privacy and survey text, Cargo metadata, and the API user agent):
+Gradle replaces the main desktop product identity with its own identity; some upstream wording and metadata remain (for example in privacy and survey text, Cargo metadata, and the API user agent):
 
-- The Tauri product name, executable name, application identifier, window titles, HTML title, settings label, startup messages, and user-facing error text are changed from Modrinth App to AstralRinth.
-- Modrinth launcher artwork is replaced with AstralRinth artwork in the splash screen, application/bundled icons, settings header, and account-provider controls. The frontend HTML favicon is not correctly connected: `apps/app-frontend/index.html` still references the absent `/vite.svg`. The configured `apps/app/dmg/dmg-background.png` retains the Modrinth logo and “modrinth app” text, so packaging branding replacement is incomplete.
-- `apps/app-frontend/src/components/ui/SplashScreen.vue` uses the AstralRinth app logo asset instead of the large inline Modrinth SVG and increases the logo presentation for the fork splash screen.
-- `packages/assets/icons/astralrinth/` adds the AstralRinth logo and Microsoft, Ely.by, and offline-account icons.
-- The frontend uses Modrinth components and theme colors. `apps/app-frontend/src/assets/stylesheets/liquid-glass.scss` adds optional translucent surfaces, blur, and layered depth while retaining the selected color theme. It replaces the removed neon text, icon, button, and soft-input styles formerly under `packages/assets/styles/astralrinth/`.
-- `apps/app-frontend/src/components/ui/settings/astralrinth/VisualSettings.vue` exposes Liquid Glass in the beta-marked AstralRinth Visual tab. It exposes a three-position Glass level slider (Matte, Standard, Transparent), uses the existing `advanced_rendering` setting for the toggle and local storage for the level, and participates in the settings modal's save/reset flow; the upstream Advanced rendering control is hidden in the app's Appearance settings.
-- `apps/app-frontend/package.json` carries an AstralRinth-specific application version, while `apps/app/tauri.conf.json`, `apps/app/tauri.linux.conf.json`, and `apps/app/tauri-release.conf.json` change the packaging identity and remove the upstream updater configuration.
+- The Tauri product name, executable name, application identifier, window titles, HTML title, settings label, startup messages, and user-facing error text are changed from Modrinth App to Gradle.
+- Modrinth launcher artwork is replaced with Gradle artwork in the splash screen, application/bundled icons, settings header, and account-provider controls. The frontend HTML favicon is not correctly connected: `apps/app-frontend/index.html` still references the absent `/vite.svg`. The configured `apps/app/dmg/dmg-background.png` retains the Modrinth logo and “modrinth app” text, so packaging branding replacement is incomplete.
+- `apps/app-frontend/src/components/ui/SplashScreen.vue` uses the Gradle app logo asset instead of the large inline Modrinth SVG and increases the logo presentation for the fork splash screen.
+- `packages/assets/icons/gradle/` adds the Gradle logo and Microsoft, Ely.by, and offline-account icons.
+- The frontend uses Modrinth components and theme colors. `apps/app-frontend/src/assets/stylesheets/liquid-glass.scss` adds optional translucent surfaces, blur, and layered depth while retaining the selected color theme. It replaces the removed neon text, icon, button, and soft-input styles formerly under `packages/assets/styles/gradle/`.
+- `apps/app-frontend/src/components/ui/settings/gradle/VisualSettings.vue` exposes Liquid Glass in the beta-marked Gradle Visual tab. It exposes a three-position Glass level slider (Matte, Standard, Transparent), uses the existing `advanced_rendering` setting for the toggle and local storage for the level, and participates in the settings modal's save/reset flow; the upstream Advanced rendering control is hidden in the app's Appearance settings.
+- `apps/app-frontend/package.json` carries an Gradle-specific application version, while `apps/app/tauri.conf.json`, `apps/app/tauri.linux.conf.json`, and `apps/app/tauri-release.conf.json` change the packaging identity and remove the upstream updater configuration.
 
 ### Account model and Minecraft authentication
 
-AstralRinth expands the upstream Minecraft account model. This is separate from signing into a Modrinth website account.
+Gradle expands the upstream Minecraft account model. This is separate from signing into a Modrinth website account.
 
 - Microsoft accounts remain supported, but the account selector becomes a method chooser rather than a single Microsoft sign-in button.
 - Offline accounts can be created from the UI with a validated player name. The frontend limits the name to 3–20 ASCII letters, digits, and underscores, and the flow has dedicated input, validation, retry, and unexpected-error modals.
@@ -94,26 +94,26 @@ AstralRinth expands the upstream Minecraft account model. This is separate from 
 - External sign-in uses an OAuth Device Authorization flow. The Tauri host opens a dedicated always-on-top verification WebView, polls the provider until authorization, handles pending/slow-down/denied/expired states, and persists the returned credentials.
 - Account records gain `account_type`. SQL migrations classify existing rows; Microsoft accounts are identified as `microsoft`, and offline accounts as `offline`. This does not guarantee compatibility with upstream SQLite migration checksums or legacy JSON imports; see the persistence section.
 - Credential refresh now distinguishes Microsoft, external-provider, offline, and unknown account types. External refresh tokens use the provider OAuth flow; offline accounts are not sent through online token refresh. External launches still validate the access token remotely on every launch, so an installed provider library does not enable disconnected launch. Provider validation failures block launch, and external refresh failures do not inherit the Microsoft-specific connectivity fallback.
-- `AccountsCard.vue`, `MinecraftRequiredModal.vue`, `Skins.vue`, and the new AstralRinth account components share the same account-type-aware flow. The shared chooser exposes Microsoft, offline, and registered external-provider methods.
+- `AccountsCard.vue`, `MinecraftRequiredModal.vue`, `Skins.vue`, and the new Gradle account components share the same account-type-aware flow. The shared chooser exposes Microsoft, offline, and registered external-provider methods.
 
 The main contract crosses these layers:
 
-1. `apps/app-frontend/src/models/astralrinth/authentication.ts` defines provider metadata, frontend account types, provider loading, OAuth invocation, and library commands.
-2. `apps/app-frontend/src/features/minecraft-accounts/accounts-card.vue` and `components/ui/astralrinth/accounts/` render account methods and errors.
-3. `apps/app/src/api/auth.rs` and `apps/app/src/api/astralrinth/mod.rs` expose Tauri commands and own the OAuth verification window.
-4. `packages/app-lib/src/models/astralrinth/authentication.rs` owns provider registration, OAuth, token validation, credential persistence, and launch configuration.
+1. `apps/app-frontend/src/models/gradle/authentication.ts` defines provider metadata, frontend account types, provider loading, OAuth invocation, and library commands.
+2. `apps/app-frontend/src/features/minecraft-accounts/accounts-card.vue` and `components/ui/gradle/accounts/` render account methods and errors.
+3. `apps/app/src/api/auth.rs` and `apps/app/src/api/gradle/mod.rs` expose Tauri commands and own the OAuth verification window.
+4. `packages/app-lib/src/models/gradle/authentication.rs` owns provider registration, OAuth, token validation, credential persistence, and launch configuration.
 5. `packages/app-lib/src/state/minecraft_auth.rs` stores `account_type`, refreshes credentials, and serializes the extended record.
 6. `packages/app-lib/src/launcher/mod.rs` converts the selected account into JVM arguments before Minecraft starts.
 
 ### `authlib-injector` library management and external launches
 
-AstralRinth adds a complete provider-library lifecycle that does not exist in the upstream Microsoft-only flow:
+Gradle adds a complete provider-library lifecycle that does not exist in the upstream Microsoft-only flow:
 
-- `packages/app-lib/src/util/astralrinth/utils.rs` fetches provider release metadata, validates asset names, lists local JARs, downloads exact assets, stores the selected asset in SQLite, and can install the newest compatible library automatically.
+- `packages/app-lib/src/util/gradle/utils.rs` fetches provider release metadata, validates asset names, lists local JARs, downloads exact assets, stores the selected asset in SQLite, and can install the newest compatible library automatically.
 - Ely.by release metadata comes from an unauthenticated GET to `https://api.xorison.dev/v1/public/lib/elyby/injector`, without query parameters. The frontend catalog and exact Rust installer consume the flat `assets` array, accepting only case-insensitive `authlib-injector-` names; remote `authlib-` and `old_` assets are excluded. Existing local libraries and selections, including legacy `old_` files, remain usable. Automatic installation uses the API's `latest_injector` object, whose nullable `name` and `browser_download_url` identify the highest numeric version independently of asset order. A null name or missing/blank URL fails automatic installation without falling back to an older asset. A missing download URL does not prevent catalog listing, but explicit installation reports an error. Release labels, download counts, and unrelated upstream asset fields are not required by the launcher. HTTP failures, including 404, 502, and non-JSON 429 responses, do not enter success-response parsing; the frontend retains its local-library fallback and refresh cooldown.
-- `apps/app-frontend/src/components/ui/settings/astralrinth/ExternalAuthLibrarySettings.vue` exposes per-provider version discovery, refresh, installation, reinstall, local-only fallback, and selection. Its dropdown combines remote assets with installed local versions, preserving legacy selections even after a successful catalog refresh. Choosing a version updates the pending install target; installed versions are selected immediately, while remote-only versions become the persisted selection only after a successful install. Install/reinstall is available only for assets still listed remotely; local-only versions remain selectable without downloading.
+- `apps/app-frontend/src/components/ui/settings/gradle/ExternalAuthLibrarySettings.vue` exposes per-provider version discovery, refresh, installation, reinstall, local-only fallback, and selection. Its dropdown combines remote assets with installed local versions, preserving legacy selections even after a successful catalog refresh. Choosing a version updates the pending install target; installed versions are selected immediately, while remote-only versions become the persisted selection only after a successful install. Install/reinstall is available only for assets still listed remotely; local-only versions remain selectable without downloading.
 - `packages/app-lib/migrations/20260802201752_external-auth-libraries.sql` creates the provider-to-asset selection table.
-- When an external account launches, the selected JAR's asset name and local file existence are checked before it is passed as `-javaagent:<path>=<server>`. Missing selections/files or invalid asset names produce the serializable `external_auth_library_not_installed` error; the file-existence check does not validate JAR contents. The frontend provides a dedicated recovery message pointing to AstralRinth settings.
+- When an external account launches, the selected JAR's asset name and local file existence are checked before it is passed as `-javaagent:<path>=<server>`. Missing selections/files or invalid asset names produce the serializable `external_auth_library_not_installed` error; the file-existence check does not validate JAR contents. The frontend provides a dedicated recovery message pointing to Gradle settings.
 - If no local library exists, the launcher attempts to install the latest compatible provider library. If local libraries exist but the selected one is missing, it reports the error rather than silently changing the user's selection.
 - Asset names are restricted to safe JAR file names, preventing path traversal through remote release metadata or persisted selections. Provider-library downloads check HTTP success but do not verify cryptographic signatures or checksums.
 
@@ -124,19 +124,19 @@ Local launcher queries for instance lists, processes, screenshots, worlds, files
 The offline flow changes both authentication and launch arguments:
 
 - `packages/app-lib/src/state/minecraft_auth.rs` creates a local profile with a random UUID, `null` placeholder tokens, and an expiry 99 years in the future. Offline accounts bypass online token refresh, but backend profile lookup/upsert can still attempt Mojang requests using the placeholder token. Player-name validation is enforced by the frontend, not the native offline-login function.
-- For Minecraft 1.16.4 and 1.16.5, `packages/app-lib/src/models/astralrinth/authentication.rs` applies the vanilla multiplayer compatibility workaround by setting the Minecraft API hosts to an invalid endpoint and enabling the custom API environment.
+- For Minecraft 1.16.4 and 1.16.5, `packages/app-lib/src/models/gradle/authentication.rs` applies the vanilla multiplayer compatibility workaround by setting the Minecraft API hosts to an invalid endpoint and enabling the custom API environment.
 - The launcher emits informational events when applying the compatibility workaround or loading an external provider library. These events are surfaced as frontend notifications through the new `info` event path.
 
-### AstralRinth launcher updates through Xorison
+### Gradle launcher updates through Xorison
 
 The upstream Tauri updater is replaced for the fork's own launcher distribution:
 
-- `apps/app-frontend/src/helpers/astralrinth/update.ts` queries `${XORISON_API_URL}public/product/astralrinth?version=latest`, normalizes and compares version number parts, selects installers from the release's architecture/OS asset groups, and excludes asset names starting with `dev` or `nightly` (not `dirty`). It does not filter release tags/titles by these prefixes; it exposes update status and HTTP diagnostics. The shared `latestLauncherRelease` ref groups the release payload (`data`) and response status (`httpStatus`); the update modal and settings consumers use this contract. The repository and release-recovery links use `XORISON_GIT_URL` from the app-library environment, matching the checked-in `.env.prod` configuration.
-- `apps/app-frontend/src/components/ui/astralrinth/LauncherUpdateModal.vue` shows the installed version, latest release tag/title, backup warnings, repository link, installer selection, download state, and failure recovery link.
-- `apps/app-frontend/src/components/ui/settings/astralrinth/UpdateSettings.vue` is exposed only when developer mode is enabled and displays release and distribution diagnostics: operating system, architecture, latest tag, release title, asset count, download count, HTTP status, and API URL. OS and architecture come from the Tauri OS plugin; outside Tauri, the UI shows that system information is unavailable.
+- `apps/app-frontend/src/helpers/gradle/update.ts` queries `${XORISON_API_URL}public/product/gradle?version=latest`, normalizes and compares version number parts, selects installers from the release's architecture/OS asset groups, and excludes asset names starting with `dev` or `nightly` (not `dirty`). It does not filter release tags/titles by these prefixes; it exposes update status and HTTP diagnostics. The shared `latestLauncherRelease` ref groups the release payload (`data`) and response status (`httpStatus`); the update modal and settings consumers use this contract. The repository and release-recovery links use `XORISON_GIT_URL` from the app-library environment, matching the checked-in `.env.prod` configuration.
+- `apps/app-frontend/src/components/ui/gradle/LauncherUpdateModal.vue` shows the installed version, latest release tag/title, backup warnings, repository link, installer selection, download state, and failure recovery link.
+- `apps/app-frontend/src/components/ui/settings/gradle/UpdateSettings.vue` is exposed only when developer mode is enabled and displays release and distribution diagnostics: operating system, architecture, latest tag, release title, asset count, download count, HTTP status, and API URL. OS and architecture come from the Tauri OS plugin; outside Tauri, the UI shows that system information is unavailable.
 - `apps/app-frontend/src/App.vue` checks for updates during startup, posts an update notification, marks the settings icon with the theme's brand color, and mounts the fork update modal.
-- `apps/app/src/api/utils.rs`, `packages/app-lib/src/util/astralrinth/utils.rs`, and `packages/app-lib/src/api/astralrinth/update.rs` download the selected package into the platform Downloads directory. Windows runs `.exe` installers directly and `.msi` through `msiexec /quiet`; a failed installer opens the folder and returns an error, so the launcher stays open. macOS opens the package; Linux opens the containing folder for manual installation. The helper exits only after `get_resource` returns success. Open and installer failures are returned to `init_update_launcher`, which logs them, but the Tauri command still discards download errors, so UI success does not prove installation or handoff succeeded.
-- The native update download is not Tauri's signed-updater contract. `packages/app-lib/src/api/astralrinth/update.rs` accepts a caller-supplied URL, filename, and OS type. It requires an `https` URL and a plain file name without path components, rejects non-2xx responses, and streams the body into `<name>.part`, renaming it into Downloads only after the full body is written. It performs no signature or checksum verification, because the release source publishes no hash; frontend HTTP allowlists and CSP do not constrain its Rust `reqwest` download.
+- `apps/app/src/api/utils.rs`, `packages/app-lib/src/util/gradle/utils.rs`, and `packages/app-lib/src/api/gradle/update.rs` download the selected package into the platform Downloads directory. Windows runs `.exe` installers directly and `.msi` through `msiexec /quiet`; a failed installer opens the folder and returns an error, so the launcher stays open. macOS opens the package; Linux opens the containing folder for manual installation. The helper exits only after `get_resource` returns success. Open and installer failures are returned to `init_update_launcher`, which logs them, but the Tauri command still discards download errors, so UI success does not prove installation or handoff succeeded.
+- The native update download is not Tauri's signed-updater contract. `packages/app-lib/src/api/gradle/update.rs` accepts a caller-supplied URL, filename, and OS type. It requires an `https` URL and a plain file name without path components, rejects non-2xx responses, and streams the body into `<name>.part`, renaming it into Downloads only after the full body is written. It performs no signature or checksum verification, because the release source publishes no hash; frontend HTTP allowlists and CSP do not constrain its Rust `reqwest` download.
 - `packages/app-lib/.env.prod`, `apps/app-frontend/vite.config.ts`, Tauri capabilities, CSP, and HTTP permissions add the Xorison endpoints and Ely.by endpoints required by this path.
 - Upstream updater code remains, including `app-update.ts`, `app-update-button/`, Rust updater implementations/dependencies, and `apps/app/capabilities/updater.json`, but it is not wired into the Xorison update path. The default Cargo features and current build workflow do not enable `updater`, and the Tauri configs do not select the updater capability or supply upstream signing configuration. The updater plugin is also no longer registered in `apps/app/src/main.rs`; enabling its retained feature/capability alone would not reconnect it. Its presence does not represent a second active self-update flow.
 
@@ -153,7 +153,7 @@ The upstream Tauri updater is replaced for the fork's own launcher distribution:
 
 ### Advertising, consent, promotion, and campaign removals
 
-AstralRinth removes the desktop advertising integration and selected promotional surfaces, but not every upstream campaign or survey feature:
+Gradle removes the desktop advertising integration and selected promotional surfaces, but not every upstream campaign or survey feature:
 
 - The desktop ad WebView, ads Tauri plugin, ads capability, ads bridge/controller/CMP scripts, ad event, ad helpers, consent notification, consent settings, ad window visibility holds, and ad-related modal hooks are removed.
 - `PromotionWrapper.vue` and the desktop ad placement are deleted. Download-manager sizing no longer reserves 250 pixels for an ad.
@@ -181,12 +181,12 @@ These removals are intentional differences from the upstream desktop product.
 
 ### Discord Rich Presence
 
-AstralRinth replaces the upstream Discord Rich Presence presentation:
+Gradle replaces the upstream Discord Rich Presence presentation:
 
 - A different Discord application ID is used.
-- The asset changes from the Modrinth logo to `astralrinth_logo`.
-- Presence includes the AstralRinth version, download and support buttons, and a timestamp reset on each activity update, rather than a persistent launcher/session start.
-- Active and inactive status messages use randomized AstralRinth-specific phrases rather than only `Playing <instance>` or `Idling...`. Game exit resets presence to an inactive phrase without checking whether another instance remains running.
+- The asset changes from the Modrinth logo to `gradle_logo`.
+- Presence includes the Gradle version, download and support buttons, and a timestamp reset on each activity update, rather than a persistent launcher/session start.
+- Active and inactive status messages use randomized Gradle-specific phrases rather than only `Playing <instance>` or `Idling...`. Game exit resets presence to an inactive phrase without checking whether another instance remains running.
 - The launcher embeds its version from the frontend package metadata at compile time, so package-version changes affect Rich Presence after rebuilding.
 
 Relevant implementation is in `packages/app-lib/src/state/discord.rs` and `packages/app-lib/src/launcher/mod.rs`.
@@ -204,19 +204,19 @@ The fork adds native commands and changes the Tauri boundary:
 - `apps/app/src/api/mod.rs` serializes the external-auth-library error into a frontend-stable error code.
 - `apps/app-frontend/vite.config.ts` excludes Vue core packages from dependency optimization and accepts the `XORISON_` environment prefix.
 
-The native invocation boundary consists of frontend `invoke` wrappers and return types, registered Rust commands, permission generation in `apps/app/build.rs`, Tauri capabilities, and allowed origins where applicable. Enabled capabilities are local and scoped to the `main` window; the separate `astralrinth-external-signin` OAuth verification window is not granted the main window's native-command capabilities.
+The native invocation boundary consists of frontend `invoke` wrappers and return types, registered Rust commands, permission generation in `apps/app/build.rs`, Tauri capabilities, and allowed origins where applicable. Enabled capabilities are local and scoped to the `main` window; the separate `gradle-external-signin` OAuth verification window is not granted the main window's native-command capabilities.
 
 ### Persistence and migration changes
 
-AstralRinth changes initial defaults and adds account/library persistence:
+Gradle changes initial defaults and adds account/library persistence:
 
 - New installations default to an OLED theme rather than the upstream dark theme.
 - Telemetry defaults to disabled.
 - `minecraft_users.account_type` is added and existing rows are classified during migration. A follow-up migration renames the legacy `pirate` classification to `offline`.
 - `external_auth_libraries` stores the selected provider library asset.
 - SQLx offline query snapshots are regenerated to include `account_type` and the changed account upsert/select queries.
-- The backup directory changes from a Modrinth-branded path to `AstralRinthApp/Backups/app-db`.
-- Liquid Glass enablement reuses SQLite's `advanced_rendering` setting (default `true`); the Glass level is frontend-local under `astralrinth-glass-level`, defaults to `standard`, and is not part of database migrations or account appearance sync.
+- The backup directory changes from a Modrinth-branded path to `GradleApp/Backups/app-db`.
+- Liquid Glass enablement reuses SQLite's `advanced_rendering` setting (default `true`); the Glass level is frontend-local under `gradle-glass-level`, defaults to `standard`, and is not part of database migrations or account appearance sync.
 
 Fresh installations, existing SQLite databases, and legacy JSON imports are distinct compatibility paths. The fork modifies the historical initial migration to change theme/telemetry defaults, while startup uses SQLx's checksum-validating migrator. A reused upstream Modrinth database carrying the original migration checksum can fail before later migrations run; compatibility is not unconditional. Existing migration files match the `AR-0.19.202` fork reference, so that checksum mismatch does not by itself establish a failure for upgrades from that release.
 
@@ -224,17 +224,17 @@ SQL migrations classify existing account rows, but the legacy JSON importer requ
 
 ### Localization and user-facing text
 
-- New AstralRinth message namespaces cover external authentication, offline accounts, unsupported skins, library management, update dialogs, update diagnostics, and settings.
+- New Gradle message namespaces cover external authentication, offline accounts, unsupported skins, library management, update dialogs, update diagnostics, and settings.
 - English and Russian contain the principal fork translations; the v0.22.0 integration adds the 14 icon-editor notification/modal IDs and reorganized settings messages to both locales, updates fork branding, and preserves the intentional advertising/consent-key deletions. Changed ICU placeholders and rich-text tags are checked across the app catalogs.
-- Existing Modrinth App labels in settings, authentication errors, startup errors, and support text are replaced with AstralRinth wording where the desktop app is fork-owned.
-- Support and release links are redirected to Xorison/AstralRinth endpoints in the relevant fork UI, although some upstream support links remain for generic Minecraft or Modrinth functionality.
+- Existing Modrinth App labels in settings, authentication errors, startup errors, and support text are replaced with Gradle wording where the desktop app is fork-owned.
+- Support and release links are redirected to Xorison/Gradle endpoints in the relevant fork UI, although some upstream support links remain for generic Minecraft or Modrinth functionality.
 
 ### Repository, release, and CI/CD changes
 
 The fork also changes repository operations rather than only application code:
 
-- The root README is replaced with AstralRinth installation, feature, support, and Russian-language documentation. `readme/ru_ru/README.md` is added.
-- `STRUCTURE.md` documents the repository architecture, fork-specific behavior, and integration contracts; `AGENTS.md` contains agent instructions and links to this guide. The fork also adds `mise.toml`, the AstralRinth issue form, and an AstralRinth desktop build workflow.
+- The root README is replaced with Gradle installation, feature, support, and Russian-language documentation. `readme/ru_ru/README.md` is added.
+- `STRUCTURE.md` documents the repository architecture, fork-specific behavior, and integration contracts; `AGENTS.md` contains agent instructions and links to this guide. The fork also adds `mise.toml`, the Gradle issue form, and an Gradle desktop build workflow.
 - The build workflow targets Linux x86_64/aarch64, Windows x86_64/aarch64, and macOS x86_64/aarch64, installs the required Rust/Node/pnpm/Java tooling, builds Tauri bundles, marks experimental packages, generates SHA-256 checksum files, and uploads GitHub Actions artifacts. It does not publish GitHub/Xorison releases. It runs on configured branch/tag pushes and manual dispatch, not pull requests; Linux ARM64, Windows ARM64, and macOS x86_64 packages receive the `nightly_expiremental_` filename prefix.
 - The patch removes or replaces many upstream Modrinth workflows for website deployment, Labrinth deployment, app build/release, Crowdin automation, generic CI, PR cancellation, changelog comments, slash commands, and API-client publishing. The resulting CI/CD configuration is fork-owned rather than a mirror of upstream automation.
 - Push builds are path-filtered; changes only to omitted paths such as root `Cargo.toml`/`Cargo.lock`, `packages/api-client/`, `packages/tooling-config/`, or some retained Rust dependencies do not trigger branch builds. Tag triggers are `release-*` and `beta-*`, not the existing `AR-*` convention. There are no explicit Rust test, Clippy, formatting, or ESLint steps; frontend type checking runs as part of its build script. Checksums are generated for every regular file recursively in the bundle directory, excluding existing checksum files.
@@ -258,14 +258,14 @@ These features depend on matching commands, events, migrations, capabilities, an
 
 ### Workflow and issue configuration
 
-- `.github/workflows/astralrinth-build.yml`: AstralRinth's desktop build pipeline and its platform artifacts/checksums.
-- `.github/ISSUE_TEMPLATE/astralrinth-bug.yml`: the sole bug-report form in the patch, scoped to AstralRinth-specific issues and collecting affected area, OS, launcher version, install source, account type, reproduction steps, logs, and system details. The upstream app, website, hosting, API bug forms, and generic feature-request form are removed.
-- `.github/ISSUE_TEMPLATE/config.yml`: disables blank issues and directs users to AstralRinth Telegram support, while retaining the Modrinth Support Portal link. The configuration therefore includes both fork and upstream support destinations.
+- `.github/workflows/gradle-build.yml`: Gradle's desktop build pipeline and its platform artifacts/checksums.
+- `.github/ISSUE_TEMPLATE/gradle-bug.yml`: the sole bug-report form in the patch, scoped to Gradle-specific issues and collecting affected area, OS, launcher version, install source, account type, reproduction steps, logs, and system details. The upstream app, website, hosting, API bug forms, and generic feature-request form are removed.
+- `.github/ISSUE_TEMPLATE/config.yml`: disables blank issues and directs users to Gradle Telegram support, while retaining the Modrinth Support Portal link. The configuration therefore includes both fork and upstream support destinations.
 - `.github/instructions/i18n-convert.instructions.md`: editor/AI instruction for Vue localization, separate from GitHub Actions and the application build.
 
 ### Assets and upstream automation
 
-- Upstream cover/social-preview artwork under `.github/assets/` is removed rather than redistributed. Retained package/app README banners and `.idea/icon.svg` use the existing `packages/assets/icons/astralrinth/astralrinth-logo.svg`; `COPYING.md` contains the branding requirements.
+- Upstream cover/social-preview artwork under `.github/assets/` is removed rather than redistributed. Retained package/app README banners and `.idea/icon.svg` use the existing `packages/assets/icons/gradle/gradle-logo.svg`; `COPYING.md` contains the branding requirements.
 - Workflow dependencies include `uses:` references, helper actions, and repository settings; root automation under `scripts/` is separate from `.github/` and can also be invoked by package scripts, Cargo scripts, and documentation.
 - The unreferenced `clone-labrinth-projects.mjs`, `seed-db.sh`, `reset-db.sh`, and `import-projects.py` backend utilities are removed with the omitted projects. Cargo and pnpm explicitly exclude the omitted app workspaces; i18n scanners target retained source trees.
 
@@ -279,62 +279,62 @@ These features depend on matching commands, events, migrations, capabilities, an
 - `apps/app/src/api/`: Tauri command/plugin modules and command registration.
 - `packages/app-lib/src/lib.rs` and `packages/app-lib/src/`: shared launcher state, APIs, events, process handling, authentication, and game launch/install code.
 
-## AstralRinth feature map
+## Gradle feature map
 
-The fork-specific implementation is distributed across frontend, Tauri, and Rust library code. The directories named `astralrinth` are useful discovery points, but are not a complete list of fork behavior.
+The fork-specific implementation is distributed across frontend, Tauri, and Rust library code. The directories named `gradle` are useful discovery points, but are not a complete list of fork behavior.
 
 ### External Minecraft authentication and provider libraries
 
-- Frontend provider model and command adapters: `apps/app-frontend/src/models/astralrinth/authentication.ts`.
-- Account flows and error/input dialogs: `apps/app-frontend/src/components/ui/astralrinth/accounts/`, called from `apps/app-frontend/src/features/minecraft-accounts/accounts-card.vue`.
-- Provider/library settings UI: `apps/app-frontend/src/components/ui/settings/astralrinth/ExternalAuthLibrarySettings.vue` and the AstralRinth settings page.
-- Tauri commands and OAuth verification window: `apps/app/src/api/astralrinth/mod.rs`.
-- Provider metadata, OAuth/device flows, and provider library lifecycle: `packages/app-lib/src/models/astralrinth/` and corresponding state/API modules.
-- Provider icons: `packages/assets/icons/astralrinth/`. Account dialogs use theme-aware component styles; the optional glass override is in `apps/app-frontend/src/assets/stylesheets/liquid-glass.scss`.
+- Frontend provider model and command adapters: `apps/app-frontend/src/models/gradle/authentication.ts`.
+- Account flows and error/input dialogs: `apps/app-frontend/src/components/ui/gradle/accounts/`, called from `apps/app-frontend/src/features/minecraft-accounts/accounts-card.vue`.
+- Provider/library settings UI: `apps/app-frontend/src/components/ui/settings/gradle/ExternalAuthLibrarySettings.vue` and the Gradle settings page.
+- Tauri commands and OAuth verification window: `apps/app/src/api/gradle/mod.rs`.
+- Provider metadata, OAuth/device flows, and provider library lifecycle: `packages/app-lib/src/models/gradle/` and corresponding state/API modules.
+- Provider icons: `packages/assets/icons/gradle/`. Account dialogs use theme-aware component styles; the optional glass override is in `apps/app-frontend/src/assets/stylesheets/liquid-glass.scss`.
 
 UI provider IDs, Tauri command names and serialized data, Rust provider metadata, credential storage, and launcher argument construction form an end-to-end contract. Minecraft-account sign-in and Modrinth-account sign-in are separate flows.
 
-### AstralRinth launcher self-updates (Xorison)
+### Gradle launcher self-updates (Xorison)
 
 The fork's launcher update is separate from upstream Modrinth app updates:
 
-1. `apps/app-frontend/src/helpers/astralrinth/update.ts` checks the Xorison-hosted AstralRinth release API, compares versions, selects platform installer assets, and starts installation.
+1. `apps/app-frontend/src/helpers/gradle/update.ts` checks the Xorison-hosted Gradle release API, compares versions, selects platform installer assets, and starts installation.
 2. `apps/app-frontend/src/App.vue` runs the check and presents the update notification/modal entry point.
-3. `apps/app-frontend/src/components/ui/astralrinth/LauncherUpdateModal.vue` presents release information and installer selection.
-4. `apps/app-frontend/src/components/ui/settings/astralrinth/UpdateSettings.vue` provides the related developer-only diagnostics settings surface.
-5. `apps/app/src/api/utils.rs` registers `plugin:utils|init_update_launcher`; `packages/app-lib/src/util/astralrinth/utils.rs` and `packages/app-lib/src/api/astralrinth/update.rs` download/open the package and handle process exit. The Tauri `api/astralrinth/` module handles authentication, not updates.
+3. `apps/app-frontend/src/components/ui/gradle/LauncherUpdateModal.vue` presents release information and installer selection.
+4. `apps/app-frontend/src/components/ui/settings/gradle/UpdateSettings.vue` provides the related developer-only diagnostics settings surface.
+5. `apps/app/src/api/utils.rs` registers `plugin:utils|init_update_launcher`; `packages/app-lib/src/util/gradle/utils.rs` and `packages/app-lib/src/api/gradle/update.rs` download/open the package and handle process exit. The Tauri `api/gradle/` module handles authentication, not updates.
 
 `apps/app-frontend/src/providers/app-update.ts` and `app-update-button/` represent the upstream app-update UI/state. Their action wiring is separate from the active Xorison update path.
 
-### AstralRinth news service (Xorison)
+### Gradle news service (Xorison)
 
-- `apps/app-frontend/src/helpers/astralrinth/news.ts` exposes `fetchAstralRinthNews(signal?)` and `AstralRinthNewsArticle`. It sends an unauthenticated GET to `${XORISON_API_URL}public/product/astralrinth/news` through the Tauri HTTP plugin, with no query parameters or request body. It supplies the AstralRinth news modal separately from the existing Modrinth news feed.
-- `apps/app-frontend/src/providers/astralrinth-news.ts` owns the shared TanStack Query state, injected by `App.vue`. `setupApp()` explicitly calls the provider's `load()` to start a non-blocking news request during frontend initialization; an API failure is presented in the news UI, not treated as a fatal startup failure. Automatic query execution, retries, and mount/focus/reconnect refetches are disabled. Modal open/close and page changes reuse this state without requesting news. The provider passes the query abort signal to the service; the App-owned observer remains while the modal is closed, so closing the modal does not cancel a request, but unmounting the app does.
-- `apps/app-frontend/src/components/ui/astralrinth/news/index.vue` adds an independent sidebar button alongside the unchanged Modrinth news feed. A brand-colored accessible indicator appears when the latest article's age is between zero and four days inclusive; future-dated and older latest articles do not activate it. This is a recency indicator, not unread state: opening the modal does not clear it, and its age condition is reevaluated over time.
+- `apps/app-frontend/src/helpers/gradle/news.ts` exposes `fetchGradleNews(signal?)` and `GradleNewsArticle`. It sends an unauthenticated GET to `${XORISON_API_URL}public/product/gradle/news` through the Tauri HTTP plugin, with no query parameters or request body. It supplies the Gradle news modal separately from the existing Modrinth news feed.
+- `apps/app-frontend/src/providers/gradle-news.ts` owns the shared TanStack Query state, injected by `App.vue`. `setupApp()` explicitly calls the provider's `load()` to start a non-blocking news request during frontend initialization; an API failure is presented in the news UI, not treated as a fatal startup failure. Automatic query execution, retries, and mount/focus/reconnect refetches are disabled. Modal open/close and page changes reuse this state without requesting news. The provider passes the query abort signal to the service; the App-owned observer remains while the modal is closed, so closing the modal does not cancel a request, but unmounting the app does.
+- `apps/app-frontend/src/components/ui/gradle/news/index.vue` adds an independent sidebar button alongside the unchanged Modrinth news feed. A brand-colored accessible indicator appears when the latest article's age is between zero and four days inclusive; future-dated and older latest articles do not activate it. This is a recency indicator, not unread state: opening the modal does not clear it, and its age condition is reevaluated over time.
 - The scrollable `NewModal` displays two articles per client-side page with shared pagination in its fixed action area. Opening the modal or receiving a changed dataset resets to page one; changing page scrolls the content to the top without an API request. There are no manual refresh or error retry buttons; news loads during startup only. The startup loader uses TanStack Query state to skip an in-flight or already completed request, including failed attempts; no manual refresh state or cooldown is retained.
-- `astralrinth-news-card.vue` renders image/title/summary/date previews with locale-aware dates. A localized `New` badge beside each date uses the provider's shared reactive recency check (zero to four days inclusive), also used by the sidebar indicator; future-dated and older articles have no badge. Banner images retain their proportions without cropping, with maximum width 512px, maximum height 300px, and responsive width limits. Nullable or broken images do not hide the text; only HTTP(S) links and image sources or embedded PNG/JPEG data URIs are accepted. The app CSP permits arbitrary HTTPS image origins but restricts HTTP images to its explicit exceptions. Article links open through the existing app-wide external-link handler. Duplicate IDs are supported by including the list index in card keys. Loading, empty, error, and rate-limit states use the shared localization system; English and Russian message entries are in `apps/app-frontend/src/locales/en-US/index.json` and `apps/app-frontend/src/locales/ru-RU/index.json`.
+- `gradle-news-card.vue` renders image/title/summary/date previews with locale-aware dates. A localized `New` badge beside each date uses the provider's shared reactive recency check (zero to four days inclusive), also used by the sidebar indicator; future-dated and older articles have no badge. Banner images retain their proportions without cropping, with maximum width 512px, maximum height 300px, and responsive width limits. Nullable or broken images do not hide the text; only HTTP(S) links and image sources or embedded PNG/JPEG data URIs are accepted. The app CSP permits arbitrary HTTPS image origins but restricts HTTP images to its explicit exceptions. Article links open through the existing app-wide external-link handler. Duplicate IDs are supported by including the list index in card keys. Loading, empty, error, and rate-limit states use the shared localization system; English and Russian message entries are in `apps/app-frontend/src/locales/en-US/index.json` and `apps/app-frontend/src/locales/ru-RU/index.json`.
 - Every response article must contain `id`, `title`, `summary`, `url`, and `published_at`; `image_url` may be omitted. The client validates string/null types and a finite `Date.parse(published_at)`, normalizes omitted images to `null` for UI callers, removes extra properties, and sorts newest first client-side. Server-side ordering/pagination is an externally supplied contract, not verified by this repository. Equal timestamps retain response order; empty strings, duplicate IDs, and future publication dates are not filtered.
 - The client helper does not resolve filenames, load image files, or encode/decode image data; it normalizes omitted images to `null` and otherwise preserves accepted image strings/null. UI rendering applies its own safe-source checks. The external service's preservation/omission of image fields and image-hosting behavior are externally supplied contracts, not repository-verified implementation details.
 - The externally supplied service contract describes news JSON being read per request, independently served images, and a separate static image browser at `https://xorison.dev/images/`. This checkout does not contain that server implementation and cannot verify those behaviors. Browser caching can affect replaced images; changing the filename provides a new image URL.
-- HTTP failures, including `429` and `500`, throw `AstralRinthNewsError` with `httpStatus` before success-response parsing. The client cannot establish the server-side cause of a failure, such as unreadable or invalid news JSON. Malformed successful responses also throw this error; transport/cancellation errors propagate. The AstralRinth feed remains separate from the Modrinth news filtering; opening its modal does not replace or merge the two feeds.
+- HTTP failures, including `429` and `500`, throw `GradleNewsError` with `httpStatus` before success-response parsing. The client cannot establish the server-side cause of a failure, such as unreadable or invalid news JSON. Malformed successful responses also throw this error; transport/cancellation errors propagate. The Gradle feed remains separate from the Modrinth news filtering; opening its modal does not replace or merge the two feeds.
 
 ### Skins, Ears, and account-specific behavior
 
-- Skin page and fork account UI: `apps/app-frontend/src/pages/Skins.vue` and `apps/app-frontend/src/components/ui/astralrinth/skin/UnsupportedSkinAccount.vue`.
+- Skin page and fork account UI: `apps/app-frontend/src/pages/Skins.vue` and `apps/app-frontend/src/components/ui/gradle/skin/UnsupportedSkinAccount.vue`.
 - Ears controls and skin rendering: `apps/app-frontend/src/helpers/rendering/`, `apps/app-frontend/src/components/ui/skin/`, and the skin page.
 - Account card/avatar rendering: `apps/app-frontend/src/features/minecraft-accounts/accounts-card.vue` and `helpers/rendering/player-head.ts`.
-- Backend authentication, provider metadata, and launcher integration: `packages/app-lib/src/models/astralrinth/` plus `packages/app-lib/src/launcher/`.
+- Backend authentication, provider metadata, and launcher integration: `packages/app-lib/src/models/gradle/` plus `packages/app-lib/src/launcher/`.
 
 The current UI lazily acquires/releases baked previews through `BakedSkinButton` and `skin-previews.ts`. Rendering helpers have been reorganized over time; older imports from `batch-skin-renderer.ts` may no longer match current exports. Account-type checks, custom skin capabilities, Ears behavior, and URL/resource cleanup are coupled to this rendering lifecycle.
 
 ### Liquid Glass and visual settings
 
-- Settings registration: `apps/app-frontend/src/features/settings/app-settings-modal/index.vue`; the AstralRinth Visual tab is marked as beta.
-- Controls and save/reset: `apps/app-frontend/src/components/ui/settings/astralrinth/VisualSettings.vue` edits `useTheme().advancedRendering` and `glassLevel` through the modal's unsaved-changes/save/reset flow. The three-position slider is disabled while Liquid Glass is off or a save is in progress; edits apply after saving, not as a live preview.
-- Persistence: the toggle saves the existing SQLite `advanced_rendering` setting. `apps/app-frontend/src/composables/use-theme.ts` loads/saves the level separately in WebView local storage under `astralrinth-glass-level`. Missing, invalid, or unreadable stored values fall back to `standard`; storage-write failures are ignored, so the level may not survive a restart if storage is unavailable. The level is not synced with account appearance, and neither control adds a database setting or migration.
+- Settings registration: `apps/app-frontend/src/features/settings/app-settings-modal/index.vue`; the Gradle Visual tab is marked as beta.
+- Controls and save/reset: `apps/app-frontend/src/components/ui/settings/gradle/VisualSettings.vue` edits `useTheme().advancedRendering` and `glassLevel` through the modal's unsaved-changes/save/reset flow. The three-position slider is disabled while Liquid Glass is off or a save is in progress; edits apply after saving, not as a live preview.
+- Persistence: the toggle saves the existing SQLite `advanced_rendering` setting. `apps/app-frontend/src/composables/use-theme.ts` loads/saves the level separately in WebView local storage under `gradle-glass-level`. Missing, invalid, or unreadable stored values fall back to `standard`; storage-write failures are ignored, so the level may not survive a restart if storage is unavailable. The level is not synced with account appearance, and neither control adds a database setting or migration.
 - Levels: `matte` uses near-opaque surfaces and 32px blur without glass-surface gradients; `standard` is the default translucent/blurred style with gradients and theme-specific blur; `transparent` lowers background opacity and removes glass backdrop filtering and glass-surface gradients. These settings do not remove unrelated component gradients or decorative app-background accents. Accessibility/unsupported-backdrop-filter fallbacks can still make surfaces opaque.
 - Activation and styles: `apps/app-frontend/src/App.vue` watches `advancedRendering` and `glassLevel`, toggles `html.liquid-glass`, and sets `html[data-glass-level]`; `apps/app-frontend/src/assets/stylesheets/global.scss` imports `liquid-glass.scss`.
-- Appearance UI: `apps/app-frontend/src/features/settings/display/appearance-settings.vue` hides the upstream Advanced rendering control to avoid exposing the same setting twice. The AstralRinth Visual tab is the app's control surface for this shared setting.
+- Appearance UI: `apps/app-frontend/src/features/settings/display/appearance-settings.vue` hides the upstream Advanced rendering control to avoid exposing the same setting twice. The Gradle Visual tab is the app's control surface for this shared setting.
 - Decoration: glass backgrounds and blur for panels, buttons, switches, and input wrappers use negative-z-index pseudo-elements with `pointer-events: none`; menus retain their own decorative `::before`. Native input backgrounds and slider decoration are handled directly where appropriate. Shadows stay on clipping panel hosts so `overflow-clip` does not cut off the outer glass shadow. The override includes opaque fallbacks, contrast/forced-color handling, and reduced-motion rules.
 - Color contract: glass decoration changes background alpha while foreground colors, font styles, and component interaction/disabled states remain owned by the theme and components. Background colors come from theme surface tokens or semantic component backgrounds and are mixed with `transparent`. Blur uses `backdrop-filter`, not whole-element `opacity`/`filter`.
 - Button states: quiet/outlined buttons retain their native backgrounds paired with their native hover/focus colors. Their glass overlay is transparent; outlined buttons additionally disable backdrop filtering on `::after` and use `contain: paint` to confine descendant decoration to the button's own rounded bounds during native hover, pressed, and disabled states. This containment separates button decoration from the surrounding panel without changing icon or text colors.
@@ -347,9 +347,9 @@ Liquid Glass is a visual layer over native component behavior, including modal t
 
 - Startup, launcher branding, and privacy override: `apps/app-frontend/src/App.vue`; the current fork sets telemetry off during app startup.
 - New-icon-editor notification: `apps/app-frontend/src/components/ui/new-icon-editor-notification/`, invoked from the app startup path. It is a user-facing icon-management notification, separate from removed advertising surfaces.
-- AstralRinth-specific startup/random text and launcher changes may live in shared files such as `packages/app-lib/src/launcher/mod.rs`, not just fork-named modules.
+- Gradle-specific startup/random text and launcher changes may live in shared files such as `packages/app-lib/src/launcher/mod.rs`, not just fork-named modules.
 - Translations are maintained under `apps/app-frontend/src/locales/`, including the English and Russian fork messages.
-- Fork workflows and release automation also live in `.github/`, including the AstralRinth build workflow.
+- Fork workflows and release automation also live in `.github/`, including the Gradle build workflow.
 
 ## Shared upstream contracts and data migrations
 
@@ -370,7 +370,7 @@ The v0.22.0 comparison patch is `patches/cmp_v0.22.0.patch`. It records the fork
 - **Adapted:** `App.vue` composes the extracted `app/shell/sidebar/` and `app/shell/title-bar/`, with route-loading/scroll-restoration state in `app/runtime/`. Settings live under `features/settings/` and instance settings under `features/instances/settings-modal/`. The settings modal's typed context owns unsaved-change controllers; `settings-actions.ts` connects instance-default links to the relocated modal.
 - **Preserved:** `features/minecraft-accounts/context.ts` exposes `MinecraftAccountsActions`, including `showAccountLoginModal`. The sidebar adapts the account card's exposed actions, while required-account dialogs and the skin page open the shared Microsoft/offline/external chooser. The Modrinth feed/filter moved to `features/news/queries.ts`; the separate Xorison feed, launcher-update notifications, icon-editor notification, direct `info` event, telemetry override, Liquid Glass settings, and fork Discord presentation remain connected.
 - **Adapted:** library errors use `anyhow` with typed `ErrorKind` downcasts. Native `CommandError` serialization preserves `external_auth_library_not_installed` through added context; Microsoft authentication error UI now selects structured backend codes rather than parsing text. New external-file download and shared-instance publish flows span `components/ui/download-manager/external-file-downloads.ts`, `shared-instance-publishes.ts`, `providers/setup/file-download.ts`, Tauri commands, app-lib shared-instance APIs, and API-client contracts. Their command registration, build permissions, event bindings, cancellation, and error mapping must remain aligned. Rust service state now separates database/process/presence ownership.
-- **Preserved:** backup inspection failures abort before migrations; failed SQLite `VACUUM INTO` snapshots do not fall back to unchecked raw DB/WAL copies. The `astralrinth_backup_failure_prevents_migrations` library test covers the initialization boundary.
+- **Preserved:** backup inspection failures abort before migrations; failed SQLite `VACUUM INTO` snapshots do not fall back to unchecked raw DB/WAL copies. The `gradle_backup_failure_prevents_migrations` library test covers the initialization boundary.
 - **Intentionally not adopted:** upstream startup deletion of old per-item API caches. Installed-content and linked-modpack views need stale metadata when disconnected. The cache-expiry index migration is retained, but no automatic expiry deletion runs. Explicit user cache clearing remains available.
 - **Intentionally removed:** reintroduced advertising/consent implementations, sidebar promotion, deleted campaign/onboarding UI, omitted app projects and their workspace/lockfile entries, obsolete backend utilities, and upstream cover artwork. The unused website-only `PageLoadingBar` and its reintroduced export remain absent. Onboarding state initialization and existing non-removed campaign functionality remain.
 

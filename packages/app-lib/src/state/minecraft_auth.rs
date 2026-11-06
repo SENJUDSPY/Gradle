@@ -1,5 +1,5 @@
 use crate::ErrorKind;
-use crate::models::astralrinth::authentication::{
+use crate::models::gradle::authentication::{
     external_auth_provider, refresh_external_credentials,
 };
 use crate::util::fetch::INSECURE_REQWEST_CLIENT;
@@ -272,7 +272,7 @@ pub async fn login_finish(
     Ok(credentials)
 }
 
-// This code is modified by AstralRinth
+// This code is modified by Gradle
 #[tracing::instrument]
 pub async fn offline_auth(
     name: &str,
@@ -302,7 +302,7 @@ pub async fn offline_auth(
     Ok(credentials)
 }
 
-// This code is modified by AstralRinth
+// This code is modified by Gradle
 #[derive(Deserialize, Debug)]
 pub enum AccountType {
     Unknown,
@@ -404,7 +404,7 @@ impl Credentials {
         if self.expires > Utc::now() + Duration::minutes(5) {
             return Ok(());
         }
-		// This code is modified by AstralRinth
+		// This code is modified by Gradle
         if external_auth_provider(&self.account_type).is_some() {
             if refresh_external_credentials(self).await? {
                 self.upsert(exec).await?;

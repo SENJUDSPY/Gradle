@@ -1,10 +1,10 @@
-![AstralRinth](../../packages/assets/icons/astralrinth/astralrinth-logo.svg)
+![Gradle](../../packages/assets/icons/gradle/gradle-logo.svg)
 
-## AstralRinth desktop host
+## Gradle desktop host
 
-AstralRinth is a Modrinth-based desktop launcher built with [Tauri](https://tauri.app/) and [Vue](https://vuejs.org/).
+Gradle is a Modrinth-based desktop launcher built with [Tauri](https://tauri.app/) and [Vue](https://vuejs.org/).
 
-For downloads and everyday use, see the [AstralRinth guide](../../README.md).
+For downloads and everyday use, see the [Gradle guide](../../README.md).
 
 ## Development
 

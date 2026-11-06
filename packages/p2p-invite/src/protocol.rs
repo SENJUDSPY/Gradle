@@ -1,6 +1,6 @@
 //! P2P Tunnel Protocol definitions and framing constants
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Gradle authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Gradle authors (MIT License).
 
 use anyhow::{Result, bail};
 use std::time::Duration;

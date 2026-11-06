@@ -140,14 +140,15 @@ export const IntercomBubbleIcon = _IntercomBubbleIcon
 export const MinecraftServerIcon = _MinecraftServerIcon
 export const LinuxIcon = _LinuxIcon
 
-// This code is modified by AstralRinth
-import _AstralRinthLogo from './icons/astralrinth/astralrinth-logo.svg?component'
-import _ElyByIcon from './icons/astralrinth/elyby-icon.svg?component'
-import _MicrosoftIcon from './icons/astralrinth/microsoft.svg?component'
-import _OfflineIcon from './icons/astralrinth/offline.svg?component'
+// This code is modified by Gradle
+import _GradleLogo from './icons/gradle/gradle-logo.svg?component'
+import _ElyByIcon from './icons/gradle/elyby-icon.svg?component'
+import _MicrosoftIcon from './icons/gradle/microsoft.svg?component'
+import _OfflineIcon from './icons/gradle/offline.svg?component'
 export const OfflineIcon = _OfflineIcon
 export const MicrosoftIcon = _MicrosoftIcon
-export const AstralRinthLogo = _AstralRinthLogo
+export const GradleLogo = _GradleLogo
+export const AstralRinthLogo = _GradleLogo
 export const ElyByIcon = _ElyByIcon
 
 // Skin Models

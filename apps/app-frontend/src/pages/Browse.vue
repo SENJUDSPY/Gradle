@@ -559,7 +559,7 @@ const messages = defineMessages({
 	horizonAssetsCompatibleNotice: {
 		id: 'app.browse.horizon.assets-compatible-notice',
 		defaultMessage:
-			'Horizon natively supports resource packs, shaders (wgpu/Vulkan), and data packs from AstralRinth.',
+			'Horizon natively supports resource packs, shaders (wgpu/Vulkan), and data packs from Gradle.',
 	},
 	addServersToInstance: {
 		id: 'app.browse.add-servers-to-instance',

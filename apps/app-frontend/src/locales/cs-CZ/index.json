@@ -1500,7 +1500,7 @@
     "message": "Nejstarší"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Nastavení proměnného prostředí při spuštění instance."
@@ -1860,7 +1860,7 @@
     "message": "Stiskněte <shortcut>N</shortcut> pro rychlé vytvoření instance"
   },
   "app.welcome-screen.title": {
-    "message": "Vítejte v AstralRinth"
+    "message": "Vítejte v Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "priklad.modrinth.gg"

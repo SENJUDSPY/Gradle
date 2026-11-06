@@ -1,1 +1,1 @@
-pub mod astralrinth;
+pub mod gradle;

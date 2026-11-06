@@ -1,6 +1,6 @@
 //! Invite code encoder, decoder, and secure memory representation
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Gradle authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Gradle authors (MIT License).
 
 use anyhow::{Context, Result, bail};
 use base64::Engine;

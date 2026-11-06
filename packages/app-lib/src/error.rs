@@ -125,7 +125,7 @@ pub enum ErrorKind {
     SharedInstancesApiError,
 
     #[error(
-        "The {provider_name} authentication library is not installed or corrupted. Install it from AstralRinth settings before launching Minecraft."
+        "The {provider_name} authentication library is not installed or corrupted. Install it from Gradle settings before launching Minecraft."
     )]
     ExternalAuthLibraryNotInstalled {
         provider_name: String,
@@ -455,7 +455,7 @@ mod tests {
 	use super::{Error, ErrorKind, error_code};
 
 	#[test]
-	fn astralrinth_external_library_code_survives_context() {
+	fn gradle_external_library_code_survives_context() {
 		let error = Error::from(ErrorKind::ExternalAuthLibraryNotInstalled {
 			provider_name: "Ely.by".to_string(),
 		})
@@ -470,7 +470,7 @@ mod tests {
 	}
 
 	#[test]
-	fn astralrinth_library_failures_keep_their_error_categories() {
+	fn gradle_library_failures_keep_their_error_categories() {
 		for (kind, code) in [
 			(
 				ErrorKind::NetworkErrorOccurred {

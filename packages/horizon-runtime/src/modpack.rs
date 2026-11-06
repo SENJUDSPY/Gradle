@@ -4,7 +4,7 @@
 //! can be carried over to Horizon (data packs, resource packs, shaders, configs, asset mods)
 //! and which Java bytecode mods (.class jars) cannot run natively on Rust.
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Horizon authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Horizon authors (MIT License).
 
 use anyhow::{Context, Result, bail};
 use serde::{Deserialize, Serialize};

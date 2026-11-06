@@ -1611,7 +1611,7 @@
     "message": "Oudste"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Omgevingsvariabelen die bij het opstarten van een instantie worden ingesteld."
@@ -3096,7 +3096,7 @@
     "message": "Druk op <shortcut>N</shortcut> om snel een instantie te maken"
   },
   "app.welcome-screen.title": {
-    "message": "Welkom bij AstralRinth"
+    "message": "Welkom bij Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "voorbeeld.modrinth.gg"

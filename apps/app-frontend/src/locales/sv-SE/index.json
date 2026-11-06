@@ -1617,7 +1617,7 @@
     "message": "Äldst"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Miljövariabler som anges när en instans startas."
@@ -3024,7 +3024,7 @@
     "message": "Tryck på <shortcut>N</shortcut> för att snabbt skapa en instans"
   },
   "app.welcome-screen.title": {
-    "message": "Välkommen till AstralRinth"
+    "message": "Välkommen till Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "exempel.modrinth.gg"

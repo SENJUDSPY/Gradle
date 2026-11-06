@@ -3,7 +3,7 @@
 //! Provides peer-to-peer game port tunneling via iroh QUIC with invite codes,
 //! automatic NAT traversal / relay fallback, host approval, and token revocation.
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Gradle authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Gradle authors (MIT License).
 
 pub mod host;
 pub mod invite;

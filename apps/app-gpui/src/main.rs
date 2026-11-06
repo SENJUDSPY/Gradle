@@ -87,7 +87,7 @@ impl Render for AppShell {
 							.text_size(px(17.))
 							.font_weight(FontWeight::SEMIBOLD)
 							.text_color(rgb(0xb9e8a7))
-							.child("AstralRinth"),
+							.child("Gradle"),
 					)
 					.child(
 						div()
@@ -137,7 +137,7 @@ fn main() {
 			WindowOptions {
 				window_bounds: Some(WindowBounds::Windowed(bounds)),
 				window_min_size: Some(size(px(1100.), px(700.))),
-				app_id: Some("AstralRinthApp".into()),
+				app_id: Some("GradleApp".into()),
 				..Default::default()
 			},
 			|_, cx| {
@@ -146,7 +146,7 @@ fn main() {
 				})
 			},
 		)
-		.expect("failed to open the AstralRinth GPUI window");
+		.expect("failed to open the Gradle GPUI window");
 		cx.activate(true);
 	});
 }

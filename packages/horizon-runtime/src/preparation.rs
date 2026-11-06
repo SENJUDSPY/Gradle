@@ -4,7 +4,7 @@
 //! verifies jar checksums, extracts client textures, models, blockstates, fonts, languages,
 //! and copies sound events from the user's asset store.
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Horizon authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Horizon authors (MIT License).
 
 use crate::releases::horizon_data_dir;
 use crate::requirements::{

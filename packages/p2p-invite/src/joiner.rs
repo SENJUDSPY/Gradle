@@ -1,6 +1,6 @@
 //! Joiner engine for P2P Minecraft game tunneling
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Gradle authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Gradle authors (MIT License).
 
 use crate::invite::InviteCode;
 use crate::protocol::{

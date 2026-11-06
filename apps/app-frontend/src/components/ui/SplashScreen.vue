@@ -2,7 +2,7 @@
 	<Transition name="splash-fade" @after-leave="onAfterLeave">
 		<div v-if="!doneLoading" class="splash-screen" :class="`${theme.active}-mode`">
 			<div class="app-logo-wrapper" data-tauri-drag-region>
-				<img class="app-logo" :src="astralrinthAppLogo" alt="AstralRinth App" />
+				<img class="app-logo" :src="gradleAppLogo" alt="Gradle App" />
 				<ProgressBar class="loading-bar" :progress="Math.min(loadingProgress, 100)" />
 				<span v-if="message">{{ message }}</span>
 			</div>
@@ -17,7 +17,7 @@
 import { injectLoadingState } from '@modrinth/ui'
 import { onMounted, ref, watch } from 'vue'
 
-import astralrinthAppLogo from '@/assets/astralrinth-app.svg?url'
+import gradleAppLogo from '@/assets/gradle-app.svg?url'
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import { useAppEvent } from '@/composables/use-app-event'
 import { useTheme } from '@/composables/use-theme.ts'

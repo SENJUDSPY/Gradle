@@ -1,5 +1,5 @@
 [package]
-name = "astralrinth-gpui"
+name = "gradle-gpui"
 version = "0.1.0"
 edition.workspace = true
 rust-version.workspace = true

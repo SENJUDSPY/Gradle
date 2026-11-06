@@ -136,7 +136,16 @@ pub fn app_db_backup_dir() -> crate::Result<PathBuf> {
         ),
     )?;
 
-    Ok(base.join("AstralRinthApp").join("Backups").join("app-db"))
+    let target = base.join("GradleApp").join("Backups").join("app-db");
+    let legacy = base.join("AstralRinthApp").join("Backups").join("app-db");
+    if legacy.exists() && !target.exists() {
+        if let Some(parent) = target.parent() {
+            let _ = std::fs::create_dir_all(parent);
+        }
+        let _ = std::fs::rename(&legacy, &target);
+    }
+
+    Ok(target)
 }
 
 async fn has_user_tables(conn: &mut SqliteConnection) -> crate::Result<bool> {

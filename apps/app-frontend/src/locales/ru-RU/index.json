@@ -621,7 +621,7 @@
     "message": "Без имени над скином"
   },
   "app.appearance-settings.minimize-launcher.description": {
-    "message": "Сворачивать AstralRinth при запуске Minecraft."
+    "message": "Сворачивать Gradle при запуске Minecraft."
   },
   "app.appearance-settings.minimize-launcher.title": {
     "message": "Сворачивание приложения"
@@ -678,7 +678,7 @@
 		"message": "Закрыть"
 	},
 	"app.icon-editor.apply-icons-modal.description": {
-		"message": "Создавайте собственные значки для сборок прямо в AstralRinth. Сочетайте фоны с символами из Minecraft и популярных модов!"
+		"message": "Создавайте собственные значки для сборок прямо в Gradle. Сочетайте фоны с символами из Minecraft и популярных модов!"
 	},
 	"app.icon-editor.apply-icons-modal.instances-without-icons": {
 		"message": "{count, plural, one {У # сборки ещё нет значка. Назначить ей случайный значок для начала?} few {У # сборок ещё нет значков. Назначить им случайные значки для начала?} many {У # сборок ещё нет значков. Назначить им случайные значки для начала?} other {У # сборки ещё нет значков. Назначить им случайные значки для начала?}}"
@@ -758,496 +758,496 @@
 	"app.shared-instance-publish.uploading": {
 		"message": "Отправка обновления…"
 	},
-  "astralrinth.app.launcher-update.available.action": {
+  "gradle.app.launcher-update.available.action": {
     "message": "Посмотреть обновление"
   },
-  "astralrinth.app.launcher-update.available.text": {
-    "message": "Новая версия AstralRinth уже доступна для загрузки."
+  "gradle.app.launcher-update.available.text": {
+    "message": "Новая версия Gradle уже доступна для загрузки."
   },
-  "astralrinth.app.launcher-update.fetch-unavailable.text": {
+  "gradle.app.launcher-update.fetch-unavailable.text": {
     "message": "Не удалось проверить коммит сборки лаунчера, поэтому наличие обновлений проверить нельзя."
   },
-  "astralrinth.app.launcher-update.fetch-unavailable.title": {
+  "gradle.app.launcher-update.fetch-unavailable.title": {
     "message": "Не удалось получить информацию об обновлении"
   },
-  "astralrinth.app.launcher-update.available.title": {
+  "gradle.app.launcher-update.available.title": {
     "message": "Доступно обновление лаунчера"
   },
-  "astralrinth.app.settings.external-auth-libraries.description": {
+  "gradle.app.settings.external-auth-libraries.description": {
     "message": "Выберите и установите библиотеку аутентификации, которая используется при запуске Minecraft с внешним профилем игрока."
   },
-  "astralrinth.app.settings.external-auth-libraries.install-selected": {
+  "gradle.app.settings.external-auth-libraries.install-selected": {
     "message": "Установить"
   },
-  "astralrinth.app.settings.external-auth-libraries.installed": {
+  "gradle.app.settings.external-auth-libraries.installed": {
     "message": "{providerName}: библиотека {version} установлена"
   },
-  "astralrinth.app.settings.external-auth-libraries.installing": {
+  "gradle.app.settings.external-auth-libraries.installing": {
     "message": "Установка..."
   },
-  "astralrinth.app.settings.external-auth-libraries.load-failed": {
+  "gradle.app.settings.external-auth-libraries.load-failed": {
     "message": "Не удалось загрузить библиотеки аутентификации: {error}"
   },
-  "astralrinth.app.settings.external-auth-libraries.loading": {
+  "gradle.app.settings.external-auth-libraries.loading": {
     "message": "Загрузка доступных версий библиотек..."
   },
-  "astralrinth.app.settings.external-auth-libraries.local-only": {
+  "gradle.app.settings.external-auth-libraries.local-only": {
     "message": "Сервер недоступен, поэтому отображаются только локально установленные версии."
   },
-  "astralrinth.app.settings.external-auth-libraries.no-versions": {
+  "gradle.app.settings.external-auth-libraries.no-versions": {
     "message": "Совместимые версии библиотеки не найдены."
   },
-  "astralrinth.app.settings.external-auth-libraries.not-selected": {
+  "gradle.app.settings.external-auth-libraries.not-selected": {
     "message": "Не выбрана"
   },
-  "astralrinth.app.settings.external-auth-libraries.reinstall": {
+  "gradle.app.settings.external-auth-libraries.reinstall": {
     "message": "Переустановить"
   },
-  "astralrinth.app.settings.external-auth-libraries.request-server": {
+  "gradle.app.settings.external-auth-libraries.request-server": {
     "message": "Обновить"
   },
-  "astralrinth.app.settings.external-auth-libraries.requesting-server": {
+  "gradle.app.settings.external-auth-libraries.requesting-server": {
     "message": "Запрос данных..."
   },
-  "astralrinth.app.settings.external-auth-libraries.retry": {
+  "gradle.app.settings.external-auth-libraries.retry": {
     "message": "Повторить"
   },
-  "astralrinth.app.settings.external-auth-libraries.selected-version": {
+  "gradle.app.settings.external-auth-libraries.selected-version": {
     "message": "Выбранная версия"
   },
-  "astralrinth.app.settings.external-auth-libraries.title": {
+  "gradle.app.settings.external-auth-libraries.title": {
     "message": "Библиотеки аутентификации"
   },
-  "astralrinth.app.settings.external-auth-libraries.version": {
+  "gradle.app.settings.external-auth-libraries.version": {
     "message": "Версия"
   },
-  "astralrinth.app.settings.sidebar.label.astralrinth": {
-    "message": "AstralRinth"
+  "gradle.app.settings.sidebar.label.gradle": {
+    "message": "Gradle"
   },
-  "astralrinth.app.settings.tabs.external-auth-libraries": {
+  "gradle.app.settings.tabs.external-auth-libraries": {
     "message": "Библиотеки аутентификации"
   },
-  "astralrinth.app.settings.tabs.visual": {
+  "gradle.app.settings.tabs.visual": {
     "message": "Визуальные настройки"
   },
-  "astralrinth.app.settings.tabs.horizon": {
+  "gradle.app.settings.tabs.horizon": {
     "message": "Движок Horizon"
   },
-  "astralrinth.app.settings.horizon.title": {
+  "gradle.app.settings.horizon.title": {
     "message": "Движок Horizon"
   },
-  "astralrinth.app.settings.horizon.description": {
+  "gradle.app.settings.horizon.description": {
     "message": "Настройка нативного клиента Horizon (Rust): пресеты графики, дальность прорисовки рельефа (LOD) до 1024 чанков, тактильная отдача геймпада и дополнительные возможности."
   },
-  "astralrinth.app.settings.horizon.graphics.title": {
+  "gradle.app.settings.horizon.graphics.title": {
     "message": "Графика и дальний рельеф"
   },
-  "astralrinth.app.settings.horizon.graphics.desc": {
+  "gradle.app.settings.horizon.graphics.desc": {
     "message": "Horizon запускает Minecraft 26.3 нативно через wgpu/Vulkan. Дальний рельеф расширяет видимость миров далеко за пределы ванильных ограничений."
   },
-  "astralrinth.app.settings.horizon.preset.title": {
+  "gradle.app.settings.horizon.preset.title": {
     "message": "Пресет графики"
   },
-  "astralrinth.app.settings.horizon.preset.performance": {
+  "gradle.app.settings.horizon.preset.performance": {
     "message": "Производительность"
   },
-  "astralrinth.app.settings.horizon.preset.balanced": {
+  "gradle.app.settings.horizon.preset.balanced": {
     "message": "Сбалансированный"
   },
-  "astralrinth.app.settings.horizon.preset.quality": {
+  "gradle.app.settings.horizon.preset.quality": {
     "message": "Качество"
   },
-  "astralrinth.app.settings.horizon.preset.ultra": {
+  "gradle.app.settings.horizon.preset.ultra": {
     "message": "Ультра"
   },
-  "astralrinth.app.settings.horizon.render-distance.title": {
+  "gradle.app.settings.horizon.render-distance.title": {
     "message": "Дальность полной прорисовки"
   },
-  "astralrinth.app.settings.horizon.lod-distance.title": {
+  "gradle.app.settings.horizon.lod-distance.title": {
     "message": "Дальний рельеф LOD (до 1024 чанков)"
   },
-  "astralrinth.app.settings.horizon.cave-culling.title": {
+  "gradle.app.settings.horizon.cave-culling.title": {
     "message": "Отсечение пещер"
   },
-  "astralrinth.app.settings.horizon.cave-culling.desc": {
+  "gradle.app.settings.horizon.cave-culling.desc": {
     "message": "Пропускает отрисовку скрытых подземных пещер при взгляде на поверхность."
   },
-  "astralrinth.app.settings.horizon.entity-culling.title": {
+  "gradle.app.settings.horizon.entity-culling.title": {
     "message": "Отсечение существ"
   },
-  "astralrinth.app.settings.horizon.entity-culling.desc": {
+  "gradle.app.settings.horizon.entity-culling.desc": {
     "message": "Скрывает модели мобов за непрозрачными блоками для повышения FPS."
   },
-  "astralrinth.app.settings.horizon.vsync.title": {
+  "gradle.app.settings.horizon.vsync.title": {
     "message": "Вертикальная синхронизация"
   },
-  "astralrinth.app.settings.horizon.max-fps.title": {
+  "gradle.app.settings.horizon.max-fps.title": {
     "message": "Максимальная частота кадров"
   },
-  "astralrinth.app.settings.horizon.unlimited-fps": {
+  "gradle.app.settings.horizon.unlimited-fps": {
     "message": "Без ограничений"
   },
-  "astralrinth.app.settings.horizon.controller.title": {
+  "gradle.app.settings.horizon.controller.title": {
     "message": "Контроллер и тактильная отдача"
   },
-  "astralrinth.app.settings.horizon.controller.desc": {
+  "gradle.app.settings.horizon.controller.desc": {
     "message": "Встроенная поддержка геймпадов Xbox, PlayStation DualSense (адаптивные триггеры, тактильная отдача) и Nintendo Switch."
   },
-  "astralrinth.app.settings.horizon.controller-enabled.title": {
+  "gradle.app.settings.horizon.controller-enabled.title": {
     "message": "Включить поддержку контроллера"
   },
-  "astralrinth.app.settings.horizon.vibration.title": {
+  "gradle.app.settings.horizon.vibration.title": {
     "message": "Вибрация и отдача"
   },
-  "astralrinth.app.settings.horizon.adaptive-triggers.title": {
+  "gradle.app.settings.horizon.adaptive-triggers.title": {
     "message": "Адаптивные триггеры DualSense"
   },
-  "astralrinth.app.settings.horizon.look-sensitivity.title": {
+  "gradle.app.settings.horizon.look-sensitivity.title": {
     "message": "Чувствительность обзора"
   },
-  "astralrinth.app.settings.horizon.invert-y.title": {
+  "gradle.app.settings.horizon.invert-y.title": {
     "message": "Инверсия по вертикали (ось Y)"
   },
-  "astralrinth.app.settings.horizon.deadzone.title": {
+  "gradle.app.settings.horizon.deadzone.title": {
     "message": "Мертвая зона стиков"
   },
-  "astralrinth.app.settings.horizon.glyphs.title": {
+  "gradle.app.settings.horizon.glyphs.title": {
     "message": "Обозначения кнопок"
   },
-  "astralrinth.app.settings.horizon.menu-nav.title": {
+  "gradle.app.settings.horizon.menu-nav.title": {
     "message": "Режим навигации в меню"
   },
-  "astralrinth.app.settings.horizon.extras.title": {
+  "gradle.app.settings.horizon.extras.title": {
     "message": "Дополнения Horizon"
   },
-  "astralrinth.app.settings.horizon.extras.desc": {
+  "gradle.app.settings.horizon.extras.desc": {
     "message": "Дополнительные функции, встроенные в нативный Rust-клиент без затрат производительности на моды."
   },
-  "astralrinth.app.settings.horizon.zoom.title": {
+  "gradle.app.settings.horizon.zoom.title": {
     "message": "Приближение камеры (клавиша C)"
   },
-  "astralrinth.app.settings.horizon.zoom.desc": {
+  "gradle.app.settings.horizon.zoom.desc": {
     "message": "Плавное нативное кинематографическое приближение с замедлением мыши."
   },
-  "astralrinth.app.settings.horizon.minimap.title": {
+  "gradle.app.settings.horizon.minimap.title": {
     "message": "Внутриигровая миникарта"
   },
-  "astralrinth.app.settings.horizon.minimap.desc": {
+  "gradle.app.settings.horizon.minimap.desc": {
     "message": "Радар с отображением биомов, высот и меток в реальном времени."
   },
-  "astralrinth.app.settings.horizon.overlay.title": {
+  "gradle.app.settings.horizon.overlay.title": {
     "message": "Оверлей производительности"
   },
-  "astralrinth.app.settings.horizon.battery.title": {
+  "gradle.app.settings.horizon.battery.title": {
     "message": "Энергосберегающий режим"
   },
-  "astralrinth.app.settings.horizon.battery.desc": {
+  "gradle.app.settings.horizon.battery.desc": {
     "message": "Снижает энергопотребление на ноутбуках и портативных консолях."
   },
-  "astralrinth.app.settings.horizon.agent.title": {
+  "gradle.app.settings.horizon.agent.title": {
     "message": "Управление ИИ-агентами и MCP-сервер"
   },
-  "astralrinth.app.settings.horizon.agent.desc": {
+  "gradle.app.settings.horizon.agent.desc": {
     "message": "Предоставление доступа к Horizon по протоколу Model Context Protocol (MCP) для ассистентов (Claude Code, Cursor, Codex) для наблюдения и управления игрой."
   },
-  "astralrinth.app.settings.horizon.agent.allow-ai-agents.title": {
+  "gradle.app.settings.horizon.agent.allow-ai-agents.title": {
     "message": "Разрешить ИИ-агентов"
   },
-  "astralrinth.app.settings.horizon.agent.allow-ai-agents.desc": {
+  "gradle.app.settings.horizon.agent.allow-ai-agents.desc": {
     "message": "По умолчанию отключено. При включении Horizon запускается с локальным сокетом управления, а horizon-ctl предоставляет более 80 инструментов через stdio JSON-RPC."
   },
-  "astralrinth.app.settings.horizon.agent.ctl-installed": {
+  "gradle.app.settings.horizon.agent.ctl-installed": {
     "message": "Установлен и готов"
   },
-  "astralrinth.app.settings.horizon.agent.ctl-missing": {
+  "gradle.app.settings.horizon.agent.ctl-missing": {
     "message": "Бинарный файл не найден"
   },
-  "astralrinth.app.settings.horizon.agent.test-mcp-btn": {
+  "gradle.app.settings.horizon.agent.test-mcp-btn": {
     "message": "Проверить MCP-сервер"
   },
-  "astralrinth.app.settings.horizon.agent.connect.title": {
+  "gradle.app.settings.horizon.agent.connect.title": {
     "message": "Подключение ИИ-агента"
   },
-  "astralrinth.app.settings.horizon.agent.connect.desc": {
+  "gradle.app.settings.horizon.agent.connect.desc": {
     "message": "Добавьте MCP-сервер Horizon в настройки вашего ИИ-ассистента."
   },
-  "astralrinth.app.settings.horizon.agent.one-click-cli": {
+  "gradle.app.settings.horizon.agent.one-click-cli": {
     "message": "Команда для терминала (в один шаг)"
   },
-  "astralrinth.app.settings.horizon.agent.copy-config": {
+  "gradle.app.settings.horizon.agent.copy-config": {
     "message": "Скопировать конфиг"
   },
-  "astralrinth.app.settings.horizon.agent.copy-command": {
+  "gradle.app.settings.horizon.agent.copy-command": {
     "message": "Скопировать команду"
   },
-  "astralrinth.app.settings.horizon.agent.copied": {
+  "gradle.app.settings.horizon.agent.copied": {
     "message": "Скопировано!"
   },
-  "astralrinth.app.settings.visual.description": {
-    "message": "Настройте визуальные эффекты AstralRinth, не изменяя выбранную тему."
+  "gradle.app.settings.visual.description": {
+    "message": "Настройте визуальные эффекты Gradle, не изменяя выбранную тему."
   },
-	"astralrinth.app.settings.visual.glass-level.matte": {
+	"gradle.app.settings.visual.glass-level.matte": {
 		"message": "Матовый"
 	},
-	"astralrinth.app.settings.visual.glass-level.standard": {
+	"gradle.app.settings.visual.glass-level.standard": {
 		"message": "Стандартный"
 	},
-	"astralrinth.app.settings.visual.glass-level.title": {
+	"gradle.app.settings.visual.glass-level.title": {
 		"message": "Уровень стекла"
 	},
-	"astralrinth.app.settings.visual.glass-level.transparent": {
+	"gradle.app.settings.visual.glass-level.transparent": {
 		"message": "Прозрачный"
 	},
-  "astralrinth.app.settings.visual.liquid-glass.description": {
+  "gradle.app.settings.visual.liquid-glass.description": {
     "message": "Используйте полупрозрачные поверхности, размытие и многослойную глубину интерфейса. Отключите эту настройку, если эффекты влияют на производительность или читаемость."
   },
-  "astralrinth.app.settings.visual.liquid-glass.title": {
+  "gradle.app.settings.visual.liquid-glass.title": {
     "message": "Liquid Glass"
   },
-  "astralrinth.app.settings.visual.note": {
-    "message": "Liquid Glass — визуальное переопределение AstralRinth. Выбранная цветовая тема и взаимодействие с приложением остаются без изменений."
+  "gradle.app.settings.visual.note": {
+    "message": "Liquid Glass — визуальное переопределение Gradle. Выбранная цветовая тема и взаимодействие с приложением остаются без изменений."
   },
-  "astralrinth.app.settings.visual.title": {
+  "gradle.app.settings.visual.title": {
     "message": "Визуальные настройки"
   },
-  "astralrinth.app.settings.update-installing": {
+  "gradle.app.settings.update-installing": {
     "message": "Установка обновления..."
   },
-  "astralrinth.app.settings.tabs.updates": {
+  "gradle.app.settings.tabs.updates": {
     "message": "Обновления"
   },
-  "astralrinth.app.settings.updates.analytics.description": {
+  "gradle.app.settings.updates.analytics.description": {
     "message": "Статистика релиза и распространения от поставщика обновлений."
   },
-  "astralrinth.app.settings.updates.analytics.title": {
+  "gradle.app.settings.updates.analytics.title": {
     "message": "Аналитика"
   },
-  "astralrinth.app.settings.updates.description": {
-    "message": "Просматривайте канал релизов AstralRinth, состояние распространения и диагностику провайдера обновлений."
+  "gradle.app.settings.updates.description": {
+    "message": "Просматривайте канал релизов Gradle, состояние распространения и диагностику провайдера обновлений."
   },
-	"astralrinth.app.settings.updates.os": {
+	"gradle.app.settings.updates.os": {
 		"message": "Операционная система"
 	},
-	"astralrinth.app.settings.updates.arch": {
+	"gradle.app.settings.updates.arch": {
 		"message": "Архитектура"
 	},
-	"astralrinth.app.settings.updates.app-commit": {
+	"gradle.app.settings.updates.app-commit": {
 		"message": "Коммит"
 	},
-	"astralrinth.app.settings.updates.system-information-unavailable": {
+	"gradle.app.settings.updates.system-information-unavailable": {
 		"message": "Системная информация недоступна."
 	},
-  "astralrinth.app.settings.updates.api-url": {
+  "gradle.app.settings.updates.api-url": {
     "message": "URL API поставщика обновлений"
   },
-	"astralrinth.app.settings.updates.libraries-api-url": {
+	"gradle.app.settings.updates.libraries-api-url": {
 		"message": "URL API поставщика библиотек"
 	},
-  "astralrinth.app.settings.updates.downloadable-files": {
+  "gradle.app.settings.updates.downloadable-files": {
     "message": "Файлы для загрузки"
   },
-  "astralrinth.app.settings.updates.http-status": {
+  "gradle.app.settings.updates.http-status": {
     "message": "Статус HTTP"
   },
-  "astralrinth.app.settings.updates.latest-release-tag": {
+  "gradle.app.settings.updates.latest-release-tag": {
     "message": "Последний тэг релиза"
   },
-  "astralrinth.app.settings.updates.latest-update-title": {
+  "gradle.app.settings.updates.latest-update-title": {
     "message": "Последний заголовок обновления"
   },
-  "astralrinth.app.settings.updates.no-update-information": {
+  "gradle.app.settings.updates.no-update-information": {
     "message": "Информация об обновлении недоступна."
   },
-  "astralrinth.app.settings.updates.total-downloads": {
+  "gradle.app.settings.updates.total-downloads": {
     "message": "Всего скачиваний продукта"
   },
-  "astralrinth.app.settings.updates.title": {
+  "gradle.app.settings.updates.title": {
     "message": "Обновления"
   },
-  "astralrinth.app.settings.updates-installed": {
+  "gradle.app.settings.updates-installed": {
     "message": "Обновления уже установлены"
   },
-  "astralrinth.app.settings.view-update-info": {
+  "gradle.app.settings.view-update-info": {
     "message": "Посмотреть информацию об обновлении"
   },
-  "astralrinth.app.skins.unsupported-account.description": {
+  "gradle.app.skins.unsupported-account.description": {
     "message": "Управление скинами доступно только для учётных записей Microsoft. Вернитесь на главную страницу и выберите или добавьте учётную запись Microsoft, чтобы продолжить."
   },
-  "astralrinth.app.skins.unsupported-account.external.action": {
+  "gradle.app.skins.unsupported-account.external.action": {
     "message": "Управлять скином на {providerName}"
   },
-  "astralrinth.app.skins.unsupported-account.external.description": {
+  "gradle.app.skins.unsupported-account.external.description": {
     "message": "Вы вошли через учётную запись {providerName}. Загрузить, выбрать или изменить скин можно прямо на сайте провайдера."
   },
-  "astralrinth.app.skins.unsupported-account.external.title": {
+  "gradle.app.skins.unsupported-account.external.title": {
     "message": "Управление скином {providerName}"
   },
-  "astralrinth.app.skins.unsupported-account.return-home": {
+  "gradle.app.skins.unsupported-account.return-home": {
     "message": "Вернуться на главную"
   },
-  "astralrinth.app.skins.unsupported-account.title": {
+  "gradle.app.skins.unsupported-account.title": {
     "message": "Требуется учётная запись Microsoft"
   },
-	"astralrinth.app.skins.sign-in.description": {
+	"gradle.app.skins.sign-in.description": {
 		"message": "Выберите способ входа, чтобы добавить свой аккаунт Minecraft."
 	},
-	"astralrinth.app.skins.sign-in.title": {
+	"gradle.app.skins.sign-in.title": {
 		"message": "Войдите в аккаунт, чтобы управлять скинами"
 	},
-  "astralrinth.app.skins.sign-in-methods.button": {
+  "gradle.app.skins.sign-in-methods.button": {
     "message": "Способы входа"
   },
-  "astralrinth.app.launcher-update-modal.error.close-action": {
+  "gradle.app.launcher-update-modal.error.close-action": {
     "message": "Закрыть"
   },
-  "astralrinth.app.launcher-update-modal.error.description": {
-    "message": "AstralRinth не удалось скачать файл обновления с сервера."
+  "gradle.app.launcher-update-modal.error.description": {
+    "message": "Gradle не удалось скачать файл обновления с сервера."
   },
-  "astralrinth.app.launcher-update-modal.error.header": {
+  "gradle.app.launcher-update-modal.error.header": {
     "message": "Не удалось скачать обновление"
   },
-  "astralrinth.app.launcher-update-modal.error.help-link": {
-    "message": "релизы репозитория AstralRinth"
+  "gradle.app.launcher-update-modal.error.help-link": {
+    "message": "релизы репозитория Gradle"
   },
-  "astralrinth.app.launcher-update-modal.error.help-suffix": {
+  "gradle.app.launcher-update-modal.error.help-suffix": {
     "message": "если там доступен более новый релиз."
   },
-  "astralrinth.app.launcher-update-modal.error.help-text": {
+  "gradle.app.launcher-update-modal.error.help-text": {
     "message": "Вы можете скачать его вручную из"
   },
-  "astralrinth.app.launcher-update-modal.error.local-version": {
-    "message": "Локальная версия AstralRinth:"
+  "gradle.app.launcher-update-modal.error.local-version": {
+    "message": "Локальная версия Gradle:"
   },
-  "astralrinth.app.launcher-update-modal.error.title": {
+  "gradle.app.launcher-update-modal.error.title": {
     "message": "Не удалось скачать файл"
   },
-  "astralrinth.app.launcher-update-modal.update.cancel-action": {
+  "gradle.app.launcher-update-modal.update.cancel-action": {
     "message": "Отмена"
   },
-  "astralrinth.app.launcher-update-modal.update.description": {
+  "gradle.app.launcher-update-modal.update.description": {
     "message": "Ваш лаунчер не совпадает с актуальным релизом от Xorison Development. Рекомендуем обновиться сейчас."
   },
-  "astralrinth.app.launcher-update-modal.update.download-action": {
+  "gradle.app.launcher-update-modal.update.download-action": {
     "message": "Скачать обновление"
   },
-  "astralrinth.app.launcher-update-modal.update.header": {
-    "message": "Обновление лаунчера AstralRinth"
+  "gradle.app.launcher-update-modal.update.header": {
+    "message": "Обновление лаунчера Gradle"
   },
-  "astralrinth.app.launcher-update-modal.update.installer-description": {
+  "gradle.app.launcher-update-modal.update.installer-description": {
     "message": "Выберите пакет установщика, с которым хотите продолжить."
   },
-  "astralrinth.app.launcher-update-modal.update.installer-title": {
+  "gradle.app.launcher-update-modal.update.installer-title": {
     "message": "Тип установщика"
   },
-  "astralrinth.app.launcher-update-modal.update.installed-version": {
+  "gradle.app.launcher-update-modal.update.installed-version": {
     "message": "💾 Установленная и запущенная версия:"
   },
-  "astralrinth.app.launcher-update-modal.update.latest-release-tag": {
+  "gradle.app.launcher-update-modal.update.latest-release-tag": {
     "message": "☁️ Тег последнего релиза:"
   },
-  "astralrinth.app.launcher-update-modal.update.latest-release-title": {
+  "gradle.app.launcher-update-modal.update.latest-release-title": {
     "message": "☁️ Название последнего релиза:"
   },
-  "astralrinth.app.launcher-update-modal.update.notice-lead": {
+  "gradle.app.launcher-update-modal.update.notice-lead": {
     "message": "Перед установкой обновления сохраните работу, закройте все запущенные экземпляры лаунчера и сделайте резервную копию его данных."
   },
-  "astralrinth.app.launcher-update-modal.update.notice-macos": {
+  "gradle.app.launcher-update-modal.update.notice-macos": {
     "message": "На macOS важные данные могут находиться в"
   },
-  "astralrinth.app.launcher-update-modal.update.notice-outro": {
+  "gradle.app.launcher-update-modal.update.notice-outro": {
     "message": "Чтобы избежать потери данных, сохраните резервную копию в безопасном месте перед продолжением."
   },
-  "astralrinth.app.launcher-update-modal.update.notice-windows": {
+  "gradle.app.launcher-update-modal.update.notice-windows": {
     "message": "На Windows важные данные могут находиться в"
   },
-  "astralrinth.app.launcher-update-modal.update.notice-title": {
+  "gradle.app.launcher-update-modal.update.notice-title": {
     "message": "⚠️ Перед продолжением"
   },
-  "astralrinth.app.launcher-update-modal.update.repository-link": {
+  "gradle.app.launcher-update-modal.update.repository-link": {
     "message": "Открыть репозиторий проекта"
   },
-  "astralrinth.app.launcher-update-modal.update.select-installer": {
+  "gradle.app.launcher-update-modal.update.select-installer": {
     "message": "Выберите установщик"
   },
-  "astralrinth.app.launcher-update-modal.update.title": {
-    "message": "Доступна новая версия лаунчера AstralRinth."
+  "gradle.app.launcher-update-modal.update.title": {
+    "message": "Доступна новая версия лаунчера Gradle."
   },
-	"astralrinth.app.news.empty": {
-		"message": "Новостей AstralRinth пока нет."
+	"gradle.app.news.empty": {
+		"message": "Новостей Gradle пока нет."
 	},
-	"astralrinth.app.news.error": {
-		"message": "Не удалось загрузить новости AstralRinth."
+	"gradle.app.news.error": {
+		"message": "Не удалось загрузить новости Gradle."
 	},
-	"astralrinth.app.news.loading": {
-		"message": "Загрузка новостей AstralRinth…"
+	"gradle.app.news.loading": {
+		"message": "Загрузка новостей Gradle…"
 	},
-	"astralrinth.app.news.rate-limited": {
+	"gradle.app.news.rate-limited": {
 		"message": "Слишком много запросов."
 	},
-	"astralrinth.app.news.recent-available": {
+	"gradle.app.news.recent-available": {
 		"message": "Есть свежие новости"
 	},
-	"astralrinth.app.news.new": {
+	"gradle.app.news.new": {
 		"message": "Новое"
 	},
-	"astralrinth.app.news.open-article": {
+	"gradle.app.news.open-article": {
 		"message": "Перейти"
 	},
-	"astralrinth.app.news.title": {
-		"message": "Новости AstralRinth"
+	"gradle.app.news.title": {
+		"message": "Новости Gradle"
 	},
-  "astralrinth.app.minecraft-account.error.input-offline.description": {
+  "gradle.app.minecraft-account.error.input-offline.description": {
     "message": "Произошла ошибка при добавлении офлайн-аккаунта. Пожалуйста, выполните рекомендации ниже."
   },
-  "astralrinth.app.minecraft-account.error.input-offline.format-hint": {
+  "gradle.app.minecraft-account.error.input-offline.format-hint": {
     "message": "Убедитесь, что имя соответствует требуемому формату `{nameExp}`"
   },
-  "astralrinth.app.minecraft-account.error.input-offline.header": {
+  "gradle.app.minecraft-account.error.input-offline.header": {
     "message": "Ошибка во время ввода данных для офлайн-аккаунта"
   },
-  "astralrinth.app.minecraft-account.error.input-offline.length-hint": {
+  "gradle.app.minecraft-account.error.input-offline.length-hint": {
     "message": "Имя игрока должно содержать не менее {min} и не более {max} символов."
   },
-  "astralrinth.app.minecraft-account.error.input-offline.name-hint": {
+  "gradle.app.minecraft-account.error.input-offline.name-hint": {
     "message": "Проверьте, что имя игрока введено корректно."
   },
-  "astralrinth.app.minecraft-account.error.retry-action": {
+  "gradle.app.minecraft-account.error.retry-action": {
     "message": "Повторить"
   },
-  "astralrinth.app.minecraft-account.error.unexpected.description": {
+  "gradle.app.minecraft-account.error.unexpected.description": {
     "message": "Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже."
   },
-  "astralrinth.app.minecraft-account.error.unexpected.header": {
+  "gradle.app.minecraft-account.error.unexpected.header": {
     "message": "Произошла непредвиденная ошибка"
   },
-  "astralrinth.app.minecraft-account.input.auth.description": {
+  "gradle.app.minecraft-account.input.auth.description": {
     "message": "Выберите способ входа или игры."
   },
-  "astralrinth.app.minecraft-account.input.auth.external-description": {
+  "gradle.app.minecraft-account.input.auth.external-description": {
     "message": "Аккаунт для серверов с поддержкой {providerName}."
   },
-  "astralrinth.app.minecraft-account.input.auth.header": {
+  "gradle.app.minecraft-account.input.auth.header": {
     "message": "Добавить аккаунт Minecraft"
   },
-  "astralrinth.app.minecraft-account.input.auth.microsoft-description": {
+  "gradle.app.minecraft-account.input.auth.microsoft-description": {
     "message": "Официальный аккаунт с Minecraft: Java Edition."
   },
-  "astralrinth.app.minecraft-account.input.auth.offline-description": {
+  "gradle.app.minecraft-account.input.auth.offline-description": {
     "message": "Локальный профиль без токенов авторизации."
   },
-  "astralrinth.app.minecraft-account.input.auth.offline-label": {
+  "gradle.app.minecraft-account.input.auth.offline-label": {
     "message": "Офлайн"
   },
-  "astralrinth.app.minecraft-account.input.login-action": {
+  "gradle.app.minecraft-account.input.login-action": {
     "message": "Войти"
   },
-  "astralrinth.app.minecraft-account.input.offline.header": {
+  "gradle.app.minecraft-account.input.offline.header": {
     "message": "Добавить новый офлайн-аккаунт"
   },
-  "astralrinth.app.minecraft-account.input.offline.name.label": {
+  "gradle.app.minecraft-account.input.offline.name.label": {
     "message": "Введите имя игрока"
   },
-  "astralrinth.app.minecraft-account.input.offline.name.placeholder": {
+  "gradle.app.minecraft-account.input.offline.name.placeholder": {
     "message": "Введите имя игрока..."
   },
   "app.behavior-settings.confirmations.title": {
@@ -1257,7 +1257,7 @@
     "message": "Главная и контент"
   },
   "app.behavior-settings.refocus-on-game-close.description": {
-    "message": "Выводить AstralRinth на передний план при закрытии игры."
+    "message": "Выводить Gradle на передний план при закрытии игры."
   },
   "app.behavior-settings.refocus-on-game-close.title": {
     "message": "Возврат фокуса при закрытии Minecraft"
@@ -1308,7 +1308,7 @@
     "message": "Horizon поддерживает нативные WebAssembly-моды (.wasm, .hmod) и датапаки/ресурспаки. Стандартные Java-моды (.jar) требуют JVM (Fabric/NeoForge) и не запускаются."
   },
   "app.browse.horizon.assets-compatible-notice": {
-    "message": "Horizon нативно поддерживает ресурспаки, шейдеры (wgpu/Vulkan) и датапаки из AstralRinth."
+    "message": "Horizon нативно поддерживает ресурспаки, шейдеры (wgpu/Vulkan) и датапаки из Gradle."
   },
   "app.browse.hide-added-servers": {
     "message": "Скрывать добавленные"
@@ -1566,7 +1566,7 @@
     "message": "Посмотреть сборку"
   },
   "app.hosting.update-required.description": {
-    "message": "Обновитесь, чтобы использовать Modrinth Hosting через AstralRinth"
+    "message": "Обновитесь, чтобы использовать Modrinth Hosting через Gradle"
   },
   "app.hosting.update-required.download": {
     "message": "Скачать и обновить"
@@ -1575,7 +1575,7 @@
     "message": "Восторженный Modrinth Bot"
   },
   "app.hosting.update-required.title": {
-    "message": "Обновите AstralRinth"
+    "message": "Обновите Gradle"
   },
   "app.install.phase.downloading_content": {
     "message": "Скачивание контента"
@@ -2685,7 +2685,7 @@
     "message": "Сначала старые"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Переменные среды при запуске игры."
@@ -3786,7 +3786,7 @@
     "message": "macOS"
   },
   "app.settings.privacy.discord-rich-presence.description": {
-    "message": "Показывать AstralRinth в текущей активности Discord. Не влияет на Rich Presence модов. Требуется перезапуск."
+    "message": "Показывать Gradle в текущей активности Discord. Не влияет на Rich Presence модов. Требуется перезапуск."
   },
   "app.settings.privacy.discord-rich-presence.title": {
     "message": "Discord Rich Presence"
@@ -3825,7 +3825,7 @@
     "message": "Выбрать каталог приложения"
   },
   "app.settings.resource-management.app-directory.description": {
-    "message": "Здесь AstralRinth хранит сборки и другие файлы. Изменения вступят в силу после перезапуска."
+    "message": "Здесь Gradle хранит сборки и другие файлы. Изменения вступят в силу после перезапуска."
   },
   "app.settings.resource-management.app-directory.select": {
     "message": "Выбор нового каталога приложения"
@@ -3834,7 +3834,7 @@
     "message": "Каталог приложения"
   },
   "app.settings.resource-management.debug-info.description": {
-    "message": "Экспортировать журналы приложения и диагностические данные в ZIP-файл, чтобы поделиться ими с поддержкой AstralRinth."
+    "message": "Экспортировать журналы приложения и диагностические данные в ZIP-файл, чтобы поделиться ими с поддержкой Gradle."
   },
   "app.settings.resource-management.debug-info.export": {
     "message": "Экспорт отладочной информации"
@@ -4338,7 +4338,7 @@
     "message": "Показать"
   },
   "app.survey.body": {
-    "message": "Не хотите ответить на несколько вопросов о вашем опыте с AstralRinth?"
+    "message": "Не хотите ответить на несколько вопросов о вашем опыте с Gradle?"
   },
   "app.survey.footer": {
     "message": "Этот отзыв будет доставлен напрямую команде Modrinth и поможет разрабатывать будущие обновления!"
@@ -4482,13 +4482,13 @@
     "message": "Синхронизированные наборы ресурсов"
   },
   "app.update-popup.body.download-complete": {
-    "message": "Скачивание версии AstralRinth {version} завершено. Перезапустите приложение, чтобы обновить его, или оно обновится автоматически после закрытия."
+    "message": "Скачивание версии Gradle {version} завершено. Перезапустите приложение, чтобы обновить его, или оно обновится автоматически после закрытия."
   },
   "app.update-popup.body.linux": {
-    "message": "Доступна версия AstralRinth {version}. Обновите приложение через менеджер пакетов, чтобы получить последние улучшения и исправления!"
+    "message": "Доступна версия Gradle {version}. Обновите приложение через менеджер пакетов, чтобы получить последние улучшения и исправления!"
   },
   "app.update-popup.body.metered": {
-    "message": "Версия AstralRinth {version} доступна для скачивания! Используется сеть с лимитным тарифным планом, поэтому скачивание не началось автоматически."
+    "message": "Версия Gradle {version} доступна для скачивания! Используется сеть с лимитным тарифным планом, поэтому скачивание не началось автоматически."
   },
   "app.update-popup.changelog": {
     "message": "Список изменений"
@@ -4533,7 +4533,7 @@
     "message": "Нажмите <shortcut>Т</shortcut> быстрого создания сборки"
   },
   "app.welcome-screen.title": {
-    "message": "Добро пожаловать в AstralRinth"
+    "message": "Добро пожаловать в Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "example.modrinth.gg"

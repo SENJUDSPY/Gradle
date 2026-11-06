@@ -1518,7 +1518,7 @@
     "message": "الاقدم"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "متغيرات البيئة المحددة عند تشغيل النسخة."
@@ -2061,7 +2061,7 @@
     "message": "اضغط <shortcut>N</shortcut> لإنشاء نسخة سريع"
   },
   "app.welcome-screen.title": {
-    "message": "مرحبًا بك في AstralRinth"
+    "message": "مرحبًا بك في Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "(example.modrinth.gg)"

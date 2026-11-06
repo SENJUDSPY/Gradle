@@ -13,7 +13,7 @@ use crate::api::oauth_utils::auth_code_reply::{
 use dashmap::DashMap;
 use std::path::{Path, PathBuf};
 use theseus::prelude::canonicalize;
-use theseus::util::astralrinth::utils;
+use theseus::util::gradle::utils;
 use tokio_util::sync::CancellationToken;
 use url::Url;
 
@@ -58,7 +58,7 @@ pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
         .build()
 }
 
-// This code function is modified by AstralRinth
+// This code function is modified by Gradle
 #[tauri::command]
 pub async fn init_update_launcher(
     download_url: &str,

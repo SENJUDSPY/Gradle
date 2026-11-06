@@ -141,7 +141,7 @@ const emit = defineEmits<{
 	completed: []
 }>()
 
-const MIGRATION_STORAGE_KEY = 'astralrinth_horizon_dual_runtime_migration_v1'
+const MIGRATION_STORAGE_KEY = 'gradle_horizon_dual_runtime_migration_v1'
 
 async function checkAndPromptMigration() {
 	if (localStorage.getItem(MIGRATION_STORAGE_KEY) === 'true') {

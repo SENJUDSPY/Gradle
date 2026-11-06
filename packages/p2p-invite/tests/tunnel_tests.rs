@@ -1,6 +1,6 @@
 //! Integration tests for P2P Minecraft game tunneling
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Gradle authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Gradle authors (MIT License).
 
 use p2p_invite::host::{HostEvent, HostOptions, start_host};
 use p2p_invite::joiner::{JoinOptions, join};

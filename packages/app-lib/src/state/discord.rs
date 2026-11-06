@@ -1,11 +1,11 @@
-// This code is modified by AstralRinth
+// This code is modified by Gradle
 use std::{
     sync::{atomic::AtomicBool, Arc},
     time::{SystemTime, UNIX_EPOCH},
 };
 
 use discord_rich_presence::{
-    activity::{Activity, Assets, Button, Timestamps}, // This code is modified by AstralRinth
+    activity::{Activity, Assets, Button, Timestamps}, // This code is modified by Gradle
     DiscordIpc, DiscordIpcClient,
 };
 use rand::seq::SliceRandom;
@@ -13,7 +13,7 @@ use sqlx::SqlitePool;
 use tokio::sync::RwLock;
 
 use crate::state::ProcessManager;
-use crate::util::astralrinth::utils;
+use crate::util::gradle::utils;
 
 pub struct DiscordGuard {
     client: Arc<RwLock<DiscordIpcClient>>,
@@ -125,15 +125,15 @@ impl DiscordGuard {
             .state(msg)
             .assets(
                 Assets::new()
-                    .large_image("astralrinth_logo")
+                    .large_image("gradle_logo")
                     .large_text(&build_info),
             )
             .buttons(vec![Button::new(
                 "Get launcher",
-                "https://xorison.dev/product/astralrinth",
+                "https://xorison.dev/product/gradle",
             ), Button::new(
 				"Support",
-				"https://xorison.dev/product/astralrinth/support"
+				"https://xorison.dev/product/gradle/support"
 			)])
             .timestamps(Timestamps::new().start(time));
 
@@ -181,7 +181,7 @@ impl DiscordGuard {
         Ok(())
     }
 
-	/// Restores AstralRinth's inactive presence, even when another instance is running.
+	/// Restores Gradle's inactive presence, even when another instance is running.
     pub async fn clear_to_default(
         &self,
         reconnect_if_fail: bool,

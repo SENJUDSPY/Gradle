@@ -1,6 +1,6 @@
 //! Horizon dedicated server management (native Rust, zero JVM)
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Horizon authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Horizon authors (MIT License).
 
 use anyhow::{Context, Result, bail};
 use chrono::Utc;

@@ -3,7 +3,7 @@ import { defineMessages, useScrollIndicator, useVIntl } from '@modrinth/ui'
 import { OverlayScrollbars } from 'overlayscrollbars'
 import { computed, onMounted, onScopeDispose, ref } from 'vue'
 
-import AstralRinthNews from '@/components/ui/astralrinth/news/index.vue'
+import GradleNews from '@/components/ui/gradle/news/index.vue'
 import { useTheme } from '@/composables/use-theme'
 import FriendsList from '@/features/friends/friends-list/index.vue'
 import AccountsCard from '@/features/minecraft-accounts/accounts-card.vue'
@@ -108,7 +108,7 @@ const messages = defineMessages({
 						</Suspense>
 					</div>
 					<div class="px-4 pt-4">
-						<AstralRinthNews />
+						<GradleNews />
 					</div>
 					<NewsSidebar />
 				</div>

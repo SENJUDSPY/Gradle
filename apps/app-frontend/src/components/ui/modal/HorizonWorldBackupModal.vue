@@ -104,7 +104,7 @@ const messages = defineMessages({
 	bannerDescription: {
 		id: 'app.horizon.world-backup.banner-desc',
 		defaultMessage:
-			'Horizon upgrades world saves to the Minecraft 26.3 format, which cannot be loaded in older Minecraft versions without backup. AstralRinth will create an automatic backup now before launch.',
+			'Horizon upgrades world saves to the Minecraft 26.3 format, which cannot be loaded in older Minecraft versions without backup. Gradle will create an automatic backup now before launch.',
 	},
 	worldsListTitle: {
 		id: 'app.horizon.world-backup.worlds-title',

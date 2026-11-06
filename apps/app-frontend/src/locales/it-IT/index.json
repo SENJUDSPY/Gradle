@@ -1623,7 +1623,7 @@
     "message": "Meno recenti"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Le variabili d'ambiente impostate all'avvio di un'istanza."
@@ -3471,7 +3471,7 @@
     "message": "Premi <shortcut>N</shortcut> per creare un'istanza rapidamente"
   },
   "app.welcome-screen.title": {
-    "message": "AstralRinth ti dà il benvenuto"
+    "message": "Gradle ti dà il benvenuto"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "example.modrinth.gg"

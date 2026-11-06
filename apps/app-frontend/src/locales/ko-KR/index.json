@@ -1611,7 +1611,7 @@
     "message": "오래됨"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "인스턴스를 실행할 때 설정되는 환경 변수입니다."

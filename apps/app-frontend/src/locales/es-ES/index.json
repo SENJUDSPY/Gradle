@@ -1611,7 +1611,7 @@
     "message": "Antiguo"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "Variables de entorno definidas al ejecutar una instancia."
@@ -3441,7 +3441,7 @@
     "message": "Pulsa <shortcut>N</shortcut> para crear rápidamente una instancia"
   },
   "app.welcome-screen.title": {
-    "message": "Bienvenido a AstralRinth"
+    "message": "Bienvenido a Gradle"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "ejemplo.modrinth.gg"

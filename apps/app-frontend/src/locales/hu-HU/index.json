@@ -1611,7 +1611,7 @@
     "message": "Legrégibb"
   },
   "app.settings.app-version": {
-    "message": "AstralRinth App {version}"
+    "message": "Gradle App {version}"
   },
   "app.settings.default-instance-options.environment-variables.description": {
     "message": "A példány indításakor beállított környezeti változók."
@@ -3450,7 +3450,7 @@
     "message": "Nyomd meg az <shortcut>N</shortcut> billentyűt egy példány gyors létrehozásához"
   },
   "app.welcome-screen.title": {
-    "message": "Üdvözlünk az AstralRinthben"
+    "message": "Üdvözlünk az Gradleben"
   },
   "app.world.server-modal.placeholder-address": {
     "message": "pelda.modrinth.gg"

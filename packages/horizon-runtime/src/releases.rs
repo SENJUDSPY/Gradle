@@ -35,7 +35,7 @@ pub fn horizon_data_dir() -> PathBuf {
         return PathBuf::from(h);
     }
     let base = dirs::data_dir().unwrap_or_else(std::env::temp_dir);
-    base.join("astralrinth").join("horizon")
+    base.join("gradle").join("horizon")
 }
 
 pub fn versions_dir() -> PathBuf {
@@ -170,7 +170,7 @@ pub async fn fetch_releases_for(
             "https://api.github.com/repos/{repo_name}/releases?per_page=30"
         );
         let client = reqwest::Client::builder()
-            .user_agent("AstralRinth")
+            .user_agent("Gradle")
             .timeout(std::time::Duration::from_secs(10))
             .build()?;
 
@@ -296,7 +296,7 @@ pub async fn install_version(tag: &str) -> Result<PathBuf> {
     let archive_path = temp_dir.join("download.archive");
 
     let client = reqwest::Client::builder()
-        .user_agent("AstralRinth")
+        .user_agent("Gradle")
         .build()?;
     let bytes = client
         .get(download_url)

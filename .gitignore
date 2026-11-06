@@ -90,6 +90,6 @@ storybook-static
 packages/tooling-config/script-utils/import-sort.js
 references/
 
-# AstralRinth ignores
+# Gradle ignores
 cmp_*.patch
 .pnpm-store

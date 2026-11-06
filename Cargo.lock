@@ -574,14 +574,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "astralrinth-gpui"
-version = "0.1.0"
-dependencies = [
- "gpui-fast",
- "gpui-fast-platform",
-]
-
-[[package]]
 name = "async-broadcast"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4535,6 +4527,14 @@ name = "gpui-pre-ztracing-macro"
 version = "0.3.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99b18b06f5026b3d312488eacfdddbe78f82b4bf32bb2d2bc3186e31e552b797"
+
+[[package]]
+name = "gradle-gpui"
+version = "0.1.0"
+dependencies = [
+ "gpui-fast",
+ "gpui-fast-platform",
+]
 
 [[package]]
 name = "group"

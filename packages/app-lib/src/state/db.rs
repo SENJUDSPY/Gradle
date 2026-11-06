@@ -140,7 +140,7 @@ mod tests {
 	use sqlx::{ConnectOptions, Connection};
 
 	#[tokio::test]
-	async fn astralrinth_backup_failure_prevents_migrations() {
+	async fn gradle_backup_failure_prevents_migrations() {
 		let directory = tempfile::tempdir().unwrap();
 		let db_path = directory.path().join("app.db");
 		let mut connection = SqliteConnectOptions::new()

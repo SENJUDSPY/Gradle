@@ -20,7 +20,7 @@ Inspired by modern high-performance voxel engine design (such as *Horizon*), Ast
 ## Workspace Architecture
 
 ```
-astralrinth/game/
+gradle/game/
 ├── Cargo.toml                     # Standalone workspace root
 ├── README.md                      # Architecture, guide & controls
 ├── saves/
@@ -100,7 +100,7 @@ astralrinth/game/
 
 From the game directory:
 ```bash
-cd /home/godxzailas/Downloads/AstralRinth-AR-0.22.01/astralrinth/game
+cd /home/godxzailas/Downloads/Gradle-AR-0.22.01/gradle/game
 cargo run --release --bin astralinth
 ```
 

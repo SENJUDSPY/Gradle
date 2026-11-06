@@ -4,14 +4,14 @@
 		class="flex flex-col gap-3 bg-button-bg border border-solid border-surface-5 rounded-xl p-3 mt-2"
 	>
 		<span>{{ formatMessage(messages.notSignedIn) }}</span>
-		<!-- BEGIN: This code block modified by AstralRinth -->
+		<!-- BEGIN: This code block modified by Gradle -->
 		<Button type="colored" color="brand" @click="showAccountLoginModal">
 			<span class="inline-flex items-center gap-2">
 				<PlusIcon />
 				{{ formatMessage(messages.addAccount) }}
 			</span>
 		</Button>
-		<!-- END: This code block modified by AstralRinth -->
+		<!-- END: This code block modified by Gradle -->
 	</div>
 	<Accordion
 		v-else
@@ -154,8 +154,8 @@ import {
 import type { Ref } from 'vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
-import AccountsErrorModals from '@/components/ui/astralrinth/accounts/error/AccountsErrorModals.vue'
-import AccountsInputModals from '@/components/ui/astralrinth/accounts/input/AccountsInputModals.vue'
+import AccountsErrorModals from '@/components/ui/gradle/accounts/error/AccountsErrorModals.vue'
+import AccountsInputModals from '@/components/ui/gradle/accounts/input/AccountsInputModals.vue'
 import { useAppEvent } from '@/composables/use-app-event'
 import { handleSevereError } from '@/composables/use-error.js'
 import { trackEvent } from '@/helpers/analytics'
@@ -176,7 +176,7 @@ import {
 	loadExternalAuthProviders,
 	type MinecraftCredential,
 	useExternalAuthentication,
-} from '@/models/astralrinth/authentication'
+} from '@/models/gradle/authentication'
 
 const { formatMessage } = useVIntl()
 const { handleError } = injectNotificationManager()

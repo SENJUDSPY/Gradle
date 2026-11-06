@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-	AstralRinthLogo,
+	GradleLogo,
 	BadgeCheckIcon,
 	CodeIcon,
 	CoffeeIcon,
@@ -37,11 +37,11 @@ import { getVersion } from '@tauri-apps/api/app'
 import { platform as getOsPlatform, version as getOsVersion } from '@tauri-apps/plugin-os'
 import { computed, ref } from 'vue'
 
-import LauncherUpdateModal from '@/components/ui/astralrinth/LauncherUpdateModal.vue'
-import ExternalAuthLibrarySettings from '@/components/ui/settings/astralrinth/ExternalAuthLibrarySettings.vue'
-import HorizonSettings from '@/components/ui/settings/astralrinth/HorizonSettings.vue'
-import UpdateSettings from '@/components/ui/settings/astralrinth/UpdateSettings.vue'
-import VisualSettings from '@/components/ui/settings/astralrinth/VisualSettings.vue'
+import LauncherUpdateModal from '@/components/ui/gradle/LauncherUpdateModal.vue'
+import ExternalAuthLibrarySettings from '@/components/ui/settings/gradle/ExternalAuthLibrarySettings.vue'
+import HorizonSettings from '@/components/ui/settings/gradle/HorizonSettings.vue'
+import UpdateSettings from '@/components/ui/settings/gradle/UpdateSettings.vue'
+import VisualSettings from '@/components/ui/settings/gradle/VisualSettings.vue'
 import { useAppSettings } from '@/composables/use-app-settings.ts'
 import PrivacySettings from '@/features/settings/account/privacy-settings.vue'
 import ProfileSettings from '@/features/settings/account/profile-settings.vue'
@@ -63,7 +63,7 @@ import {
 	isUpdateAvailable,
 	isUpdateInstalling,
 	latestLauncherRelease,
-} from '@/helpers/astralrinth/update'
+} from '@/helpers/gradle/update'
 import { appSettingsKeys, appSettingsQueryOptions, set } from '@/helpers/settings.ts'
 import { injectAppUpdateDownloadProgress } from '@/providers/download-progress.ts'
 
@@ -101,9 +101,9 @@ const tabCategories = defineMessages({
 		id: 'app.settings.sidebar.label.system',
 		defaultMessage: 'System',
 	},
-	astralrinth: {
-		id: 'astralrinth.app.settings.sidebar.label.astralrinth',
-		defaultMessage: 'AstralRinth',
+	gradle: {
+		id: 'gradle.app.settings.sidebar.label.gradle',
+		defaultMessage: 'Gradle',
 	},
 })
 
@@ -229,38 +229,38 @@ const tabs = [
 	},
 	{
 		name: defineMessage({
-			id: 'astralrinth.app.settings.tabs.visual',
+			id: 'gradle.app.settings.tabs.visual',
 			defaultMessage: 'Visual',
 		}),
-		category: tabCategories.astralrinth,
+		category: tabCategories.gradle,
 		icon: PaintbrushIcon,
 		content: VisualSettings,
 		badge: commonMessages.beta,
 	},
 	{
 		name: defineMessage({
-			id: 'astralrinth.app.settings.tabs.horizon',
+			id: 'gradle.app.settings.tabs.horizon',
 			defaultMessage: 'Horizon Engine',
 		}),
-		category: tabCategories.astralrinth,
+		category: tabCategories.gradle,
 		icon: SparklesIcon,
 		content: HorizonSettings,
 	},
 	{
 		name: defineMessage({
-			id: 'astralrinth.app.settings.tabs.external-auth-libraries',
+			id: 'gradle.app.settings.tabs.external-auth-libraries',
 			defaultMessage: 'Authentication libraries',
 		}),
-		category: tabCategories.astralrinth,
+		category: tabCategories.gradle,
 		icon: DownloadIcon,
 		content: ExternalAuthLibrarySettings,
 	},
 	{
 		name: defineMessage({
-			id: 'astralrinth.app.settings.tabs.updates',
+			id: 'gradle.app.settings.tabs.updates',
 			defaultMessage: 'Updates',
 		}),
-		category: tabCategories.astralrinth,
+		category: tabCategories.gradle,
 		icon: RefreshCwIcon,
 		content: UpdateSettings,
 		developerOnly: true,
@@ -434,20 +434,20 @@ const messages = defineMessages({
 		defaultMessage: 'Downloading v{version}',
 	},
 	updateInstalling: {
-		id: 'astralrinth.app.settings.update-installing',
+		id: 'gradle.app.settings.update-installing',
 		defaultMessage: 'Installing update...',
 	},
 	updatesInstalled: {
-		id: 'astralrinth.app.settings.updates-installed',
+		id: 'gradle.app.settings.updates-installed',
 		defaultMessage: 'Updates are already installed',
 	},
 	viewUpdateInfo: {
-		id: 'astralrinth.app.settings.view-update-info',
+		id: 'gradle.app.settings.view-update-info',
 		defaultMessage: 'View update info',
 	},
 	appVersion: {
 		id: 'app.settings.app-version',
-		defaultMessage: 'AstralRinth App {version}',
+		defaultMessage: 'Gradle App {version}',
 	},
 	macos: {
 		id: 'app.settings.operating-system.macos',
@@ -510,7 +510,7 @@ const messages = defineMessages({
 						}"
 						@click="devModeCount"
 					>
-						<AstralRinthLogo aria-hidden="true" class="w-6 h-6" />
+						<GradleLogo aria-hidden="true" class="w-6 h-6" />
 					</button>
 					<div v-if="appInfo" class="max-w-[200px]">
 						<p class="m-0">

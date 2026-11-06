@@ -1,5 +1,5 @@
 use crate::api::Result;
-use crate::api::astralrinth::{
+use crate::api::gradle::{
     authenticate_external_provider, get_external_auth_library_states,
     get_external_auth_providers, install_external_auth_library,
     select_external_auth_library,
@@ -29,7 +29,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
         .build()
 }
 
-/// This code is modified by AstralRinth
+/// This code is modified by Gradle
 /// Create new offline user
 #[tauri::command]
 pub async fn offline_login(name: &str) -> Result<Credentials> {
@@ -66,7 +66,7 @@ pub async fn login<R: Runtime>(
                 .context("error parsing auth redirect URL")?,
         ),
     )
-    .title("Sign into AstralRinth")
+    .title("Sign into Gradle")
     .always_on_top(true)
     .min_inner_size(500.0, 500.0)
     .inner_size(1000.0, 700.0)

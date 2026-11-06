@@ -1,9 +1,9 @@
-//! Horizon runtime integration for AstralRinth
+//! Horizon runtime integration for Gradle
 //!
 //! Provides release management, requirements validation, and client/server process execution
 //! for Horizon (Minecraft 26.3 rewritten in native Rust).
 //!
-//! Copyright (c) 2026 AstralRinth contributors / Horizon authors (MIT License).
+//! Copyright (c) 2026 Gradle contributors / Horizon authors (MIT License).
 
 pub mod agent;
 pub mod execution;

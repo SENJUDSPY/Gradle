@@ -27,7 +27,7 @@ import { computedAsync } from '@vueuse/core'
 import { computed, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 
 import EarsModIcon from '@/assets/skins/ears-mod.png'
-import UnsupportedSkinAccount from '@/components/ui/astralrinth/skin/UnsupportedSkinAccount.vue'
+import UnsupportedSkinAccount from '@/components/ui/gradle/skin/UnsupportedSkinAccount.vue'
 import EditSkinModal from '@/components/ui/skin/EditSkinModal.vue'
 import VirtualSkinSectionList from '@/components/ui/skin/VirtualSkinSectionList.vue'
 import { useAppSettings } from '@/composables/use-app-settings.ts'
@@ -54,7 +54,7 @@ import { hasPride26Badge } from '@/helpers/user-campaigns.ts'
 import {
 	loadExternalAuthProviders,
 	type MinecraftCredential,
-} from '@/models/astralrinth/authentication'
+} from '@/models/gradle/authentication'
 import { useRootBreadcrumb } from '@/shared/breadcrumbs'
 import { appMessages } from '@/utils/app-messages'
 
@@ -198,15 +198,15 @@ const messages = defineMessages({
 		defaultMessage: 'Toggle on',
 	},
 	signInTitle: {
-		id: 'astralrinth.app.skins.sign-in.title',
+		id: 'gradle.app.skins.sign-in.title',
 		defaultMessage: 'Sign in to manage skins',
 	},
 	signInDescription: {
-		id: 'astralrinth.app.skins.sign-in.description',
+		id: 'gradle.app.skins.sign-in.description',
 		defaultMessage: 'Choose a sign-in method to add your Minecraft account.',
 	},
 	signInMethodsButton: {
-		id: 'astralrinth.app.skins.sign-in-methods.button',
+		id: 'gradle.app.skins.sign-in-methods.button',
 		defaultMessage: 'Sign-in methods',
 	},
 })
