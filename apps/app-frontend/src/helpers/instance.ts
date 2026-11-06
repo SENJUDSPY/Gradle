@@ -617,6 +617,20 @@ export async function run(
 	})
 }
 
+export const GLOBAL_DEFAULT_RUNTIME_KEY = 'astralrinth-global-default-runtime'
+
+export function getGlobalDefaultRuntime(): InstanceRuntime {
+	if (typeof window === 'undefined' || !window.localStorage) return 'horizon'
+	const stored = localStorage.getItem(GLOBAL_DEFAULT_RUNTIME_KEY)
+	return stored === 'java' ? 'java' : 'horizon'
+}
+
+export function setGlobalDefaultRuntime(runtime: InstanceRuntime): void {
+	if (typeof window !== 'undefined' && window.localStorage) {
+		localStorage.setItem(GLOBAL_DEFAULT_RUNTIME_KEY, runtime)
+	}
+}
+
 export async function getInstanceRuntime(instanceId: string): Promise<InstanceRuntime> {
 	return await invoke('plugin:instance|instance_get_runtime', { instanceId })
 }

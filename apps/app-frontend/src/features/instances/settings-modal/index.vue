@@ -6,6 +6,7 @@ import {
 	CoffeeIcon,
 	InfoIcon,
 	Settings2Icon,
+	SparklesIcon,
 	UsersIcon,
 	WindowIcon,
 	WrenchIcon,
@@ -31,6 +32,7 @@ import type { GameInstance } from '@/helpers/types'
 
 import GeneralSettings from './general-settings.vue'
 import HooksSettings from './hooks-settings.vue'
+import HorizonSettings from './horizon-settings.vue'
 import InstallationSettings from './installation-settings.vue'
 import { provideInstanceSettings } from './instance-settings-context.ts'
 import JavaSettings from './java-settings.vue'
@@ -131,6 +133,15 @@ const tabs = computed<TabbedModalTab[]>(() => [
 		icon: UsersIcon,
 		content: SharingSettings,
 		shown: props.instance.shared_instance?.role === 'owner' && !props.instance.quarantined,
+	},
+	{
+		name: defineMessage({
+			id: 'instance.settings.tabs.horizon.label',
+			defaultMessage: 'Horizon engine',
+		}),
+		icon: SparklesIcon,
+		category: tabCategories.game,
+		content: HorizonSettings,
 	},
 	{
 		name: defineMessage({

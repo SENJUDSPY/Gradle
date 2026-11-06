@@ -362,6 +362,7 @@ function showInstanceDefaults(tab: InstanceDefaultsTab): void {
 		java: JavaAndMemorySettings,
 		window: WindowSettings,
 		hooks: LaunchHooksSettings,
+		horizon: HorizonSettings,
 	}[tab]
 	const tabIndex = availableTabs.value.findIndex((tab) => tab.content === content)
 	if (tabIndex >= 0) {

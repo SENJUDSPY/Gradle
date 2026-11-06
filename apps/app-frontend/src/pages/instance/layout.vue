@@ -31,6 +31,8 @@
 			/>
 			<HorizonPreparationModal ref="horizonPreparationModal" />
 			<HorizonVersionModal ref="horizonVersionModal" :instance="instance" />
+			<HorizonJavaModIncompatibilityModal ref="horizonJavaModIncompatibilityModal" />
+			<HorizonWorldBackupModal ref="horizonWorldBackupModal" />
 			<InstancePageHeader
 				:instance="instance"
 				:icon-src="icon"
@@ -123,8 +125,10 @@ import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 
 import ExportModal from '@/components/ui/ExportModal.vue'
 import ConfirmDeleteInstanceModal from '@/components/ui/modal/ConfirmDeleteInstanceModal.vue'
+import HorizonJavaModIncompatibilityModal from '@/components/ui/modal/HorizonJavaModIncompatibilityModal.vue'
 import HorizonPreparationModal from '@/components/ui/modal/HorizonPreparationModal.vue'
 import HorizonVersionModal from '@/components/ui/modal/HorizonVersionModal.vue'
+import HorizonWorldBackupModal from '@/components/ui/modal/HorizonWorldBackupModal.vue'
 import UpdateToPlayModal from '@/components/ui/modal/UpdateToPlayModal.vue'
 import SharedInstanceInstallModal from '@/components/ui/shared-instances/shared-instance-install-modal/index.vue'
 import SharedInstanceUpdateModal from '@/components/ui/shared-instances/SharedInstanceUpdateModal.vue'
@@ -162,7 +166,12 @@ import {
 import { useSharedInstanceErrors } from '@/helpers/shared-instance-errors'
 import type { GameInstance } from '@/helpers/types'
 import { createInstanceShortcut, showInstanceInFolder } from '@/helpers/utils.js'
-import type { ServerStatus } from '@/helpers/worlds'
+import {
+	backup_world,
+	get_instance_worlds,
+	type ServerStatus,
+	type SingleplayerWorld,
+} from '@/helpers/worlds'
 import { provideInstanceBackup } from '@/providers/instance-backup'
 import { injectServerInstall } from '@/providers/server-install'
 import { useRootBreadcrumb } from '@/shared/breadcrumbs'
@@ -380,6 +389,9 @@ const deleteConfirmModal = ref<InstanceType<typeof ConfirmDeleteInstanceModal>>(
 const settingsModal = ref<InstanceType<typeof InstanceSettingsModal>>()
 const horizonPreparationModal = ref<InstanceType<typeof HorizonPreparationModal>>()
 const horizonVersionModal = ref<InstanceType<typeof HorizonVersionModal>>()
+const horizonJavaModIncompatibilityModal =
+	ref<InstanceType<typeof HorizonJavaModIncompatibilityModal>>()
+const horizonWorldBackupModal = ref<InstanceType<typeof HorizonWorldBackupModal>>()
 const selectedInstanceToDelete = ref<GameInstance | null>(null)
 const hiddenSharedInstanceUpdateKey = ref<string | null>(null)
 
@@ -715,24 +727,86 @@ const startInstance = async (context: string, runtimeOverride?: InstanceRuntime)
 	}
 
 	if (targetRuntime === 'horizon') {
-		const prepared = await isHorizonResourcesPrepared().catch(() => false)
-		if (!prepared) {
-			horizonPreparationModal.value?.show(async () => {
-				await startInstance(context, 'horizon')
+		// 1. Check for incompatible Java mod JARs
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const contentData = queryClient.getQueryData<any>(instanceKeys.content(instanceId))
+		const items = contentData?.contentItems ?? []
+		const incompatibleJavaMods = items.filter(
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(item: any) =>
+				item.project_type === 'mod' &&
+				item.enabled &&
+				!item.file_name?.toLowerCase().endsWith('.wasm') &&
+				!item.file_name?.toLowerCase().endsWith('.hmod'),
+		)
+		if (incompatibleJavaMods.length > 0) {
+			horizonJavaModIncompatibilityModal.value?.show(incompatibleJavaMods, {
+				playJava: () => {
+					void handleRuntimeUpdate('java')
+					void startInstance(context, 'java')
+				},
+				continueHorizon: () => {
+					void checkWorldsAndLaunchHorizon(context)
+				},
+				cancel: () => {},
 			})
 			return
 		}
 
-		const installed = await getInstalledHorizonVersions().catch(() => [])
-		if (installed.length === 0) {
-			horizonVersionModal.value?.show(async () => {
-				await launchInstance(context, 'horizon')
-			})
-			return
-		}
+		await checkWorldsAndLaunchHorizon(context)
+		return
 	}
 
 	await launchInstance(context, targetRuntime)
+}
+
+async function checkWorldsAndLaunchHorizon(context: string) {
+	if (!instance.value) return
+	const instanceId = instance.value.id
+	const worlds = await get_instance_worlds(instanceId).catch(() => [])
+	const singleplayerWorlds = worlds.filter((w): w is SingleplayerWorld => w.type === 'singleplayer')
+	const backupStorageKey = `horizon_world_backup_done_${instanceId}`
+	const backupDone = localStorage.getItem(backupStorageKey) === 'true'
+
+	if (singleplayerWorlds.length > 0 && !backupDone) {
+		horizonWorldBackupModal.value?.show(singleplayerWorlds, {
+			confirm: async () => {
+				for (const world of singleplayerWorlds) {
+					await backup_world(instanceId, world.path).catch(console.error)
+				}
+				localStorage.setItem(backupStorageKey, 'true')
+				await proceedHorizonLaunch(context)
+			},
+			playJava: () => {
+				void handleRuntimeUpdate('java')
+				void startInstance(context, 'java')
+			},
+			cancel: () => {},
+		})
+		return
+	}
+
+	await proceedHorizonLaunch(context)
+}
+
+async function proceedHorizonLaunch(context: string) {
+	const prepared = await isHorizonResourcesPrepared().catch(() => false)
+	if (!prepared) {
+		horizonPreparationModal.value?.show(async () => {
+			await proceedHorizonLaunch(context)
+		})
+		return
+	}
+
+	const installed = await getInstalledHorizonVersions().catch(() => [])
+	if (installed.length === 0) {
+		horizonVersionModal.value?.show(async () => {
+			await launchInstance(context, 'horizon')
+		})
+		return
+	}
+
+	await launchInstance(context, 'horizon')
 }
 
 const stopInstance = async (context: string) => {

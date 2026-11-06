@@ -2,16 +2,77 @@
 	<ReadyTransition :pending="loading">
 		<div class="flex flex-col gap-3">
 			<div
-				v-if="instance?.loader === 'horizon'"
-				class="flex items-center gap-3 rounded-2xl border border-solid border-brand/20 bg-brand/10 p-4 text-xs text-contrast"
+				v-if="activeRuntime === 'horizon' && javaModsCount === 0"
+				class="flex items-center gap-3 rounded-2xl border border-solid border-purple-500/20 bg-purple-500/10 p-4 text-xs text-contrast"
 			>
-				<SparklesIcon class="size-5 shrink-0 text-brand" />
+				<SparklesIcon class="size-5 shrink-0 text-purple-400" />
 				<div class="flex flex-col">
-					<span class="font-bold text-brand">
+					<span class="font-bold text-purple-400">
 						{{ formatMessage(messages.horizonProfileNoticeTitle) }}
 					</span>
 					<span class="text-secondary">
 						{{ formatMessage(messages.horizonProfileNoticeDesc) }}
+					</span>
+				</div>
+			</div>
+
+			<!-- Isolated Java Mods Alert (if Horizon is active and Java mods exist) -->
+			<div
+				v-if="activeRuntime === 'horizon' && javaModsCount > 0"
+				class="flex items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-contrast"
+			>
+				<div class="flex items-center gap-2.5">
+					<TriangleAlertIcon class="size-4 shrink-0 text-amber-400" />
+					<span>
+						{{ formatMessage(messages.javaModsIsolatedNotice, { count: javaModsCount }) }}
+					</span>
+				</div>
+				<Button
+					size="sm"
+					class="shrink-0 font-medium"
+					@click="handlePlayWithJavaInstead"
+				>
+					<CoffeeIcon class="mr-1.5 size-3.5 text-amber-400" />
+					{{ formatMessage(messages.playWithJavaInstead) }}
+				</Button>
+			</div>
+
+			<!-- Runtime / Content Partition Tabs -->
+			<div class="glass-surface glass-surface--strong flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-surface-5/50 bg-surface-2/60 p-2.5 backdrop-blur-md">
+				<div class="flex flex-wrap items-center gap-1.5">
+					<button
+						v-for="tab in partitionTabs"
+						:key="tab.id"
+						type="button"
+						:class="[
+							'flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all',
+							selectedPartitionTab === tab.id
+								? 'bg-brand text-white shadow-sm'
+								: 'bg-surface-3/50 text-secondary hover:bg-surface-4 hover:text-contrast',
+						]"
+						@click="selectedPartitionTab = tab.id"
+					>
+						<span>{{ tab.label }}</span>
+						<span
+							:class="[
+								'rounded-full px-1.5 py-0.5 text-[10px]',
+								selectedPartitionTab === tab.id
+									? 'bg-white/20 text-white font-bold'
+									: 'bg-surface-5/50 text-secondary',
+							]"
+						>
+							{{ tab.count }}
+						</span>
+					</button>
+				</div>
+				<div class="flex items-center gap-2 pr-2 text-xs">
+					<span v-if="activeRuntime === 'horizon'" class="flex items-center gap-1.5 text-purple-400">
+						<span class="inline-block size-2 rounded-full bg-purple-500 animate-pulse" />
+						{{ formatMessage(messages.runtimeHorizonActiveNotice) }}
+					</span>
+					<span v-else class="flex items-center gap-1.5 text-amber-400">
+						<span class="inline-block size-2 rounded-full bg-amber-500" />
+						{{ formatMessage(messages.runtimeJavaActiveNotice) }}
 					</span>
 				</div>
 			</div>
@@ -110,12 +171,15 @@
 import type { Labrinth } from '@modrinth/api-client'
 import {
 	ClipboardCopyIcon,
+	CoffeeIcon,
 	FolderOpenIcon,
 	LockIcon,
 	LockOpenIcon,
 	SparklesIcon,
+	TriangleAlertIcon,
 } from '@modrinth/assets'
 import {
+	Button,
 	type ButtonMenuOption,
 	commonMessages,
 	ConfirmDisableModal,
@@ -191,6 +255,50 @@ const messages = defineMessages({
 		id: 'app.instance.content.horizon.notice-desc',
 		defaultMessage:
 			'Horizon runs natively in Rust (wgpu/Vulkan). It supports WebAssembly mods (.wasm, .hmod), data packs, resource packs, and shaders. Standard Java JAR bytecode mods are not supported.',
+	},
+	tabActive: {
+		id: 'app.instance.content.tab.active',
+		defaultMessage: 'Active ({runtime})',
+	},
+	tabHorizonMods: {
+		id: 'app.instance.content.tab.horizon-mods',
+		defaultMessage: 'Horizon Mods (Wasm)',
+	},
+	tabJavaMods: {
+		id: 'app.instance.content.tab.java-mods',
+		defaultMessage: 'Java Mods (JAR)',
+	},
+	tabResourcePacks: {
+		id: 'app.instance.content.tab.resourcepacks',
+		defaultMessage: 'Resource Packs',
+	},
+	tabDataPacks: {
+		id: 'app.instance.content.tab.datapacks',
+		defaultMessage: 'Data Packs',
+	},
+	tabShaders: {
+		id: 'app.instance.content.tab.shaders',
+		defaultMessage: 'Shaders',
+	},
+	tabAll: {
+		id: 'app.instance.content.tab.all',
+		defaultMessage: 'All Files',
+	},
+	runtimeHorizonActiveNotice: {
+		id: 'app.instance.content.runtime-active.horizon',
+		defaultMessage: 'Horizon (Rust, native)',
+	},
+	runtimeJavaActiveNotice: {
+		id: 'app.instance.content.runtime-active.java',
+		defaultMessage: 'Java (classic)',
+	},
+	javaModsIsolatedNotice: {
+		id: 'app.instance.content.java-mods-isolated.notice',
+		defaultMessage: '{count, plural, one {# Java mod (.jar) is} other {# Java mods (.jar) are}} installed but isolated from Horizon. Switch to Java to run them.',
+	},
+	playWithJavaInstead: {
+		id: 'app.instance.content.play-with-java-instead',
+		defaultMessage: 'Play with Java instead',
 	},
 	modpackContentHeader: {
 		id: 'app.instance.content.managed-content.modpack-header',
@@ -316,10 +424,127 @@ const mergedProjects = computed<ContentItem[]>(() => {
 	return placeholders.length > 0 ? [...displayProjects, ...placeholders] : displayProjects
 })
 
+const activeRuntime = computed(() => instancePage.activeRuntime.value ?? 'horizon')
+
+type ContentPartitionTab =
+	| 'active'
+	| 'horizon'
+	| 'java'
+	| 'resourcepack'
+	| 'datapack'
+	| 'shader'
+	| 'all'
+const selectedPartitionTab = ref<ContentPartitionTab>('active')
+
+function isHorizonMod(item: ContentItem): boolean {
+	const name = (item.file_name || '').toLowerCase()
+	return (
+		name.endsWith('.wasm') ||
+		name.endsWith('.wasm.disabled') ||
+		name.endsWith('.hmod') ||
+		name.endsWith('.hmod.disabled')
+	)
+}
+
+function isJavaMod(item: ContentItem): boolean {
+	const name = (item.file_name || '').toLowerCase()
+	return (
+		name.endsWith('.jar') ||
+		name.endsWith('.jar.disabled') ||
+		(!isHorizonMod(item) && item.project_type === 'mod')
+	)
+}
+
+const horizonModsCount = computed(
+	() => mergedProjects.value.filter((i) => i.project_type === 'mod' && isHorizonMod(i)).length,
+)
+const javaModsCount = computed(
+	() => mergedProjects.value.filter((i) => i.project_type === 'mod' && isJavaMod(i)).length,
+)
+const resourcePacksCount = computed(
+	() => mergedProjects.value.filter((i) => i.project_type === 'resourcepack').length,
+)
+const dataPacksCount = computed(
+	() => mergedProjects.value.filter((i) => i.project_type === 'datapack').length,
+)
+const shadersCount = computed(
+	() => mergedProjects.value.filter((i) => i.project_type === 'shader').length,
+)
+
+const partitionedProjects = computed<ContentItem[]>(() => {
+	const all = mergedProjects.value
+	switch (selectedPartitionTab.value) {
+		case 'active':
+			if (activeRuntime.value === 'horizon') {
+				return all.filter((item) => item.project_type !== 'mod' || isHorizonMod(item))
+			} else {
+				return all.filter((item) => item.project_type !== 'mod' || isJavaMod(item))
+			}
+		case 'horizon':
+			return all.filter((item) => item.project_type === 'mod' && isHorizonMod(item))
+		case 'java':
+			return all.filter((item) => item.project_type === 'mod' && isJavaMod(item))
+		case 'resourcepack':
+			return all.filter((item) => item.project_type === 'resourcepack')
+		case 'datapack':
+			return all.filter((item) => item.project_type === 'datapack')
+		case 'shader':
+			return all.filter((item) => item.project_type === 'shader')
+		case 'all':
+		default:
+			return all
+	}
+})
+
+const partitionTabs = computed(() => [
+	{
+		id: 'active' as const,
+		label: formatMessage(messages.tabActive, {
+			runtime: activeRuntime.value === 'horizon' ? 'Horizon' : 'Java',
+		}),
+		count: partitionedProjects.value.length,
+	},
+	{
+		id: 'horizon' as const,
+		label: formatMessage(messages.tabHorizonMods),
+		count: horizonModsCount.value,
+	},
+	{
+		id: 'java' as const,
+		label: formatMessage(messages.tabJavaMods),
+		count: javaModsCount.value,
+	},
+	{
+		id: 'resourcepack' as const,
+		label: formatMessage(messages.tabResourcePacks),
+		count: resourcePacksCount.value,
+	},
+	{
+		id: 'datapack' as const,
+		label: formatMessage(messages.tabDataPacks),
+		count: dataPacksCount.value,
+	},
+	{
+		id: 'shader' as const,
+		label: formatMessage(messages.tabShaders),
+		count: shadersCount.value,
+	},
+	{
+		id: 'all' as const,
+		label: formatMessage(messages.tabAll),
+		count: mergedProjects.value.length,
+	},
+])
+
+async function handlePlayWithJavaInstead() {
+	await instancePage.setRuntime('java')
+	await instancePage.play('content_isolated_banner', 'java')
+}
+
 const highlightedItemId = computed(() => {
 	const path = route.query.highlight
 	if (typeof path !== 'string') return undefined
-	return mergedProjects.value.find(matchesHighlightedFile)?.file_path ?? path
+	return partitionedProjects.value.find(matchesHighlightedFile)?.file_path ?? path
 })
 
 function matchesHighlightedFile(item: ContentItem) {
@@ -1641,7 +1866,7 @@ function contentVersionLabel(item: ContentItem): string {
 }
 
 provideContentManager({
-	items: mergedProjects,
+	items: partitionedProjects,
 	loading,
 	error: ref(null),
 	managedContent,

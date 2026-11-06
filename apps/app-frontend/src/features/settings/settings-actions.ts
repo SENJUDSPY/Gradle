@@ -1,6 +1,6 @@
 import { createContext } from '@modrinth/ui'
 
-export type InstanceDefaultsTab = 'java' | 'window' | 'hooks'
+export type InstanceDefaultsTab = 'java' | 'window' | 'hooks' | 'horizon'
 
 /**
  * Opens the app settings modal from anywhere in the app, optionally on a specific tab.

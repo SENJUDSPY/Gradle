@@ -71,6 +71,7 @@ import IconEditorModal from '@/components/ui/instance_settings/icon-editor-modal
 import MinecraftAuthErrorModal from '@/components/ui/minecraft-auth-error-modal/MinecraftAuthErrorModal.vue'
 import MinecraftRequiredModal from '@/components/ui/minecraft-required-modal/MinecraftRequiredModal.vue'
 import InstallToPlayModal from '@/components/ui/modal/InstallToPlayModal.vue'
+import InstanceRuntimeMigrationModal from '@/components/ui/modal/InstanceRuntimeMigrationModal.vue'
 import ModpackAlreadyInstalledModal from '@/components/ui/modal/ModpackAlreadyInstalledModal.vue'
 import ModrinthAccountRequiredModal from '@/components/ui/modal/ModrinthAccountRequiredModal.vue'
 import UpdateToPlayModal from '@/components/ui/modal/UpdateToPlayModal.vue'
@@ -869,6 +870,7 @@ const appSettingsModal = ref()
 const launcherUpdateModal = ref()
 const launcherVersion = ref('')
 const newUpdateModal = ref()
+const instanceRuntimeMigrationModal = ref()
 
 async function showLauncherUpdateModal() {
 	launcherVersion.value = await getVersion()
@@ -1286,6 +1288,7 @@ onMounted(() => {
 	setServerAddServerToInstanceModal(addServerToInstanceModal.value)
 	setServerInstallToPlayModal(installToPlayModal.value)
 	setServerUpdateToPlayModal(updateToPlayModal.value)
+	void instanceRuntimeMigrationModal.value?.checkAndPromptMigration()
 })
 
 const sidebar = ref(null)
@@ -1549,6 +1552,10 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	<div id="teleports"></div>
 	<AccountSwitchOverlay :show="isSwitchingAccount" />
 	<LauncherUpdateModal ref="launcherUpdateModal" :version="launcherVersion" />
+	<InstanceRuntimeMigrationModal
+		ref="instanceRuntimeMigrationModal"
+		@completed="queryClient.invalidateQueries({ queryKey: ['instances', 'list'] })"
+	/>
 	<div
 		v-if="stateInitialized"
 		class="app-grid-layout relative"

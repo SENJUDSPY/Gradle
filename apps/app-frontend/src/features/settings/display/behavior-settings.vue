@@ -4,15 +4,21 @@ import {
 	injectAuth,
 	injectNotificationManager,
 	injectUserPreferences,
+	SegmentedControl,
 	Toggle,
 	useSavable,
 	useVIntl,
 } from '@modrinth/ui'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { useAppSettings } from '@/composables/use-app-settings.ts'
 import { injectAppSettingsModal } from '@/features/settings/app-settings-modal/context'
+import {
+	getGlobalDefaultRuntime,
+	type InstanceRuntime,
+	setGlobalDefaultRuntime,
+} from '@/helpers/instance'
 import {
 	type AppSettings,
 	appSettingsKeys,
@@ -28,6 +34,7 @@ const { handleError } = injectNotificationManager()
 const { updatePreferences } = injectUserPreferences()
 const settingsModal = injectAppSettingsModal()
 const queryClient = useQueryClient()
+const globalDefaultRuntime = ref<InstanceRuntime>(getGlobalDefaultRuntime())
 
 const messages = defineMessages({
 	syncAcrossDevicesTitle: {
@@ -46,6 +53,22 @@ const messages = defineMessages({
 	startupAndNavigationTitle: {
 		id: 'app.behavior-settings.startup-and-navigation.title',
 		defaultMessage: 'Startup and navigation',
+	},
+	defaultRuntimeTitle: {
+		id: 'app.behavior-settings.default-runtime.title',
+		defaultMessage: 'Default launch runtime',
+	},
+	defaultRuntimeDescription: {
+		id: 'app.behavior-settings.default-runtime.description',
+		defaultMessage: 'Choose the default runtime for newly created and imported instances.',
+	},
+	runtimeHorizon: {
+		id: 'app.runtime.horizon',
+		defaultMessage: 'Horizon (Rust, optimized)',
+	},
+	runtimeJava: {
+		id: 'app.runtime.java',
+		defaultMessage: 'Java (classic)',
 	},
 	contentTitle: {
 		id: 'app.behavior-settings.content.title',
@@ -275,6 +298,30 @@ onBeforeUnmount(() => {
 			{{ formatMessage(messages.startupAndNavigationTitle) }}
 		</h2>
 		<div class="mt-4 flex flex-col gap-6">
+			<!-- Default Launch Runtime -->
+			<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+				<div>
+					<h3 class="m-0 text-lg font-semibold text-contrast">
+						{{ formatMessage(messages.defaultRuntimeTitle) }}
+					</h3>
+					<p class="m-0 mt-1 text-secondary">
+						{{ formatMessage(messages.defaultRuntimeDescription) }}
+					</p>
+				</div>
+				<SegmentedControl
+					:model-value="globalDefaultRuntime"
+					:items="['horizon', 'java']"
+					:format-label="(item) => (item === 'horizon' ? formatMessage(messages.runtimeHorizon) : formatMessage(messages.runtimeJava))"
+					class="shrink-0"
+					@update:model-value="(val) => {
+						if (val) {
+							globalDefaultRuntime = val as InstanceRuntime
+							setGlobalDefaultRuntime(val as InstanceRuntime)
+						}
+					}"
+				/>
+			</div>
+
 			<div class="flex items-center justify-between gap-4">
 				<div>
 					<h3 class="m-0 text-lg font-semibold text-contrast">
