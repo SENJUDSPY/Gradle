@@ -4700,6 +4700,21 @@
   "instance.action.export-modpack": {
     "message": "Экспортировать сборку"
   },
+  "instance.action.play-horizon": {
+    "message": "Играть через Horizon"
+  },
+  "instance.action.play-java": {
+    "message": "Играть через Java"
+  },
+  "instance.runtime.horizon": {
+    "message": "Horizon (Rust, оптим.)"
+  },
+  "instance.runtime.java": {
+    "message": "Java (классика)"
+  },
+  "instance.runtime.switch-label": {
+    "message": "Среда запуска"
+  },
   "instance.action.launch-instance": {
     "message": "Запустить сборку"
   },

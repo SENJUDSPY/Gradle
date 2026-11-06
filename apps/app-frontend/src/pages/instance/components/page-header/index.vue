@@ -11,15 +11,22 @@
 		</template>
 
 		<template
-			v-if="instance.shared_instance || instance.quarantined || instance.loader === 'horizon'"
+			v-if="instance.shared_instance || instance.quarantined || activeRuntime === 'horizon' || instance.loader === 'horizon'"
 			#badges
 		>
 			<PageHeaderBadgeItem
-				v-if="instance.loader === 'horizon'"
+				v-if="activeRuntime === 'horizon' || instance.loader === 'horizon'"
 				aria-label="Horizon native runtime"
 				class="!border-purple-500 !bg-purple-500/15 !text-purple-400 font-semibold"
 			>
 				Horizon (Rust)
+			</PageHeaderBadgeItem>
+			<PageHeaderBadgeItem
+				v-else
+				aria-label="Java classic runtime"
+				class="!border-amber-500 !bg-amber-500/15 !text-amber-400 font-semibold"
+			>
+				Java (classic)
 			</PageHeaderBadgeItem>
 			<PageHeaderBadgeItem
 				v-if="instance.quarantined"
@@ -89,9 +96,20 @@
 
 		<template #actions>
 			<PageHeaderActions>
+				<!-- Runtime Switch (Segmented Control): Horizon (Rust, optimized) vs Java (classic) -->
+				<SegmentedControl
+					v-if="!playing && !isInstalling && !instance.quarantined"
+					:model-value="activeRuntime"
+					:items="['horizon', 'java']"
+					:format-label="(item) => (item === 'horizon' ? formatMessage(messages.runtimeHorizon) : formatMessage(messages.runtimeJava))"
+					:aria-label="formatMessage(messages.runtimeSwitchLabel)"
+					class="mr-2"
+					@update:model-value="(val) => val && handleRuntimeChange(val as InstanceRuntime)"
+				/>
+
 				<!-- Horizon Mode Toggle: Client vs Dedicated Server -->
 				<div
-					v-if="instance.loader === 'horizon' && !playing && !isInstalling && !instance.quarantined"
+					v-if="activeRuntime === 'horizon' && !playing && !isInstalling && !instance.quarantined"
 					class="mr-1 flex items-center rounded-xl border border-solid border-surface-5 bg-surface-2 p-0.5 text-xs font-semibold"
 				>
 					<button
@@ -170,45 +188,24 @@
 					{{ formatMessage(messages.repair) }}
 				</Button>
 				<SplitButton
-					v-else-if="!loading && isServerInstance"
-					type="colored"
-					color="brand"
-					size="xl"
-					:options="serverPlayOptions"
-					:menu-label="formatMessage(messages.launchInstance)"
-					@click="emit('playServer')"
-				>
-					<PlayIcon />
-					{{ formatMessage(commonMessages.playButton) }}
-				</SplitButton>
-				<SplitButton
-					v-else-if="!loading && instance.loader === 'horizon'"
-					type="colored"
-					color="brand"
-					size="xl"
-					:options="horizonPlayOptions"
-					:menu-label="formatMessage(messages.launchInstance)"
-					@click="handleHorizonPlay"
-				>
-					<ServerIcon v-if="horizonMode === 'server'" />
-					<PlayIcon v-else />
-					{{
-						horizonMode === 'server'
-							? formatMessage(messages.launchServer)
-							: formatMessage(commonMessages.playButton)
-					}}
-				</SplitButton>
-				<Button
 					v-else-if="!loading"
 					type="colored"
 					color="brand"
 					size="xl"
-					native-type="button"
-					@click="emit('play')"
+					:options="dualPlayOptions"
+					:menu-label="formatMessage(messages.launchInstance)"
+					@click="handleHorizonPlay"
 				>
-					<PlayIcon />
-					{{ formatMessage(commonMessages.playButton) }}
-				</Button>
+					<ServerIcon v-if="activeRuntime === 'horizon' && horizonMode === 'server'" />
+					<PlayIcon v-else />
+					{{
+						activeRuntime === 'horizon' && horizonMode === 'server'
+							? formatMessage(messages.launchServer)
+							: activeRuntime === 'horizon'
+								? formatMessage(messages.playHorizon)
+								: formatMessage(messages.playJava)
+					}}
+				</SplitButton>
 				<Button v-else type="colored" color="brand" size="xl" native-type="button" disabled>{{
 					formatMessage(messages.starting)
 				}}</Button>
@@ -260,7 +257,7 @@ import {
 	UnknownIcon,
 	WrenchIcon,
 } from '@modrinth/assets'
-import { Button, IconButton, SplitButton, TeleportOverflowMenu } from '@modrinth/ui'
+import { Button, IconButton, SegmentedControl, SplitButton, TeleportOverflowMenu } from '@modrinth/ui'
 import {
 	Avatar,
 	type ButtonMenuOption,
@@ -280,6 +277,7 @@ import { computed, ref } from 'vue'
 
 import HorizonRequirementsModal from '@/components/ui/modal/HorizonRequirementsModal.vue'
 import HorizonVersionModal from '@/components/ui/modal/HorizonVersionModal.vue'
+import type { InstanceRuntime } from '@/helpers/instance'
 import type { GameInstance } from '@/helpers/types'
 
 import InstanceHeaderServerMetadata from './instance-page-header-server-metadata.vue'
@@ -300,6 +298,26 @@ const messages = defineMessages({
 	launchInstance: {
 		id: 'instance.action.launch-instance',
 		defaultMessage: 'Launch instance',
+	},
+	runtimeHorizon: {
+		id: 'instance.runtime.horizon',
+		defaultMessage: 'Horizon (Rust, optimized)',
+	},
+	runtimeJava: {
+		id: 'instance.runtime.java',
+		defaultMessage: 'Java (classic)',
+	},
+	playHorizon: {
+		id: 'instance.action.play-horizon',
+		defaultMessage: 'Play with Horizon',
+	},
+	playJava: {
+		id: 'instance.action.play-java',
+		defaultMessage: 'Play with Java',
+	},
+	runtimeSwitchLabel: {
+		id: 'instance.runtime.switch-label',
+		defaultMessage: 'Launch runtime',
 	},
 	moreActions: {
 		id: 'instance.action.more-actions',
@@ -390,6 +408,7 @@ const props = withDefaults(
 		statusOnline?: boolean
 		ping?: number
 		minecraftServer?: Labrinth.Projects.v3.Project['minecraft_server']
+		runtime?: InstanceRuntime
 	}>(),
 	{
 		iconSrc: null,
@@ -404,6 +423,7 @@ const props = withDefaults(
 		statusOnline: false,
 		ping: undefined,
 		minecraftServer: undefined,
+		runtime: undefined,
 	},
 )
 
@@ -418,6 +438,8 @@ const emit = defineEmits<{
 	export: []
 	createShortcut: []
 	report: [event?: MouseEvent]
+	'update:runtime': [runtime: InstanceRuntime]
+	playRuntime: [runtime: InstanceRuntime]
 }>()
 
 const installingStages = ['installing', 'pack_installing', 'minecraft_installing']
@@ -455,59 +477,95 @@ const playtimeLabel = computed(() => {
 
 	return `${seconds} second${seconds === 1 ? '' : 's'}`
 })
-const serverPlayOptions = computed<ButtonMenuOption[]>(() => [
-	{
-		id: 'launch_instance',
-		label: formatMessage(messages.launchInstance),
-		icon: PlayIcon,
-		action: () => emit('play'),
-	},
-])
+const activeRuntime = computed<InstanceRuntime>({
+	get: () => props.runtime ?? props.instance.runtime ?? 'horizon',
+	set: (val: InstanceRuntime) => emit('update:runtime', val),
+})
+
+function handleRuntimeChange(val: InstanceRuntime) {
+	emit('update:runtime', val)
+}
+
 const requirementsModal = ref<InstanceType<typeof HorizonRequirementsModal> | null>(null)
 const versionModal = ref<InstanceType<typeof HorizonVersionModal> | null>(null)
 const horizonMode = ref<'client' | 'server'>('client')
 
 function handleHorizonPlay() {
-	if (horizonMode.value === 'server') {
-		emit('playServer')
+	if (activeRuntime.value === 'horizon') {
+		if (horizonMode.value === 'server') {
+			emit('playServer')
+		} else {
+			emit('playRuntime', 'horizon')
+		}
 	} else {
-		emit('play')
+		emit('playRuntime', 'java')
 	}
 }
 
-const horizonPlayOptions = computed<ButtonMenuOption[]>(() => [
-	{
-		id: 'launch_client',
-		label: formatMessage(messages.launchClient),
-		icon: PlayIcon,
-		action: () => emit('play'),
-	},
-	{
-		id: 'launch_server',
-		label: formatMessage(messages.launchServer),
-		icon: ServerIcon,
-		action: () => emit('playServer'),
-	},
-	{ type: 'divider' },
-	{
-		id: 'select_version',
-		label: formatMessage(messages.selectVersion),
-		icon: TagIcon,
-		action: () => versionModal.value?.show(),
-	},
-	{
-		id: 'prepare_resources',
-		label: formatMessage(messages.prepareResources),
-		icon: WrenchIcon,
-		action: () => emit('prepareHorizon'),
-	},
-	{
-		id: 'check_requirements',
-		label: formatMessage(messages.checkRequirements),
-		icon: ShieldCheckIcon,
-		action: () => requirementsModal.value?.show(),
-	},
-])
+const dualPlayOptions = computed<ButtonMenuOption[]>(() => {
+	const options: ButtonMenuOption[] = [
+		{
+			id: 'play_horizon',
+			label: formatMessage(messages.playHorizon),
+			icon: PlayIcon,
+			action: () => {
+				handleRuntimeChange('horizon')
+				emit('playRuntime', 'horizon')
+			},
+		},
+		{
+			id: 'play_java',
+			label: formatMessage(messages.playJava),
+			icon: PlayIcon,
+			action: () => {
+				handleRuntimeChange('java')
+				emit('playRuntime', 'java')
+			},
+		},
+	]
+
+	if (activeRuntime.value === 'horizon') {
+		options.push(
+			{ type: 'divider' },
+			{
+				id: 'launch_server',
+				label: formatMessage(messages.launchServer),
+				icon: ServerIcon,
+				action: () => emit('playServer'),
+			},
+			{
+				id: 'select_version',
+				label: formatMessage(messages.selectVersion),
+				icon: TagIcon,
+				action: () => versionModal.value?.show(),
+			},
+			{
+				id: 'prepare_resources',
+				label: formatMessage(messages.prepareResources),
+				icon: WrenchIcon,
+				action: () => emit('prepareHorizon'),
+			},
+			{
+				id: 'check_requirements',
+				label: formatMessage(messages.checkRequirements),
+				icon: ShieldCheckIcon,
+				action: () => requirementsModal.value?.show(),
+			},
+		)
+	} else if (props.isServerInstance) {
+		options.push(
+			{ type: 'divider' },
+			{
+				id: 'launch_server_project',
+				label: formatMessage(messages.launchInstance),
+				icon: ServerIcon,
+				action: () => emit('playServer'),
+			},
+		)
+	}
+
+	return options
+})
 
 function handleRequirementsPrepare() {
 	requirementsModal.value?.hide()

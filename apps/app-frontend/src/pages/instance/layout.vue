@@ -45,6 +45,9 @@
 				:status-online="statusOnline"
 				:ping="ping"
 				:minecraft-server="minecraftServer"
+				:runtime="activeRuntime"
+				@update:runtime="handleRuntimeUpdate"
+				@play-runtime="(r) => startInstance('InstancePage', r)"
 				@repair="() => repairInstance()"
 				@stop="() => stopInstance('InstancePage')"
 				@play="() => startInstance('InstancePage')"
@@ -148,10 +151,12 @@ import {
 import {
 	get_full_path,
 	getInstanceIconUrl,
+	type InstanceRuntime,
 	kill,
 	refresh_content_updates,
 	remove,
 	run,
+	setInstanceRuntime,
 	sync_content_files,
 } from '@/helpers/instance'
 import { useSharedInstanceErrors } from '@/helpers/shared-instance-errors'
@@ -378,6 +383,23 @@ const horizonVersionModal = ref<InstanceType<typeof HorizonVersionModal>>()
 const selectedInstanceToDelete = ref<GameInstance | null>(null)
 const hiddenSharedInstanceUpdateKey = ref<string | null>(null)
 
+const activeRuntime = ref<InstanceRuntime>('horizon')
+watch(
+	() => instance.value?.runtime,
+	(val) => {
+		if (val) activeRuntime.value = val as InstanceRuntime
+	},
+	{ immediate: true },
+)
+
+async function handleRuntimeUpdate(runtime: InstanceRuntime) {
+	activeRuntime.value = runtime
+	if (instance.value) {
+		await setInstanceRuntime(instance.value.id, runtime).catch(handleError)
+		await queryClient.invalidateQueries({ queryKey: instanceKeys.detail(instance.value.id) })
+	}
+}
+
 const { notifySharedInstanceError, notifySharedInstanceUnavailable } = useSharedInstanceErrors()
 
 useLoadingBarToken(subpagePending)
@@ -583,12 +605,13 @@ watch(
 
 const options = ref<InstanceType<typeof ContextMenu> | null>(null)
 
-const launchInstance = async (context: string) => {
+const launchInstance = async (context: string, runtimeOverride?: InstanceRuntime) => {
 	if (!instance.value || instance.value.quarantined) return
 	const currentInstance = instance.value
+	const targetRuntime = runtimeOverride ?? activeRuntime.value
 	loading.value = true
 	try {
-		await run(currentInstance.id)
+		await run(currentInstance.id, null, false, targetRuntime)
 		queryClient.setQueryData(instanceKeys.processes(currentInstance.id), [true])
 	} catch (err) {
 		handleSevereError(err, { instanceId: currentInstance.id })
@@ -599,6 +622,7 @@ const launchInstance = async (context: string) => {
 	trackEvent('InstanceStart', {
 		loader: instance.value.loader,
 		game_version: instance.value.game_version,
+		runtime: targetRuntime,
 		source: context,
 	})
 }
@@ -642,11 +666,12 @@ function handleSharedInstanceUpdateComplete(successful: boolean) {
 	}
 }
 
-const startInstance = async (context: string) => {
+const startInstance = async (context: string, runtimeOverride?: InstanceRuntime) => {
 	if (!instance.value || instance.value.quarantined) return
 	if (checkingSharedInstanceLaunch.value || loading.value || playing.value) return
 
 	const instanceId = instance.value.id
+	const targetRuntime = runtimeOverride ?? activeRuntime.value
 	const isSharedInstanceMember = instance.value.shared_instance?.role === 'member'
 	const canCheckSharedInstanceUpdate =
 		!!instance.value.shared_instance && !sharedInstanceActionsLocked.value && !offline.value
@@ -671,7 +696,7 @@ const startInstance = async (context: string) => {
 		if (preview?.updateAvailable && sharedInstanceUpdateModal.value) {
 			sharedInstanceUpdateModal.value.show(instance.value, preview, async () => {
 				await refreshInstance()
-				await launchInstance(context)
+				await launchInstance(context, targetRuntime)
 			})
 			return
 		}
@@ -681,7 +706,7 @@ const startInstance = async (context: string) => {
 		if (isSharedInstanceMember) {
 			updateToPlayModal.value.show(instance.value, null, async () => {
 				await refreshInstance()
-				await launchInstance(context)
+				await launchInstance(context, targetRuntime)
 			})
 		} else {
 			updateToPlayModal.value.show(instance.value)
@@ -689,11 +714,11 @@ const startInstance = async (context: string) => {
 		return
 	}
 
-	if (instance.value.loader === 'horizon') {
+	if (targetRuntime === 'horizon') {
 		const prepared = await isHorizonResourcesPrepared().catch(() => false)
 		if (!prepared) {
 			horizonPreparationModal.value?.show(async () => {
-				await startInstance(context)
+				await startInstance(context, 'horizon')
 			})
 			return
 		}
@@ -701,13 +726,13 @@ const startInstance = async (context: string) => {
 		const installed = await getInstalledHorizonVersions().catch(() => [])
 		if (installed.length === 0) {
 			horizonVersionModal.value?.show(async () => {
-				await launchInstance(context)
+				await launchInstance(context, 'horizon')
 			})
 			return
 		}
 	}
 
-	await launchInstance(context)
+	await launchInstance(context, targetRuntime)
 }
 
 const stopInstance = async (context: string) => {
@@ -727,7 +752,7 @@ const stopInstance = async (context: string) => {
 
 const handlePlayServer = async () => {
 	if (!instance.value || instance.value.quarantined) return
-	if (instance.value.loader === 'horizon') {
+	if (activeRuntime.value === 'horizon') {
 		const currentInstance = instance.value
 		const prepared = await isHorizonResourcesPrepared().catch(() => false)
 		if (!prepared) {
@@ -747,7 +772,7 @@ const handlePlayServer = async () => {
 
 		loading.value = true
 		try {
-			await run(currentInstance.id, null, true)
+			await run(currentInstance.id, null, true, 'horizon')
 			queryClient.setQueryData(instanceKeys.processes(currentInstance.id), [true])
 		} catch (err) {
 			handleSevereError(err, { instanceId: currentInstance.id })
@@ -935,6 +960,8 @@ provideInstancePage({
 	playing,
 	loading,
 	stopping,
+	activeRuntime,
+	setRuntime: handleRuntimeUpdate,
 	refreshInstance,
 	refreshPlayState,
 	play: startInstance,

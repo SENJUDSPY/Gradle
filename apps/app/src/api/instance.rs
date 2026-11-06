@@ -162,6 +162,8 @@ pub struct Instance {
     pub game_resolution: Option<WindowSize>,
     pub hooks: Hooks,
     pub visible_tabs: InstanceTabVisibility,
+    #[serde(default)]
+    pub runtime: Option<String>,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -342,7 +344,27 @@ impl From<InstanceMetadata> for Instance {
             game_resolution: metadata.launch_overrides.game_resolution,
             hooks: metadata.launch_overrides.hooks,
             visible_tabs: metadata.launch_overrides.visible_tabs,
+            runtime: Some("horizon".to_string()),
         }
+    }
+}
+
+impl Instance {
+    pub async fn enrich_runtime(&mut self) {
+        if let Ok(full_path) = theseus::instance::get_full_path(&self.id).await {
+            let pref_file = full_path.join("instance_runtime.json");
+            if pref_file.exists() {
+                if let Ok(content) = tokio::fs::read_to_string(&pref_file).await {
+                    if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&content) {
+                        if let Some(r) = parsed.get("active_runtime").and_then(|v| v.as_str()) {
+                            self.runtime = Some(r.to_string());
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        self.runtime = Some("horizon".to_string());
     }
 }
 
@@ -523,9 +545,13 @@ pub async fn instance_remove(instance_id: &str) -> Result<()> {
 
 #[tauri::command]
 pub async fn instance_get(instance_id: &str) -> Result<Option<Instance>> {
-    Ok(theseus::instance::get(instance_id)
+    let mut instance = theseus::instance::get(instance_id)
         .await?
-        .map(Instance::from))
+        .map(Instance::from);
+    if let Some(inst) = &mut instance {
+        inst.enrich_runtime().await;
+    }
+    Ok(instance)
 }
 
 #[tauri::command]
@@ -533,20 +559,28 @@ pub async fn instance_get_many(
     instance_ids: Vec<String>,
 ) -> Result<Vec<Instance>> {
     let ids = instance_ids.iter().map(|x| &**x).collect::<Vec<&str>>();
-    Ok(theseus::instance::get_many(&ids)
+    let mut instances: Vec<Instance> = theseus::instance::get_many(&ids)
         .await?
         .into_iter()
         .map(Instance::from)
-        .collect())
+        .collect();
+    for inst in &mut instances {
+        inst.enrich_runtime().await;
+    }
+    Ok(instances)
 }
 
 #[tauri::command]
 pub async fn instance_list() -> Result<Vec<Instance>> {
-    Ok(theseus::instance::list()
+    let mut instances: Vec<Instance> = theseus::instance::list()
         .await?
         .into_iter()
         .map(Instance::from)
-        .collect())
+        .collect();
+    for inst in &mut instances {
+        inst.enrich_runtime().await;
+    }
+    Ok(instances)
 }
 
 #[tauri::command]

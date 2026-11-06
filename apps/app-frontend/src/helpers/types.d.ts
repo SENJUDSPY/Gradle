@@ -51,6 +51,7 @@ export type GameInstance = {
 		worlds: boolean
 		screenshots: boolean
 	}
+	runtime?: 'horizon' | 'java'
 }
 
 export type IconBackground =

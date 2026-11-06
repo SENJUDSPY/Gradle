@@ -2,6 +2,7 @@ import type { Labrinth } from '@modrinth/api-client'
 import { createContext } from '@modrinth/ui'
 import type { ComputedRef, Ref } from 'vue'
 
+import type { InstanceRuntime } from '@/helpers/instance'
 import type { GameInstance } from '@/helpers/types'
 
 export interface InstancePageContext {
@@ -14,9 +15,11 @@ export interface InstancePageContext {
 	readonly playing: ComputedRef<boolean>
 	readonly loading: Readonly<Ref<boolean>>
 	readonly stopping: Readonly<Ref<boolean>>
+	readonly activeRuntime: Ref<InstanceRuntime>
+	setRuntime: (runtime: InstanceRuntime) => Promise<void>
 	refreshInstance: () => Promise<void>
 	refreshPlayState: () => Promise<void>
-	play: (source: string) => Promise<void>
+	play: (source: string, runtimeOverride?: InstanceRuntime) => Promise<void>
 	stop: (source: string) => Promise<void>
 	playServer: () => Promise<void>
 	openSettings: (tab?: number) => void

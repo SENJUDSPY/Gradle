@@ -4715,6 +4715,21 @@
   "instance.action.export-modpack": {
     "message": "Export modpack"
   },
+  "instance.action.play-horizon": {
+    "message": "Play with Horizon"
+  },
+  "instance.action.play-java": {
+    "message": "Play with Java"
+  },
+  "instance.runtime.horizon": {
+    "message": "Horizon (Rust, optimized)"
+  },
+  "instance.runtime.java": {
+    "message": "Java (classic)"
+  },
+  "instance.runtime.switch-label": {
+    "message": "Launch runtime"
+  },
   "instance.action.launch-instance": {
     "message": "Launch instance"
   },

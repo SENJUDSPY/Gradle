@@ -81,13 +81,25 @@ const versionRef = ref<HTMLElement | null>(null)
 			>
 				{{ instance.name }}
 			</p>
-			<p
-				ref="versionRef"
-				v-tooltip="truncatedTooltip(versionRef, `${instance.loader} ${instance.game_version}`)"
-				class="m-0 w-full truncate text-sm font-medium capitalize leading-[18px] text-primary"
-			>
-				{{ instance.loader }} {{ instance.game_version }}
-			</p>
+			<div class="flex w-full items-center justify-between gap-1.5">
+				<p
+					ref="versionRef"
+					v-tooltip="truncatedTooltip(versionRef, `${instance.loader} ${instance.game_version}`)"
+					class="m-0 truncate text-sm font-medium capitalize leading-[18px] text-primary"
+				>
+					{{ instance.loader }} {{ instance.game_version }}
+				</p>
+				<span
+					class="inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase"
+					:class="
+						(instance.runtime ?? 'horizon') === 'horizon'
+							? 'bg-purple-500/15 text-purple-400 border border-purple-500/30'
+							: 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+					"
+				>
+					{{ (instance.runtime ?? 'horizon') === 'horizon' ? 'Horizon' : 'Java' }}
+				</span>
+			</div>
 		</div>
 		<slot name="overlay" :compact="compactMode" />
 	</div>
