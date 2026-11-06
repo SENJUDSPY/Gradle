@@ -599,14 +599,33 @@ export async function get_pack_export_candidates(
 	})
 }
 
+export type InstanceRuntime = 'horizon' | 'java'
+
 // Run Minecraft using an instance
 // Returns PID of child
 export async function run(
 	instanceId: string,
 	serverAddress: string | null = null,
 	isServer: boolean = false,
+	runtime?: InstanceRuntime | null,
 ): Promise<unknown> {
-	return await invoke('plugin:instance|instance_run', { instanceId, serverAddress, isServer })
+	return await invoke('plugin:instance|instance_run', {
+		instanceId,
+		serverAddress,
+		isServer,
+		runtime: runtime ?? null,
+	})
+}
+
+export async function getInstanceRuntime(instanceId: string): Promise<InstanceRuntime> {
+	return await invoke('plugin:instance|instance_get_runtime', { instanceId })
+}
+
+export async function setInstanceRuntime(
+	instanceId: string,
+	runtime: InstanceRuntime,
+): Promise<void> {
+	await invoke('plugin:instance|instance_set_runtime', { instanceId, runtime })
 }
 
 export async function kill(instanceId: string): Promise<void> {

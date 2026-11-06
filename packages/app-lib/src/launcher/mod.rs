@@ -910,6 +910,7 @@ pub async fn launch_minecraft(
     post_exit_hook: Option<String>,
     context: &InstanceLaunchContext,
     mut quick_play_type: QuickPlayType,
+    runtime: crate::state::LaunchRuntime,
     state: &Arc<State>,
 ) -> crate::Result<ProcessMetadata> {
     let instance = &context.instance;
@@ -935,7 +936,7 @@ pub async fn launch_minecraft(
         get_instance_full_path(&instance.path, &state.directories)
             .context("resolving instance path")?;
 
-    if content_set.loader == ModLoader::Horizon {
+    if runtime == crate::state::LaunchRuntime::Horizon {
         return launch_horizon(
             instance,
             &instance_path,
@@ -947,6 +948,12 @@ pub async fn launch_minecraft(
         )
         .await;
     }
+
+    let mut java_content_set = content_set.clone();
+    if java_content_set.loader == ModLoader::Horizon {
+        java_content_set.loader = ModLoader::Vanilla;
+    }
+    let content_set = &java_content_set;
 
     let (minecraft, version_index) =
         resolve_minecraft_manifest(&content_set.game_version, state)

@@ -1,4 +1,5 @@
 use super::content::get_projects;
+pub use crate::state::LaunchRuntime;
 use crate::ErrorKind;
 use crate::server_address::ServerAddress;
 use crate::state::{
@@ -26,6 +27,15 @@ pub enum QuickPlayType {
 pub async fn run(
     instance_id: &str,
     quick_play_type: QuickPlayType,
+) -> crate::Result<ProcessMetadata> {
+    run_with_runtime(instance_id, quick_play_type, None).await
+}
+
+#[tracing::instrument]
+pub async fn run_with_runtime(
+    instance_id: &str,
+    quick_play_type: QuickPlayType,
+    runtime: Option<crate::state::LaunchRuntime>,
 ) -> crate::Result<ProcessMetadata> {
     let state = State::get().await?;
     if crate::state::instances::adapters::sqlite::instance_rows::is_instance_quarantined(
@@ -58,7 +68,7 @@ pub async fn run(
         .await?
         .ok_or(ErrorKind::NotLoggedIn)?;
 
-    run_credentials(instance_id, &default_account, quick_play_type).await
+    run_credentials(instance_id, &default_account, quick_play_type, runtime).await
 }
 
 #[tracing::instrument(skip(credentials))]
@@ -66,6 +76,7 @@ async fn run_credentials(
     instance_id: &str,
     credentials: &Credentials,
     quick_play_type: QuickPlayType,
+    requested_runtime: Option<crate::state::LaunchRuntime>,
 ) -> crate::Result<ProcessMetadata> {
     let state = State::get().await?;
     let settings = Settings::get(&state.pool).await?;
@@ -100,6 +111,56 @@ async fn run_credentials(
         bail!(ErrorKind::InputError(
             "this instance has been quarantined".to_string(),
         ));
+    }
+
+    let instance_path = state
+        .directories
+        .instances_dir()
+        .join(&context.instance.path);
+
+    let runtime_pref_file = instance_path.join("instance_runtime.json");
+    let stored_runtime: Option<crate::state::LaunchRuntime> = if runtime_pref_file.exists() {
+        if let Ok(content) = tokio::fs::read_to_string(&runtime_pref_file).await {
+            if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&content) {
+                parsed.get("active_runtime")
+                    .and_then(|v| v.as_str())
+                    .and_then(|s| s.parse().ok())
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+
+    let effective_runtime = requested_runtime
+        .or(stored_runtime)
+        .unwrap_or(crate::state::LaunchRuntime::Horizon);
+
+    // Mutual exclusion: running both runtimes at the same time on the same instance is blocked
+    let lock_file = instance_path.join(".runtime.lock");
+    let is_running = crate::state::instance_has_running_process(instance_id, &state).await?;
+    if is_running {
+        let running_name = tokio::fs::read_to_string(&lock_file)
+            .await
+            .unwrap_or_else(|_| "another runtime".to_string());
+        bail!(ErrorKind::LauncherError(format!(
+            "This instance is already running with {}. Stop it before launching with {}.",
+            running_name.trim(),
+            effective_runtime
+        )));
+    }
+
+    let _ = tokio::fs::write(&lock_file, effective_runtime.to_string()).await;
+
+    let pref_json = serde_json::json!({
+        "last_used_runtime": effective_runtime,
+        "active_runtime": effective_runtime,
+    });
+    if let Ok(pref_str) = serde_json::to_string_pretty(&pref_json) {
+        let _ = tokio::fs::write(&runtime_pref_file, pref_str).await;
     }
 
     let pre_launch_hook = context
@@ -299,6 +360,7 @@ async fn run_credentials(
         post_exit_hook,
         &context,
         quick_play_type,
+        effective_runtime,
         &state,
     )
     .await

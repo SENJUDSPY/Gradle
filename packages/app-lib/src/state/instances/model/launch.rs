@@ -3,6 +3,40 @@ use crate::state::{
 };
 use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum LaunchRuntime {
+    Horizon,
+    Java,
+}
+
+impl Default for LaunchRuntime {
+    fn default() -> Self {
+        Self::Horizon
+    }
+}
+
+impl std::fmt::Display for LaunchRuntime {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Horizon => write!(f, "Horizon (Rust, optimized)"),
+            Self::Java => write!(f, "Java (classic)"),
+        }
+    }
+}
+
+impl std::str::FromStr for LaunchRuntime {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().trim() {
+            "horizon" | "rust" => Ok(Self::Horizon),
+            "java" | "classic" => Ok(Self::Java),
+            other => Err(format!("unknown launch runtime '{other}'")),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 pub struct InstanceTabVisibility {
     pub files: bool,
@@ -114,4 +148,22 @@ pub struct InstanceLaunchContext {
     pub applied_content_set: ContentSet,
     pub link: InstanceLink,
     pub launch_overrides: InstanceLaunchOverrides,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_launch_runtime_parsing_and_defaults() {
+        assert_eq!(LaunchRuntime::default(), LaunchRuntime::Horizon);
+        assert_eq!("horizon".parse::<LaunchRuntime>().unwrap(), LaunchRuntime::Horizon);
+        assert_eq!("rust".parse::<LaunchRuntime>().unwrap(), LaunchRuntime::Horizon);
+        assert_eq!("java".parse::<LaunchRuntime>().unwrap(), LaunchRuntime::Java);
+        assert_eq!("classic".parse::<LaunchRuntime>().unwrap(), LaunchRuntime::Java);
+        assert!("unknown".parse::<LaunchRuntime>().is_err());
+
+        assert_eq!(LaunchRuntime::Horizon.to_string(), "Horizon (Rust, optimized)");
+        assert_eq!(LaunchRuntime::Java.to_string(), "Java (classic)");
+    }
 }

@@ -104,6 +104,8 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             instance_update_managed_modrinth_version,
             instance_repair_managed_modrinth,
             instance_run,
+            instance_get_runtime,
+            instance_set_runtime,
             instance_kill,
             instance_edit,
             instance_edit_icon,
@@ -1316,6 +1318,7 @@ pub async fn instance_run(
     instance_id: &str,
     server_address: Option<String>,
     is_server: Option<bool>,
+    runtime: Option<String>,
 ) -> Result<ProcessMetadata> {
     let quick_play = if is_server.unwrap_or(false) {
         QuickPlayType::DedicatedServer
@@ -1325,7 +1328,41 @@ pub async fn instance_run(
             None => QuickPlayType::None,
         }
     };
-    Ok(theseus::instance::run(instance_id, quick_play).await?)
+    let parsed_runtime = runtime
+        .as_deref()
+        .and_then(|r| r.parse::<theseus::instance::LaunchRuntime>().ok());
+    Ok(theseus::instance::run_with_runtime(instance_id, quick_play, parsed_runtime).await?)
+}
+
+#[tauri::command]
+pub async fn instance_get_runtime(instance_id: &str) -> Result<String> {
+    let instance_path = theseus::instance::get_full_path(instance_id).await?;
+    let pref_file = instance_path.join("instance_runtime.json");
+
+    if pref_file.exists() {
+        if let Ok(content) = tokio::fs::read_to_string(&pref_file).await {
+            if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&content) {
+                if let Some(r) = parsed.get("active_runtime").and_then(|v| v.as_str()) {
+                    return Ok(r.to_string());
+                }
+            }
+        }
+    }
+
+    Ok("horizon".to_string())
+}
+
+#[tauri::command]
+pub async fn instance_set_runtime(instance_id: &str, runtime: String) -> Result<()> {
+    let instance_path = theseus::instance::get_full_path(instance_id).await?;
+    let pref_file = instance_path.join("instance_runtime.json");
+    let pref_json = serde_json::json!({
+        "last_used_runtime": runtime,
+        "active_runtime": runtime,
+    });
+    let pref_str = serde_json::to_string_pretty(&pref_json)?;
+    tokio::fs::write(&pref_file, pref_str).await?;
+    Ok(())
 }
 
 #[tauri::command]

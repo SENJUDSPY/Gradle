@@ -1032,6 +1032,9 @@ impl Process {
             tracing::warn!("Failed to write exit status to log file: {}", e);
         }
 
+        let lock_path = state.directories.instances_dir().join(&instance_path).join(".runtime.lock");
+        let _ = tokio::fs::remove_file(&lock_path).await;
+
         let _ = state
             .presence
             .discord_rpc
