@@ -89,7 +89,7 @@ pub async fn get_authlib_injector_library(
     tracing::debug!(
         provider = provider_id,
         asset = %asset_name,
-        "[AR] Auth library selected"
+        "[Gradle] Auth library selected"
     );
     Ok(path)
 }
@@ -179,9 +179,9 @@ async fn install_authlib_injector_asset(
     tracing::debug!(
         provider = provider_id,
         asset = %asset.name,
-        "[AR] Auth library download started"
+        "[Gradle] Auth library download started"
     );
-    let _ = emit_info("[AR] Installing auth library...").await;
+    let _ = emit_info("[Gradle] Installing auth library...").await;
     let bytes = fetch_bytes_from_url(asset.browser_download_url()?).await?;
     let relative_path = path
         .strip_prefix(&libraries_dir)?
@@ -344,15 +344,15 @@ pub async fn init_update_launcher(
     tracing::info!(
         file = local_filename,
         os = os_type,
-        "[AR] Downloading launcher update"
+        "[Gradle] Downloading launcher update"
     );
 
     if let Err(error) =
         update::get_resource(download_url, local_filename, os_type).await
     {
-        tracing::error!(error = %error, "[AR] Launcher update failed");
+        tracing::error!(error = %error, "[Gradle] Launcher update failed");
     } else {
-        tracing::info!("[AR] Launcher update ready");
+        tracing::info!("[Gradle] Launcher update ready");
         process::exit(0)
     }
     Ok(())
@@ -367,7 +367,7 @@ async fn write_file_to_libraries(
     let output_path = state.directories.libraries_dir().join(relative_path);
 
     fs::write(&output_path, bytes).await.map_err(|error| -> crate::Error {
-        tracing::error!(error = %error, "[AR] Library save failed");
+        tracing::error!(error = %error, "[Gradle] Library save failed");
         crate::ErrorKind::IOErrorOccurred {
             error: format!("Failed to save file: {error}"),
         }
@@ -389,7 +389,7 @@ async fn fetch_bytes_from_url(url: &str) -> Result<bytes::Bytes> {
     .map_err(|_| -> crate::Error {
         tracing::error!(
             timeout_seconds = TIMEOUT_SECONDS,
-            "[AR] Download timed out"
+            "[Gradle] Download timed out"
         );
         crate::ErrorKind::NetworkErrorOccurred {
             error: format!(
@@ -400,7 +400,7 @@ async fn fetch_bytes_from_url(url: &str) -> Result<bytes::Bytes> {
         .into()
     })?
     .map_err(|error| -> crate::Error {
-        tracing::error!(error = %error, "[AR] Download request failed");
+        tracing::error!(error = %error, "[Gradle] Download request failed");
         crate::ErrorKind::NetworkErrorOccurred {
             error: format!("Request error: {error}"),
         }
@@ -409,7 +409,7 @@ async fn fetch_bytes_from_url(url: &str) -> Result<bytes::Bytes> {
 
     if !response.status().is_success() {
         let status = response.status().to_string();
-        tracing::error!(%status, "[AR] Download failed");
+        tracing::error!(%status, "[Gradle] Download failed");
         return Err(crate::ErrorKind::NetworkErrorOccurred {
             error: format!("Failed to download file: HTTP {status}"),
         }
@@ -417,7 +417,7 @@ async fn fetch_bytes_from_url(url: &str) -> Result<bytes::Bytes> {
     }
 
     response.bytes().await.map_err(|error| -> crate::Error {
-        tracing::error!(error = %error, "[AR] Download read failed");
+        tracing::error!(error = %error, "[Gradle] Download read failed");
         crate::ErrorKind::NetworkErrorOccurred {
             error: format!("Failed to read response bytes: {error}"),
         }

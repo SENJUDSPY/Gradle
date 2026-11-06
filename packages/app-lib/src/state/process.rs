@@ -1070,7 +1070,10 @@ impl Process {
                     command.args(cmd).envs(post_exit_env_vars).current_dir(
                         state.directories.instances_dir().join(&instance_path),
                     );
-                    command.spawn().map_err(IOError::from)?;
+                    let mut child = command.spawn().map_err(IOError::from)?;
+                    tokio::spawn(async move {
+                        let _ = child.wait().await;
+                    });
                 }
             }
         }

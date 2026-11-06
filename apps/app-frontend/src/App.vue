@@ -567,7 +567,7 @@ async function setupApp() {
 	const settings = await getSettings()
 	settings.telemetry = false
 	await setSettings(settings)
-	console.info('[AR] Privacy hard-patch applied', { telemetry: settings.telemetry })
+	console.info('[Gradle] Privacy hard-patch applied', { telemetry: settings.telemetry })
 	tags.initialize()
 	await traceStartupStep('Initialize onboarding checklist', () => onboardingChecklist.initialize())
 

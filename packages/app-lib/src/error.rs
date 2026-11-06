@@ -204,35 +204,35 @@ pub enum ErrorKind {
     InvalidSkinTexture,
 
     #[error(
-        "[AR] Target minecraft {minecraft_version} version doesn't exist."
+        "[Gradle] Target minecraft {minecraft_version} version doesn't exist."
     )]
     InvalidMinecraftVersion {
         minecraft_version: String,
     },
 
     #[error(
-        "[AR] Target metadata not found for minecraft version {minecraft_version}."
+        "[Gradle] Target metadata not found for minecraft version {minecraft_version}."
     )]
     MinecraftMetadataNotFound {
         minecraft_version: String,
     },
 
     #[error(
-        "[AR] Network error: {error}"
+        "[Gradle] Network error: {error}"
     )]
     NetworkErrorOccurred {
         error: String,
     },
 
     #[error(
-        "[AR] IO error: {error}"
+        "[Gradle] IO error: {error}"
     )]
     IOErrorOccurred {
         error: String,
     },
 
     #[error(
-        "[AR] Parse error: {reason}"
+        "[Gradle] Parse error: {reason}"
     )]
     ParseError {
         reason: String,

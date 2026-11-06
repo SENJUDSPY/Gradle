@@ -1,4 +1,4 @@
--- [AR] - SQL Migration
+-- [Gradle] - SQL Migration
 ALTER TABLE minecraft_users ADD COLUMN account_type varchar(32) NOT NULL DEFAULT 'unknown';
 
 UPDATE minecraft_users SET account_type = 'microsoft' WHERE access_token != 'null';

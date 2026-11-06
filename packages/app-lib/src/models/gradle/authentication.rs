@@ -518,7 +518,7 @@ async fn configure_offline_launch(command: &mut Command, version_jar: &str) {
 
     let invalid_url = "https://invalid.invalid";
     let _ = emit_info(&format!(
-		"[AR] Detected launch of {version_jar} on the offline account. Applying vanilla 1.16.4/5 multiplayer fixes.",
+		"[Gradle] Detected launch of {version_jar} on the offline account. Applying vanilla 1.16.4/5 multiplayer fixes.",
 	))
 	.await;
     command.arg("-Dminecraft.api.env=custom");
@@ -575,12 +575,12 @@ async fn configure_external_launch(
     }
 
     let _ = emit_info(&format!(
-		"[AR] Detected launch of {version_jar} on the {} account. Loading provider library...",
+		"[Gradle] Detected launch of {version_jar} on the {} account. Loading provider library...",
 		provider.display_name,
 	))
 	.await;
     let _ = emit_info(&format!(
-        "[AR] Launching Minecraft instance with {}",
+        "[Gradle] Launching Minecraft instance with {}",
         path.display(),
     ))
     .await;

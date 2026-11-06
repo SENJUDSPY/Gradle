@@ -16,11 +16,11 @@ pub(crate) async fn get_resource(
     let url = validated_https_url(download_url)?;
     let file_name = validated_file_name(local_filename)?;
     let download_dir = dirs::download_dir()
-        .ok_or("[AR] • Failed to determine download directory")?;
+        .ok_or("[Gradle] • Failed to determine download directory")?;
     let full_path = download_dir.join(file_name);
 
     download_file(&url, &full_path).await?;
-    tracing::info!("[AR] • File downloaded to: {:?}", full_path);
+    tracing::info!("[Gradle] • File downloaded to: {:?}", full_path);
 
     let result = match os_type.to_lowercase().as_str() {
         "windows" => handle_windows_file(&full_path).await,
@@ -29,8 +29,8 @@ pub(crate) async fn get_resource(
     };
 
     match &result {
-        Ok(_) => tracing::info!("[AR] • File opened successfully!"),
-        Err(e) => tracing::error!("[AR] • Failed to open file: {e}"),
+        Ok(_) => tracing::info!("[Gradle] • File opened successfully!"),
+        Err(e) => tracing::error!("[Gradle] • Failed to open file: {e}"),
     }
 
     result
@@ -41,7 +41,7 @@ fn validated_https_url(
 ) -> Result<reqwest::Url, UpdateError> {
     let url = reqwest::Url::parse(download_url)?;
     if url.scheme() != "https" {
-        return Err("[AR] • Update download URL must use HTTPS".into());
+        return Err("[Gradle] • Update download URL must use HTTPS".into());
     }
     Ok(url)
 }
@@ -51,7 +51,7 @@ fn validated_file_name(local_filename: &str) -> Result<&str, UpdateError> {
     match (components.next(), components.next()) {
         (Some(Component::Normal(_)), None) => Ok(local_filename),
         _ => {
-            Err("[AR] • Update file name must not contain path components"
+            Err("[Gradle] • Update file name must not contain path components"
                 .into())
         }
     }
@@ -104,7 +104,7 @@ async fn handle_windows_file(path: &Path) -> Result<(), UpdateError> {
         .to_lowercase();
 
     if filename.ends_with(".exe") || filename.ends_with(".msi") {
-        tracing::info!("[AR] • Detected installer: {}", filename);
+        tracing::info!("[Gradle] • Detected installer: {}", filename);
         run_windows_installer(path).await
     } else {
         open_windows_folder(path).await
@@ -128,13 +128,13 @@ async fn run_windows_installer(path: &Path) -> Result<(), UpdateError> {
     };
 
     if status.success() {
-        tracing::info!("[AR] • Installer started successfully.");
+        tracing::info!("[Gradle] • Installer started successfully.");
         return Ok(());
     }
 
-    tracing::error!("[AR] • Installer failed. Exit code: {:?}", status.code());
+    tracing::error!("[Gradle] • Installer failed. Exit code: {:?}", status.code());
     if let Err(error) = open_windows_folder(path).await {
-        tracing::error!("[AR] • Failed to open folder: {error}");
+        tracing::error!("[Gradle] • Failed to open folder: {error}");
     }
     Err(format!("Installer exited with code {:?}", status.code()).into())
 }
