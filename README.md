@@ -2,10 +2,6 @@
 
 Gradle is a Minecraft launcher with its own visual identity, built for a clean and flexible game experience. It offers a Modrinth-style interface with optional Liquid Glass effects, no desktop ad placements, flexible account support, and updates delivered through Xorison services.
 
-## Languages
-
-[Русский](readme/ru_ru/README.md)
-
 ## Download and install
 
 1. Open the [Gradle releases page](https://xorison.dev/product/gradle/).
@@ -66,9 +62,4 @@ Gradle is an independent Modrinth-based project. Please comply with Minecraft's 
 
 For technical documentation, see the [repository guide](STRUCTURE.md). Package licenses and branding restrictions are documented in the [copying guidelines](COPYING.md).
 
-# Support Our Project (Crypto Wallets)
 
-If you'd like to support development, you can donate via the following crypto wallets:
-
-- Toncoin (TON): UQA5pGOJhIz9UAVEOh5t2ur1QVbNr_FC1eq9bOb3GwTgaiqk
-- USDT (TON): UQA5pGOJhIz9UAVEOh5t2ur1QVbNr_FC1eq9bOb3GwTgaiqk
