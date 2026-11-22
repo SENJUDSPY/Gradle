@@ -148,6 +148,75 @@ pub fn app_db_backup_dir() -> crate::Result<PathBuf> {
     Ok(target)
 }
 
+pub async fn list_app_db_backups() -> crate::Result<Vec<PathBuf>> {
+	let backup_dir = app_db_backup_dir()?;
+	if !backup_dir.exists() {
+		return Ok(Vec::new());
+	}
+	let mut entries = tokio::fs::read_dir(&backup_dir).await?;
+	let mut files = Vec::new();
+	while let Some(entry) = entries.next_entry().await? {
+		let path = entry.path();
+		if path.extension().and_then(|s| s.to_str()) == Some("db") {
+			files.push(path);
+		}
+	}
+	files.sort_by(|a, b| {
+		let meta_a = std::fs::metadata(a).and_then(|m| m.modified()).ok();
+		let meta_b = std::fs::metadata(b).and_then(|m| m.modified()).ok();
+		meta_b.cmp(&meta_a)
+	});
+	Ok(files)
+}
+
+pub async fn restore_latest_db_backup(app_identifier: &str) -> crate::Result<PathBuf> {
+	let backups = list_app_db_backups().await?;
+	let latest_backup = backups.first().ok_or_else(|| {
+		ErrorKind::FSError("No database backups found to restore".to_string())
+	})?;
+
+	let settings_dir = crate::state::dirs::DirectoryInfo::initial_settings_dir_path(app_identifier)
+		.ok_or_else(|| ErrorKind::FSError("Could not locate settings directory".to_string()))?;
+	let db_path = settings_dir.join("app.db");
+
+	if db_path.exists() {
+		let backup_dir = app_db_backup_dir()?;
+		let now = chrono::Utc::now().format("%Y%m%d%H%M%S");
+		let safety_copy = backup_dir.join(format!("app-db-pre-restore-{now}.db"));
+		let _ = tokio::fs::copy(&db_path, &safety_copy).await;
+	}
+
+	let _ = tokio::fs::remove_file(settings_dir.join("app.db-wal")).await;
+	let _ = tokio::fs::remove_file(settings_dir.join("app.db-shm")).await;
+	let _ = tokio::fs::remove_file(settings_dir.join("app.db-journal")).await;
+
+	tokio::fs::copy(latest_backup, &db_path).await?;
+	tracing::info!("Restored database from {:?}", latest_backup);
+	Ok(latest_backup.clone())
+}
+
+pub async fn reset_app_db_with_backup(app_identifier: &str) -> crate::Result<PathBuf> {
+	let settings_dir = crate::state::dirs::DirectoryInfo::initial_settings_dir_path(app_identifier)
+		.ok_or_else(|| ErrorKind::FSError("Could not locate settings directory".to_string()))?;
+	let db_path = settings_dir.join("app.db");
+
+	let backup_dir = app_db_backup_dir()?;
+	crate::util::io::create_dir_all(&backup_dir).await?;
+	let now = chrono::Utc::now().format("%Y%m%d%H%M%S");
+	let safety_copy = backup_dir.join(format!("app-db-pre-reset-{now}.db"));
+
+	if db_path.exists() {
+		tokio::fs::copy(&db_path, &safety_copy).await?;
+		let _ = tokio::fs::remove_file(&db_path).await;
+	}
+	let _ = tokio::fs::remove_file(settings_dir.join("app.db-wal")).await;
+	let _ = tokio::fs::remove_file(settings_dir.join("app.db-shm")).await;
+	let _ = tokio::fs::remove_file(settings_dir.join("app.db-journal")).await;
+
+	tracing::info!("Reset database; safety backup stored at {:?}", safety_copy);
+	Ok(safety_copy)
+}
+
 async fn has_user_tables(conn: &mut SqliteConnection) -> crate::Result<bool> {
     let count = sqlx::query_scalar!(
         "

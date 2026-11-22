@@ -2,15 +2,18 @@
 import type { Labrinth } from '@modrinth/api-client'
 import {
 	BoxIcon,
+	CircleAlertIcon,
 	GlobeIcon,
 	PlayIcon,
 	PlusIcon,
+	RefreshCwIcon,
 	ServerIcon,
 	ServerStackIcon,
 	ShareIcon,
 	SpinnerIcon,
 	StopCircleIcon,
 	TrashIcon,
+	XIcon,
 } from '@modrinth/assets'
 import {
 	Button,
@@ -74,14 +77,14 @@ const tailscaleModal = ref<InstanceType<typeof TailscaleModal>>()
 const createServerModal = ref<InstanceType<typeof NewModal>>()
 
 // Create form
-const newServerName = ref('Horizon Server')
+const newServerName = ref('Gradle Server')
 const newServerPort = ref(25565)
 const creatingServer = ref(false)
 
 const messages = defineMessages({
 	tabHorizon: {
 		id: 'servers.page.tab.horizon',
-		defaultMessage: 'Horizon Dedicated Servers',
+		defaultMessage: 'Gradle Dedicated Servers',
 	},
 	tabCloud: {
 		id: 'servers.page.tab.cloud',
@@ -102,11 +105,11 @@ const messages = defineMessages({
 	},
 	createServer: {
 		id: 'servers.page.create-server',
-		defaultMessage: 'Create Horizon Server',
+		defaultMessage: 'Create Gradle Server',
 	},
 	createModalTitle: {
 		id: 'servers.page.create-modal-title',
-		defaultMessage: 'Create Native Horizon Server',
+		defaultMessage: 'Create Native Gradle Server',
 	},
 	serverNameLabel: {
 		id: 'servers.page.server-name-label',
@@ -118,7 +121,7 @@ const messages = defineMessages({
 	},
 	noServersTitle: {
 		id: 'servers.page.no-servers-title',
-		defaultMessage: 'No Horizon servers yet',
+		defaultMessage: 'No Gradle servers yet',
 	},
 	noServersDesc: {
 		id: 'servers.page.no-servers-desc',
@@ -180,7 +183,7 @@ async function fetchServers() {
 }
 
 function openCreateModal() {
-	newServerName.value = `Horizon Server ${servers.value.length + 1}`
+	newServerName.value = `Gradle Server ${servers.value.length + 1}`
 	newServerPort.value = 25565 + servers.value.length
 	serverError.value = null
 	createServerModal.value?.show()
@@ -344,8 +347,37 @@ onMounted(() => {
 				{{ serverMessage }}
 			</div>
 
-			<div v-if="serverError" class="rounded-xl bg-red-500/10 p-3 text-xs text-red-400">
-				{{ serverError }}
+			<div
+				v-if="serverError"
+				class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl border border-red-500/20 bg-surface-2 p-4 shadow-sm"
+			>
+				<div class="flex items-center gap-3">
+					<div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-400">
+						<CircleAlertIcon class="size-5" />
+					</div>
+					<div class="flex flex-col">
+						<span class="text-sm font-semibold text-primary">Unable to complete server operation</span>
+						<span class="text-xs text-secondary break-all">{{ serverError }}</span>
+					</div>
+				</div>
+				<div class="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+					<Button
+						type="base"
+						size="sm"
+						@click="fetchServers"
+					>
+						<RefreshCwIcon class="size-3.5 mr-1" />
+						Retry
+					</Button>
+					<Button
+						type="transparent"
+						size="sm"
+						aria-label="Dismiss error"
+						@click="serverError = null"
+					>
+						<XIcon class="size-3.5" />
+					</Button>
+				</div>
 			</div>
 
 			<!-- Empty State -->
@@ -517,7 +549,7 @@ onMounted(() => {
 					<span class="font-semibold text-contrast">
 						{{ formatMessage(messages.serverNameLabel) }}
 					</span>
-					<Input v-model="newServerName" placeholder="My Horizon Server" />
+					<Input v-model="newServerName" placeholder="My Gradle Server" />
 				</label>
 
 				<label class="flex flex-col gap-1.5 text-xs text-secondary">

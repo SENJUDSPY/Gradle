@@ -428,29 +428,36 @@ onMounted(async () => {
 	}
 
 	await useCheckDisableMouseover()
-	// This code line modified by Gradle
-	await fetchRemote()
-	if (isUpdateAvailable.value) {
-		addPopupNotification({
-			title: formatMessage(messages.launcherUpdateAvailableTitle),
-			text: formatMessage(messages.launcherUpdateAvailableText),
-			type: 'info',
-			autoCloseMs: 12000,
-			buttons: [
-				{
-					label: formatMessage(messages.launcherUpdateAvailableAction),
-					action: showLauncherUpdateModal,
-					color: 'brand',
-				},
-			],
-		})
-	}
-	if (APP_COMMIT === 'unknown') {
-		addNotification({
-			title: formatMessage(messages.launcherUpdateFetchUnavailableTitle),
-			text: formatMessage(messages.launcherUpdateFetchUnavailableText),
-			type: 'error',
-		})
+	// Check if updates are enabled before fetching and showing update toasts
+	const startupSettings = await getSettings().catch(() => null)
+	const updatesEnabled = startupSettings?.auto_download_updates === true && APP_COMMIT !== 'unknown'
+
+	if (updatesEnabled) {
+		await fetchRemote()
+		if (isUpdateAvailable.value) {
+			addPopupNotification({
+				title: formatMessage(messages.launcherUpdateAvailableTitle),
+				text: formatMessage(messages.launcherUpdateAvailableText),
+				type: 'info',
+				autoCloseMs: 12000,
+				buttons: [
+					{
+						label: formatMessage(messages.launcherUpdateAvailableAction),
+						action: showLauncherUpdateModal,
+						color: 'brand',
+					},
+				],
+			})
+		} else if (
+			latestLauncherRelease.value.httpStatus &&
+			latestLauncherRelease.value.httpStatus >= 400
+		) {
+			addNotification({
+				title: formatMessage(messages.launcherUpdateFetchUnavailableTitle),
+				text: formatMessage(messages.launcherUpdateFetchUnavailableText),
+				type: 'error',
+			})
+		}
 	}
 
 	document.querySelector('body').addEventListener('click', handleClick)
@@ -716,6 +723,7 @@ async function setupApp() {
 	}
 }
 
+const error = useError()
 const stateFailed = ref(false)
 const { loading, canNavigateBack, canNavigateForward, onSuspensePending, onSuspenseResolve } =
 	useRouteLoading({ stateInitialized, stateFailed })
@@ -774,7 +782,6 @@ watch(stateInitialized, (ready) => {
 	}
 })
 
-const error = useError()
 const errorModal = ref()
 const minecraftAuthErrorModal = ref()
 const minecraftRequiredModal = ref()
@@ -1618,8 +1625,9 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 		/>
 		<UnknownPackWarningModal ref="unknownPackWarningModal" />
 		<div
-			class="app-grid-navbar bg-bg-raised flex flex-col p-[0.5rem] pt-0 gap-[0.25rem] w-[--left-bar-width]"
+			class="app-grid-navbar bg-surface-2 !border-none !outline-none !shadow-none flex flex-col items-center py-2 px-1.5 gap-1 w-[--left-bar-width]"
 		>
+			<!-- Core Navigation -->
 			<NavButton
 				v-tooltip.right="formatMessage(messages.home)"
 				to="/"
@@ -1641,6 +1649,11 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 			>
 				<CompassIcon />
 			</NavButton>
+
+			<!-- Content Group Divider -->
+			<div class="w-6 h-px bg-surface-5/80 my-1 shrink-0"></div>
+
+			<!-- Content Navigation -->
 			<NavButton
 				v-if="appSettings.showSkinSelectorInSidebar"
 				v-tooltip.right="formatMessage(appMessages.skinSelectorLabel)"
@@ -1684,76 +1697,81 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 					</NavButton>
 				</QuickInstanceSwitcher>
 			</suspense>
-			<NavButton
-				v-tooltip.right="formatMessage(commonMessages.settingsLabel)"
-				:to="settingsActions.openSettings"
-			>
-				<SettingsIcon :class="{ 'text-brand': isUpdateAvailable }" />
-			</NavButton>
-			<IconButton
-				v-if="credentials === undefined"
-				v-tooltip.right="profileButtonTooltip"
-				type="quiet"
-				size="xl"
-				disabled
-				class="pointer-events-none"
-				:label="formatMessage(messages.loadingProfile)"
-			>
-				<SpinnerIcon class="animate-spin" />
-			</IconButton>
-			<TeleportOverflowMenu
-				v-else-if="credentials?.user"
-				v-tooltip.right="profileButtonTooltip"
-				type="quiet"
-				size="xl"
-				:label="formatMessage(messages.modrinthAccount)"
-				:options="modrinthAccountMenuOptions"
-				placement="right-end"
-				:distance="4"
-				class="brightness-100 hover:!brightness-100 focus-visible:!brightness-100"
-			>
-				<Avatar
-					:src="credentials?.user?.avatar_url"
-					alt=""
-					size="32px"
-					circle
-					no-shadow
-					class="pointer-events-none !size-8"
-				/>
-				<template
-					v-for="account in accountSwitcherAccounts"
-					:key="account.user_id"
-					#[account.optionId]
+
+			<!-- System Navigation (Pinned to bottom) -->
+			<div class="mt-auto flex flex-col items-center gap-1 w-full">
+				<div class="w-6 h-px bg-surface-5/80 my-1 shrink-0"></div>
+				<NavButton
+					v-tooltip.right="formatMessage(commonMessages.settingsLabel)"
+					:to="settingsActions.openSettings"
 				>
-					<Avatar :src="account.user.avatar_url" size="1.25rem" aria-hidden="true" circle />
-					{{ account.user.username }}
-					<UserRoleIcon :role="account.user.role" />
-				</template>
-			</TeleportOverflowMenu>
-			<TeleportOverflowMenu
-				v-else-if="accountSwitcherAccounts.length > 0"
-				v-tooltip.right="profileButtonTooltip"
-				type="quiet"
-				size="xl"
-				:label="formatMessage(messages.signInToModrinthAccount)"
-				:options="accountSwitcherOptions"
-				placement="right-end"
-				:distance="4"
-			>
-				<LogInIcon class="!text-brand" />
-				<template
-					v-for="account in accountSwitcherAccounts"
-					:key="account.user_id"
-					#[account.optionId]
+					<SettingsIcon :class="{ 'text-brand': isUpdateAvailable }" />
+				</NavButton>
+				<IconButton
+					v-if="credentials === undefined"
+					v-tooltip.right="profileButtonTooltip"
+					type="quiet"
+					size="xl"
+					disabled
+					class="pointer-events-none"
+					:label="formatMessage(messages.loadingProfile)"
 				>
-					<Avatar :src="account.user.avatar_url" size="1.25rem" aria-hidden="true" circle />
-					{{ account.user.username }}
-					<UserRoleIcon :role="account.user.role" />
-				</template>
-			</TeleportOverflowMenu>
-			<NavButton v-else v-tooltip.right="profileButtonTooltip" :to="() => requestSignIn()">
-				<LogInIcon class="text-brand" />
-			</NavButton>
+					<SpinnerIcon class="animate-spin" />
+				</IconButton>
+				<TeleportOverflowMenu
+					v-else-if="credentials?.user"
+					v-tooltip.right="profileButtonTooltip"
+					type="quiet"
+					size="xl"
+					:label="formatMessage(messages.modrinthAccount)"
+					:options="modrinthAccountMenuOptions"
+					placement="right-end"
+					:distance="4"
+					class="brightness-100 hover:!brightness-100 focus-visible:!brightness-100"
+				>
+					<Avatar
+						:src="credentials?.user?.avatar_url"
+						alt=""
+						size="32px"
+						circle
+						no-shadow
+						class="pointer-events-none !size-8"
+					/>
+					<template
+						v-for="account in accountSwitcherAccounts"
+						:key="account.user_id"
+						#[account.optionId]
+					>
+						<Avatar :src="account.user.avatar_url" size="1.25rem" aria-hidden="true" circle />
+						{{ account.user.username }}
+						<UserRoleIcon :role="account.user.role" />
+					</template>
+				</TeleportOverflowMenu>
+				<TeleportOverflowMenu
+					v-else-if="accountSwitcherAccounts.length > 0"
+					v-tooltip.right="profileButtonTooltip"
+					type="quiet"
+					size="xl"
+					:label="formatMessage(messages.signInToModrinthAccount)"
+					:options="accountSwitcherOptions"
+					placement="right-end"
+					:distance="4"
+				>
+					<LogInIcon class="!text-brand" />
+					<template
+						v-for="account in accountSwitcherAccounts"
+						:key="account.user_id"
+						#[account.optionId]
+					>
+						<Avatar :src="account.user.avatar_url" size="1.25rem" aria-hidden="true" circle />
+						{{ account.user.username }}
+						<UserRoleIcon :role="account.user.role" />
+					</template>
+				</TeleportOverflowMenu>
+				<NavButton v-else v-tooltip.right="profileButtonTooltip" :to="() => requestSignIn()">
+					<LogInIcon class="text-brand" />
+				</NavButton>
+			</div>
 		</div>
 		<AppTitleBar
 			:can-navigate-back="canNavigateBack"
@@ -1816,11 +1834,22 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 				{{ formatMessage(messages.authUnreachableBody) }}
 			</Admonition>
 			<RouterView v-slot="{ Component }">
-				<template v-if="Component">
-					<Suspense @pending="onSuspensePending" @resolve="onSuspenseResolve">
-						<component :is="Component"></component>
+				<Transition name="page-view" mode="out-in">
+					<Suspense
+						v-if="Component"
+						:key="
+							route.matched[0]?.path
+								? route.params.id
+									? `${route.matched[0].path}/${route.params.id}`
+									: route.matched[0].path
+								: route.path
+						"
+						@pending="onSuspensePending"
+						@resolve="onSuspenseResolve"
+					>
+						<component :is="Component" />
 					</Suspense>
-				</template>
+				</Transition>
 			</RouterView>
 		</div>
 		<AppSidebar
@@ -1910,9 +1939,14 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	min-height: 0;
 	position: relative;
 	z-index: 2;
+	border: none !important;
+	outline: none !important;
+	box-shadow: none !important;
 
 	> :deep(*) {
 		flex-shrink: 0;
+		outline: none !important;
+		border: none !important;
 	}
 }
 
@@ -1930,10 +1964,14 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	height: calc(100vh - var(--top-bar-height));
 	background-color: var(--color-bg);
 	border-top-left-radius: var(--radius-xl);
+	outline: none !important;
+	overflow: hidden;
 
 	display: grid;
 	grid-template-columns: 1fr 0px;
-	// transition: grid-template-columns 0.4s ease-in-out;
+	transition: grid-template-columns var(--duration-slow, 280ms)
+		var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+	will-change: grid-template-columns;
 
 	&.sidebar-enabled {
 		grid-template-columns: 1fr 300px;
@@ -1943,6 +1981,72 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 .loading-indicator-container {
 	border-top-left-radius: var(--radius-xl);
 	overflow: hidden;
+
+	:deep(.modrinth-loading-bar) {
+		box-shadow:
+			0 0 12px 1px var(--color-brand-shadow, rgba(91, 91, 240, 0.45)),
+			0 0 24px 2px rgba(34, 211, 238, 0.25);
+		animation: loading-pulse 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+		position: relative;
+		overflow: hidden;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(
+				90deg,
+				transparent 0%,
+				rgba(255, 255, 255, 0.45) 50%,
+				transparent 100%
+			);
+			animation: loading-shimmer 1.8s cubic-bezier(0.2, 0, 0, 1) infinite;
+		}
+	}
+}
+
+@keyframes loading-pulse {
+	0%,
+	100% {
+		filter: brightness(1) drop-shadow(0 0 4px var(--color-brand-accent, #22d3ee));
+	}
+	50% {
+		filter: brightness(1.2) drop-shadow(0 0 10px var(--color-brand, #5b5bf0));
+	}
+}
+
+@keyframes loading-shimmer {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(250%);
+	}
+}
+
+// View transitions: cross-fade + subtle vertical slide (MD3 curves, 260ms / 180ms)
+.page-view-enter-active {
+	transition:
+		opacity var(--duration-standard, 260ms) var(--ease-entrance, cubic-bezier(0.05, 0.7, 0.1, 1)),
+		transform var(--duration-standard, 260ms) var(--ease-entrance, cubic-bezier(0.05, 0.7, 0.1, 1));
+	will-change: opacity, transform;
+}
+
+.page-view-leave-active {
+	transition:
+		opacity var(--duration-quick, 180ms) var(--ease-exit, cubic-bezier(0.3, 0, 1, 1)),
+		transform var(--duration-quick, 180ms) var(--ease-exit, cubic-bezier(0.3, 0, 1, 1));
+	will-change: opacity, transform;
+}
+
+.page-view-enter-from {
+	opacity: 0;
+	transform: translateY(8px);
+}
+
+.page-view-leave-to {
+	opacity: 0;
+	transform: translateY(-6px);
 }
 
 .disable-advanced-rendering {
@@ -1975,19 +2079,19 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	bottom: calc(-1 * var(--left-bar-width));
 	border-radius: var(--radius-xl);
 	box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1) inset;
-	border-color: var(--surface-5);
-	border-width: 1px;
-	border-style: solid;
+	border: none;
 	pointer-events: none;
+	transition: box-shadow var(--duration-standard, 220ms) ease;
 }
 
 @media (prefers-reduced-motion: no-preference) {
 	.nav-button-animated-enter-active {
-		transition: all 0.5s cubic-bezier(0.15, 1.4, 0.64, 0.96);
+		transition: all var(--duration-slow, 300ms)
+			var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275));
 	}
 
 	.nav-button-animated-leave-active {
-		transition: all 0.25s ease;
+		transition: all var(--duration-standard, 200ms) var(--ease-exit, cubic-bezier(0.3, 0, 1, 1));
 	}
 
 	.nav-button-animated-enter-active {
@@ -2000,7 +2104,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 		border-radius: 100vw;
 		background-color: var(--color-brand-highlight);
 		position: absolute;
-		animation: pop 0.5s ease-in forwards;
+		animation: pop 0.4s var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)) forwards;
 		opacity: 0;
 	}
 
@@ -2028,11 +2132,33 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	}
 
 	.fade-enter-active {
-		transition: 0.25s ease-in-out;
+		transition: opacity var(--duration-standard, 220ms)
+			var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 	}
 
 	.fade-enter-from {
 		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.app-contents,
+	.loading-indicator-container :deep(.modrinth-loading-bar),
+	.loading-indicator-container :deep(.modrinth-loading-bar)::after,
+	.page-view-enter-active,
+	.page-view-leave-active,
+	.nav-button-animated-enter-active,
+	.nav-button-animated-leave-active,
+	.fade-enter-active {
+		transition: none !important;
+		animation: none !important;
+		transform: none !important;
+	}
+
+	.page-view-enter-from,
+	.page-view-leave-to {
+		opacity: 1 !important;
+		transform: none !important;
 	}
 }
 </style>

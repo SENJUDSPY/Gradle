@@ -1,0 +1,52 @@
+[default]
+description = "Default permissions for files plugin"
+permissions = [
+    "allow-file-list",
+    "allow-file-read",
+    "allow-file-read-dragged-file",
+    "allow-file-create-directory",
+    "allow-file-rename",
+    "allow-file-write",
+    "allow-file-save-as",
+    "allow-files-save-external",
+    "allow-files-select-external",
+    "allow-files-release-external",
+    "allow-file-extract-zip",
+    "allow-file-delete",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for files plugin"
+permissions = [
+    "allow-file-list",
+    "allow-file-read",
+    "allow-file-read-dragged-file",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for files plugin"
+permissions = [
+    "allow-file-create-directory",
+    "allow-file-rename",
+    "allow-file-write",
+    "allow-file-save-as",
+    "allow-files-save-external",
+]
+
+[[set]]
+identifier = "filesystem"
+description = "Filesystem commands for files plugin"
+permissions = [
+    "allow-files-select-external",
+    "allow-files-release-external",
+    "allow-file-extract-zip",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for files plugin"
+permissions = [
+    "allow-file-delete",
+]

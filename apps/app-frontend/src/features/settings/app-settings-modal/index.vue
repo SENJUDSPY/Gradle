@@ -240,7 +240,7 @@ const tabs = [
 	{
 		name: defineMessage({
 			id: 'gradle.app.settings.tabs.horizon',
-			defaultMessage: 'Horizon Engine',
+			defaultMessage: 'Gradle Engine',
 		}),
 		category: tabCategories.gradle,
 		icon: SparklesIcon,
@@ -447,7 +447,7 @@ const messages = defineMessages({
 	},
 	appVersion: {
 		id: 'app.settings.app-version',
-		defaultMessage: 'Gradle App {version}',
+		defaultMessage: 'Gradle {version}',
 	},
 	macos: {
 		id: 'app.settings.operating-system.macos',

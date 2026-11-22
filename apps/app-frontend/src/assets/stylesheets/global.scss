@@ -53,6 +53,29 @@
 		rgba(66, 170, 255, 0.15),
 		rgba(0, 0, 0, 0) 100%
 	);
+
+	// Motion Tokens (Foundational Motion Design System)
+	--ease-standard: cubic-bezier(0.2, 0, 0, 1);
+	--ease-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
+	--ease-exit: cubic-bezier(0.3, 0, 1, 1);
+	--ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	--duration-quick: 120ms;
+	--duration-standard: 220ms;
+	--duration-slow: 350ms;
+
+	// Backwards-compatible aliases
+	--duration-fast: var(--duration-quick);
+	--duration-normal: var(--duration-standard);
+	--duration-deliberate: var(--duration-slow);
+	--ease-hover: var(--ease-standard);
+	--ease-shared: var(--ease-standard);
+
+	// Ambient Glow & Elevation Tokens
+	--shadow-glow: 0 0 24px -2px rgba(91, 91, 240, 0.35);
+	--shadow-glow-cyan: 0 0 24px -2px rgba(34, 211, 238, 0.3);
+	--shadow-glow-subtle: 0 0 16px -2px rgba(91, 91, 240, 0.18);
+	--shadow-card-elevated: 0 10px 24px -4px rgba(0, 0, 0, 0.35), 0 0 16px -2px rgba(91, 91, 240, 0.15);
+	--shadow-card-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.3), 0 0 20px -2px rgba(91, 91, 240, 0.2);
 }
 
 html.light-mode {
@@ -64,6 +87,16 @@ body {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
+}
+
+// Subtle ambient brand depth for app viewport (under 8% opacity)
+.app-viewport {
+	background: radial-gradient(
+		circle at 85% 0%,
+		rgba(91, 91, 240, 0.06) 0%,
+		rgba(34, 211, 238, 0.02) 30%,
+		transparent 60%
+	);
 }
 
 * {
@@ -127,7 +160,7 @@ a {
 	width: 16px;
 	border: 3px solid transparent;
 	opacity: 0.5;
-	transition: opacity 0.2s ease-in-out;
+	transition: opacity var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 }
 
 *::-webkit-scrollbar:hover {
@@ -211,7 +244,7 @@ textarea {
 	box-shadow:
 		var(--shadow-inset-sm),
 		0 0 0 0 transparent;
-	transition: box-shadow 0.1s ease-in-out;
+	transition: box-shadow var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 	min-height: 36px;
 
 	&:focus,
@@ -236,5 +269,26 @@ textarea {
 	&::placeholder {
 		color: var(--color-button-text);
 		opacity: 0.6;
+	}
+}
+
+// Prefers-reduced-motion foundational overrides
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--duration-quick: 0.001ms !important;
+		--duration-standard: 0.001ms !important;
+		--duration-slow: 0.001ms !important;
+		--duration-fast: 0.001ms !important;
+		--duration-normal: 0.001ms !important;
+		--duration-deliberate: 0.001ms !important;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
 	}
 }

@@ -15,15 +15,7 @@ const LAUNCHER_AUTH_PROTOCOL: &str = "2";
 
 pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {
     tauri::plugin::Builder::new("mr-auth")
-        .invoke_handler(tauri::generate_handler![
-            modrinth_login,
-            logout,
-            get,
-            get_all,
-            set_active,
-            remove_account,
-            cancel_modrinth_login,
-        ])
+        .invoke_handler(crate::commands::mr_auth_handler!())
         .build()
 }
 

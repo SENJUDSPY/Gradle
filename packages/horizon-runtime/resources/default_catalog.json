@@ -1,0 +1,379 @@
+{
+  "schema_version": 1,
+  "catalog_version": "2026.11.1",
+  "updated_at": "2026-11-13T12:00:00Z",
+  "entries": {
+    "appleskin": {
+      "mod_id": "appleskin",
+      "name": "AppleSkin",
+      "aliases": [],
+      "description": "Food value and exhaustion HUD visualizer",
+      "category": "gameplay",
+      "license": "MIT",
+      "built_in": {
+        "feature": "HUD food saturation & exhaustion overlay",
+        "description": "Horizon renders food hunger and saturation values directly in the native HUD.",
+        "status": "native_wgpu"
+      },
+      "wasm_port": {
+        "wasm_id": "appleskin-wasm",
+        "name": "AppleSkin Native WASM",
+        "version": "1.0.0",
+        "url": "https://meta.modrinth.com/v1/horizon/mods/appleskin.wasm",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "license": "MIT",
+        "author_permission_needed": false,
+        "author_permission_granted": true,
+        "notes": "Native WASM food values overlay"
+      }
+    },
+    "borderless-mining": {
+      "mod_id": "borderless-mining",
+      "name": "Borderless Mining",
+      "aliases": [],
+      "description": "Borderless fullscreen window mode",
+      "category": "utility",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "Native borderless fullscreen",
+        "description": "Window management supports seamless borderless fullscreen through native Tao/Winit.",
+        "status": "native_rust"
+      }
+    },
+    "botania": {
+      "mod_id": "botania",
+      "name": "Botania",
+      "aliases": [],
+      "description": "Natural magic tech mod using mana and flowers",
+      "category": "gameplay",
+      "license": "Custom (Open Source)",
+      "unsupported": {
+        "reason": "Java particle rendering and tile entity bytecode.",
+        "suggested_alternative": "Play in Java Edition",
+        "technical_blocker": "Direct OpenGL 1.1 immediate mode calls"
+      }
+    },
+    "c2me": {
+      "mod_id": "c2me",
+      "name": "C2ME",
+      "aliases": [
+        "noisium"
+      ],
+      "description": "Concurrent chunk management and SIMD world generator",
+      "category": "worldgen",
+      "license": "MIT",
+      "built_in": {
+        "feature": "Multi-threaded SIMD world generation",
+        "description": "Horizon's world generator runs asynchronously across all CPU cores with SIMD-accelerated noise.",
+        "status": "native_rust"
+      }
+    },
+    "chunky": {
+      "mod_id": "chunky",
+      "name": "Chunky",
+      "aliases": [],
+      "description": "Pre-generates chunks in background",
+      "category": "utility",
+      "license": "GPL-3.0-only",
+      "built_in": {
+        "feature": "Background chunk pre-generator",
+        "description": "Horizon includes a background multi-threaded chunk pre-generation engine.",
+        "status": "native_tokio"
+      }
+    },
+    "cloth-config": {
+      "mod_id": "cloth-config",
+      "name": "Cloth Config",
+      "aliases": [
+        "reeses-sodium-options",
+        "yet-another-config-lib"
+      ],
+      "description": "Configuration screen and options library",
+      "category": "library",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "Native in-game settings UI integration",
+        "description": "Horizon exposes configuration tabs directly in the native launcher and pause menu.",
+        "status": "native_rust"
+      }
+    },
+    "continuity": {
+      "mod_id": "continuity",
+      "name": "Continuity",
+      "aliases": [
+        "indium"
+      ],
+      "description": "Connected textures and custom block layers",
+      "category": "visual",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "Connected texture baking (CTM)",
+        "description": "Connected textures are pre-baked into the texture atlas during launch preparation.",
+        "status": "native_rust"
+      }
+    },
+    "create": {
+      "mod_id": "create",
+      "name": "Create",
+      "aliases": [],
+      "description": "Mechanical contraptions and rotational kinetic power",
+      "category": "gameplay",
+      "license": "MIT",
+      "unsupported": {
+        "reason": "Requires deep JVM class re-weaving and Forge/Fabric ASM/Mixin runtime. Porting to Horizon WASM API in progress.",
+        "suggested_alternative": "Use vanilla redstone mechanics or native redstone WASM extensions",
+        "technical_blocker": "Flywheel GPU virtual instancing requires custom Rust wgpu shader pipeline"
+      }
+    },
+    "curios": {
+      "mod_id": "curios",
+      "name": "Curios API",
+      "aliases": [
+        "trinkets"
+      ],
+      "description": "Flexible accessory slot system",
+      "category": "library",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "Native accessory slot system",
+        "description": "Horizon includes built-in native accessory and charm slots in the inventory.",
+        "status": "native_rust"
+      }
+    },
+    "entityculling": {
+      "mod_id": "entityculling",
+      "name": "Entity Culling",
+      "aliases": [],
+      "description": "Occlusion culling of hidden entities",
+      "category": "performance",
+      "license": "MIT",
+      "built_in": {
+        "feature": "Depth-buffer entity occlusion culling",
+        "description": "Occlusion culling of hidden entities is executed directly by Horizon's render pipeline.",
+        "status": "native_wgpu"
+      }
+    },
+    "fastquit": {
+      "mod_id": "fastquit",
+      "name": "FastQuit",
+      "aliases": [],
+      "description": "Return to title screen immediately while world saves in background",
+      "category": "performance",
+      "license": "MIT",
+      "built_in": {
+        "feature": "Non-blocking background world save",
+        "description": "Horizon saves chunks asynchronously on background worker threads on disconnect.",
+        "status": "native_tokio"
+      }
+    },
+    "ferritecore": {
+      "mod_id": "ferritecore",
+      "name": "FerriteCore",
+      "aliases": [
+        "memoryleakfix",
+        "krypton"
+      ],
+      "description": "Memory usage and async network optimizations",
+      "category": "performance",
+      "license": "MIT",
+      "built_in": {
+        "feature": "Zero-heap native memory & async Tokio networking",
+        "description": "Horizon runs without JVM heap overhead and uses Tokio async event-driven I/O.",
+        "status": "native_tokio"
+      }
+    },
+    "immediatelyfast": {
+      "mod_id": "immediatelyfast",
+      "name": "ImmediatelyFast",
+      "aliases": [
+        "exordium"
+      ],
+      "description": "Batch drawcalls for text, HUD, and interface elements",
+      "category": "performance",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "GPU drawcall batching & UI acceleration",
+        "description": "Horizon batches HUD and UI draw calls into persistent wgpu vertex buffers.",
+        "status": "native_wgpu"
+      }
+    },
+    "iris": {
+      "mod_id": "iris",
+      "name": "Iris Shaders",
+      "aliases": [
+        "oculus"
+      ],
+      "description": "Modern shaderpack pipeline",
+      "category": "visual",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "SPIR-V / WGSL native shader pipeline",
+        "description": "Horizon compiles shaderpacks directly to Vulkan/wgpu pipelines via SPIR-V/WGSL.",
+        "status": "native_wgpu"
+      }
+    },
+    "jei": {
+      "mod_id": "jei",
+      "name": "Just Enough Items",
+      "aliases": [
+        "rei",
+        "emi"
+      ],
+      "description": "Item recipe viewer and bookmark manager",
+      "category": "utility",
+      "license": "MIT",
+      "wasm_port": {
+        "wasm_id": "recipe-viewer-wasm",
+        "name": "Horizon Recipe Viewer",
+        "version": "1.0.0",
+        "url": "https://meta.modrinth.com/v1/horizon/mods/recipe-viewer.wasm",
+        "sha256": "b10a8db164e0754105b7a99be72e3fe5ec432ce7b2391549ddd3e6197b76549a",
+        "license": "MIT",
+        "author_permission_needed": false,
+        "author_permission_granted": true,
+        "notes": "Native WASM recipe search and crafting preview"
+      }
+    },
+    "lambdynamiclights": {
+      "mod_id": "lambdynamiclights",
+      "name": "LambDynamicLights",
+      "aliases": [],
+      "description": "Dynamic lighting for handheld items and glowing entities",
+      "category": "visual",
+      "license": "MIT",
+      "built_in": {
+        "feature": "Native deferred dynamic lighting",
+        "description": "Dynamic light calculations are computed natively in Horizon's lighting pass.",
+        "status": "native_wgpu"
+      }
+    },
+    "lithium": {
+      "mod_id": "lithium",
+      "name": "Lithium",
+      "aliases": [
+        "radium",
+        "canary"
+      ],
+      "description": "General-purpose physics, mob AI, and ticking optimization",
+      "category": "performance",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "Multi-threaded physics ECS & tick optimizations",
+        "description": "Horizon is built from scratch with an optimized lock-free physics ECS in Rust.",
+        "status": "native_ecs"
+      }
+    },
+    "mekanism": {
+      "mod_id": "mekanism",
+      "name": "Mekanism",
+      "aliases": [],
+      "description": "High-tech machinery and industrial processing",
+      "category": "gameplay",
+      "license": "MIT",
+      "unsupported": {
+        "reason": "Relies extensively on JVM Forge capabilities and Java bytecode pipelines.",
+        "suggested_alternative": "Native tech mods coming via Horizon WASM API",
+        "technical_blocker": "Java classloader bytecode manipulation"
+      }
+    },
+    "modernfix": {
+      "mod_id": "modernfix",
+      "name": "ModernFix",
+      "aliases": [],
+      "description": "All-in-one memory, model, and launch speed improvements",
+      "category": "performance",
+      "license": "MIT",
+      "built_in": {
+        "feature": "Native blockstate baking & texture atlas stitching",
+        "description": "Horizon's asset pipeline bakes block models directly into GPU buffers.",
+        "status": "native_rust"
+      }
+    },
+    "simple-voice-chat": {
+      "mod_id": "simple-voice-chat",
+      "name": "Simple Voice Chat",
+      "aliases": [
+        "plasmo-voice"
+      ],
+      "description": "Proximity voice chat in Minecraft",
+      "category": "audio",
+      "license": "LGPL-3.0-only",
+      "wasm_port": {
+        "wasm_id": "voice-chat-wasm",
+        "name": "Horizon Voice Chat",
+        "version": "1.0.0",
+        "url": "https://meta.modrinth.com/v1/horizon/mods/voice-chat.wasm",
+        "sha256": "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e",
+        "license": "LGPL-3.0-only",
+        "author_permission_needed": false,
+        "author_permission_granted": true,
+        "notes": "Native Opus audio encoding over UDP"
+      }
+    },
+    "sodium": {
+      "mod_id": "sodium",
+      "name": "Sodium",
+      "aliases": [
+        "embeddium",
+        "rubidium"
+      ],
+      "description": "Modern rendering engine and chunk mesher",
+      "category": "performance",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "Vulkan/wgpu chunk mesher & frustum/occlusion culling",
+        "description": "Horizon includes a native Rust multi-threaded chunk mesher with frustum & occlusion culling built-in.",
+        "status": "native_wgpu"
+      }
+    },
+    "twilightforest": {
+      "mod_id": "twilightforest",
+      "name": "The Twilight Forest",
+      "aliases": [],
+      "description": "Enchanted realm dimension with bosses and dungeons",
+      "category": "worldgen",
+      "license": "LGPL-2.1-only",
+      "unsupported": {
+        "reason": "Custom Java dimension, boss AI, and worldgen bytecode.",
+        "suggested_alternative": "Play in Java Edition or wait for Horizon Dimension API",
+        "technical_blocker": "Custom entity AI state machine & biome generators"
+      }
+    },
+    "waystones": {
+      "mod_id": "waystones",
+      "name": "Waystones",
+      "aliases": [],
+      "description": "Teleportation waystones for survival",
+      "category": "gameplay",
+      "license": "CC-BY-NC-SA-4.0",
+      "wasm_port": {
+        "wasm_id": "waystones-wasm",
+        "name": "Waystones WASM",
+        "version": "0.9.0",
+        "url": "https://meta.modrinth.com/v1/horizon/mods/waystones.wasm",
+        "sha256": "c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2",
+        "license": "CC-BY-NC-SA-4.0",
+        "author_permission_needed": true,
+        "author_permission_granted": false,
+        "notes": "Redistribution pending author consent for CC-BY-NC-SA license"
+      }
+    },
+    "zoomify": {
+      "mod_id": "zoomify",
+      "name": "Zoomify",
+      "aliases": [
+        "ok-zoomer",
+        "wi-zoom"
+      ],
+      "description": "Smooth camera zoom with transitions",
+      "category": "utility",
+      "license": "LGPL-3.0-only",
+      "built_in": {
+        "feature": "Native smooth camera zoom",
+        "description": "Horizon includes smooth camera zoom natively bound to the 'C' key.",
+        "status": "native_wgpu"
+      }
+    }
+  },
+  "signature": "877d3c82719437542a730f4fb086889108b08290f653e328dd214e7d768b28329b3caca272f7dd5cb2181ad381b478854f6c94553f50a83d3d683d953cde810e"
+}

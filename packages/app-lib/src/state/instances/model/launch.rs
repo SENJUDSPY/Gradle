@@ -19,7 +19,7 @@ impl Default for LaunchRuntime {
 impl std::fmt::Display for LaunchRuntime {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Horizon => write!(f, "Horizon (Rust, optimized)"),
+            Self::Horizon => write!(f, "Gradle (Rust, optimized)"),
             Self::Java => write!(f, "Java (classic)"),
         }
     }
@@ -163,7 +163,7 @@ mod tests {
         assert_eq!("classic".parse::<LaunchRuntime>().unwrap(), LaunchRuntime::Java);
         assert!("unknown".parse::<LaunchRuntime>().is_err());
 
-        assert_eq!(LaunchRuntime::Horizon.to_string(), "Horizon (Rust, optimized)");
+        assert_eq!(LaunchRuntime::Horizon.to_string(), "Gradle (Rust, optimized)");
         assert_eq!(LaunchRuntime::Java.to_string(), "Java (classic)");
     }
 }

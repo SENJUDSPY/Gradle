@@ -1,0 +1,44 @@
+[default]
+description = "Default application permissions for main window"
+permissions = [
+    "allow-initialize-state",
+    "allow-is-dev",
+    "allow-are-updates-enabled",
+    "allow-get-update-size",
+    "allow-enqueue-update-for-installation",
+    "allow-remove-enqueued-update",
+    "allow-set-restart-after-pending-update",
+    "allow-toggle-decorations",
+    "allow-show-window",
+    "allow-restart-app",
+    "allow-instance-content",
+    "allow-files-save-external"
+]
+
+[[set]]
+identifier = "read"
+description = "Safe app info commands"
+permissions = [
+    "allow-are-updates-enabled",
+    "allow-get-update-size",
+    "allow-is-dev",
+]
+
+[[set]]
+identifier = "write"
+description = "App state and update mutation commands"
+permissions = [
+    "allow-enqueue-update-for-installation",
+    "allow-initialize-state",
+    "allow-remove-enqueued-update",
+    "allow-set-restart-after-pending-update",
+    "allow-show-window",
+    "allow-toggle-decorations",
+]
+
+[[set]]
+identifier = "lifecycle"
+description = "App restart command"
+permissions = [
+    "allow-restart-app",
+]

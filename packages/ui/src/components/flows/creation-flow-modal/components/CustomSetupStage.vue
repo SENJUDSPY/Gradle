@@ -109,6 +109,20 @@
 			/>
 		</div>
 
+		<!-- Rust Edition info -->
+		<div
+			v-if="selectedLoader === 'horizon'"
+			class="flex items-start gap-2.5 rounded-xl border border-solid border-purple-500/30 bg-purple-500/10 p-3 text-xs text-contrast"
+		>
+			<CircleAlertIcon class="mt-0.5 size-4 shrink-0 text-purple-400" />
+			<div class="flex flex-col gap-0.5">
+				<span class="font-bold text-purple-300">Rust Edition (Minecraft 26.3)</span>
+				<span class="text-secondary leading-relaxed">
+					Native Rust client with wgpu graphics and multi-thread chunk meshing. Java bytecode mods (.jar) are skipped because there is no JVM.
+				</span>
+			</div>
+		</div>
+
 		<!-- Game version -->
 		<div class="flex flex-col gap-2">
 			<span class="font-semibold text-contrast">{{
@@ -216,6 +230,7 @@
 <script setup lang="ts">
 import type { Paper } from '@modrinth/api-client'
 import {
+	CircleAlertIcon,
 	EyeIcon,
 	EyeOffIcon,
 	PaletteIcon,
@@ -464,6 +479,10 @@ const gameVersionOptions = computed<ComboboxOption<string>[]>(() => {
 
 	// For loaders with per-version data, only show game versions that have builds
 	if (selectedLoader.value && selectedLoader.value !== 'vanilla') {
+		if (selectedLoader.value === 'horizon') {
+			return [{ value: '26.3', label: '26.3 (Rust Edition)' }]
+		}
+
 		if (selectedLoader.value === 'paper') {
 			if (!ctx.paperSupportedVersions.value) return []
 			return versions
@@ -720,6 +739,10 @@ function autoSelectLoaderVersion() {
 }
 
 const loaderVersionOptions = computed<ComboboxOption<string>[]>(() => {
+	if (selectedLoader.value === 'horizon') {
+		return [{ value: 'latest', label: 'Latest (Rust Edition)' }]
+	}
+
 	if (selectedLoader.value === 'paper' && selectedGameVersion.value) {
 		const builds = paperVersions.value[selectedGameVersion.value] ?? []
 		return builds.map((b) => ({

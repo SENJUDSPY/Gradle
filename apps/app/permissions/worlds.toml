@@ -1,0 +1,62 @@
+[default]
+description = "Default permissions for worlds plugin"
+permissions = [
+    "allow-get-instance-worlds",
+    "allow-get-recent-worlds",
+    "allow-get-singleplayer-world",
+    "allow-get-server-status",
+    "allow-get-instance-protocol-version",
+    "allow-rename-world",
+    "allow-reset-world-icon",
+    "allow-set-world-display-status",
+    "allow-add-server-to-instance",
+    "allow-edit-server-in-instance",
+    "allow-ensure-managed-server-in-instance",
+    "allow-desync-server",
+    "allow-backup-world",
+    "allow-start-join-singleplayer-world",
+    "allow-start-join-server",
+    "allow-delete-world",
+    "allow-remove-server-from-instance",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for worlds plugin"
+permissions = [
+    "allow-get-instance-worlds",
+    "allow-get-recent-worlds",
+    "allow-get-singleplayer-world",
+    "allow-get-server-status",
+    "allow-get-instance-protocol-version",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for worlds plugin"
+permissions = [
+    "allow-rename-world",
+    "allow-reset-world-icon",
+    "allow-set-world-display-status",
+    "allow-add-server-to-instance",
+    "allow-edit-server-in-instance",
+    "allow-ensure-managed-server-in-instance",
+    "allow-desync-server",
+    "allow-backup-world",
+]
+
+[[set]]
+identifier = "launch"
+description = "Launch commands for worlds plugin"
+permissions = [
+    "allow-start-join-singleplayer-world",
+    "allow-start-join-server",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for worlds plugin"
+permissions = [
+    "allow-delete-world",
+    "allow-remove-server-from-instance",
+]

@@ -646,6 +646,35 @@ export async function kill(instanceId: string): Promise<void> {
 	return await invoke('plugin:instance|instance_kill', { instanceId })
 }
 
+export async function restart(instanceId: string): Promise<ProcessMetadata> {
+	return await invoke('plugin:instance|instance_restart', { instanceId })
+}
+
+export interface HorizonCrashReport {
+	timestamp: string
+	instance_id: string
+	instance_name: string
+	exit_code?: number
+	signal?: number
+	is_crash: boolean
+	error_category: string
+	crash_reason: string
+	actionable_fix: string
+	panic_message?: string
+	wgpu_error?: string
+	relevant_logs: string[]
+	report_text: string
+	report_file_path?: string
+}
+
+export async function getLatestCrash(instanceId: string): Promise<HorizonCrashReport | null> {
+	return await invoke('plugin:horizon|horizon_get_latest_crash', { instanceId })
+}
+
+export async function clearLatestCrash(instanceId: string): Promise<void> {
+	await invoke('plugin:horizon|horizon_clear_crash', { instanceId })
+}
+
 // Edits an instance
 export type InstanceEdit = Partial<
 	Pick<

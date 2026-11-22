@@ -320,11 +320,11 @@ const removingTag = ref<string | null>(null)
 const messages = defineMessages({
 	title: {
 		id: 'patch-notes.page.title',
-		defaultMessage: 'Horizon Patch Notes',
+		defaultMessage: 'Gradle Patch Notes',
 	},
 	subtitle: {
 		id: 'patch-notes.page.subtitle',
-		defaultMessage: 'Changelogs, new features, and fixes across native Horizon runtime releases.',
+		defaultMessage: 'Changelogs, new features, and fixes across native Gradle runtime releases.',
 	},
 	channelEngine: {
 		id: 'patch-notes.page.channel-engine',

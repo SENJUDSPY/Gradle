@@ -3,13 +3,7 @@ use theseus::tags::{Category, DonationPlatform, GameVersion, Loader};
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("tags")
-        .invoke_handler(tauri::generate_handler![
-            tags_get_categories,
-            tags_get_report_types,
-            tags_get_loaders,
-            tags_get_game_versions,
-            tags_get_donation_platforms,
-        ])
+        .invoke_handler(crate::commands::tags_handler!())
         .build()
 }
 

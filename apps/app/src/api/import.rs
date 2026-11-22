@@ -7,11 +7,7 @@ use theseus::pack::import;
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("import")
-        .invoke_handler(tauri::generate_handler![
-            get_importable_instances,
-            is_valid_importable_instance,
-            get_default_launcher_path,
-        ])
+        .invoke_handler(crate::commands::import_handler!())
         .build()
 }
 

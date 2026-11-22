@@ -3,6 +3,7 @@ import {
 	CheckIcon,
 	CompassIcon,
 	GameIcon,
+	LayersIcon,
 	SparklesIcon,
 	SpinnerIcon,
 } from '@modrinth/assets'
@@ -34,11 +35,11 @@ const messages = defineMessages({
 	introDesc: {
 		id: 'instance.settings.horizon.intro.desc',
 		defaultMessage:
-			'Customize Horizon native Rust runtime settings for this instance. These settings are stored separately in the instance folder and never affect Java runtime settings.',
+			'Customize Gradle native Rust runtime settings for this instance. These settings are stored separately in the instance folder and never affect Java runtime settings.',
 	},
 	savedNotice: {
 		id: 'instance.settings.horizon.saved.notice',
-		defaultMessage: 'Horizon settings saved',
+		defaultMessage: 'Gradle settings saved',
 	},
 	graphicsSection: {
 		id: 'instance.settings.horizon.graphics.title',
@@ -154,7 +155,7 @@ const messages = defineMessages({
 	},
 	saveButton: {
 		id: 'instance.settings.horizon.save.button',
-		defaultMessage: 'Save Horizon Settings',
+		defaultMessage: 'Save Gradle Settings',
 	},
 })
 
@@ -191,6 +192,25 @@ const settings = ref<HorizonSettings>({
 
 const presets = ['performance', 'balanced', 'quality', 'ultra'] as const
 const overlayOptions = ['none', 'fps', 'fps_and_graph'] as const
+const graphicsApis = ['vulkan', 'opengl', 'dx12'] as const
+const shadowOptions = ['off', 'low', 'medium', 'high'] as const
+const msaaOptions = [1, 2, 4, 8] as const
+const filteringOptions = ['nearest', 'bilinear', 'trilinear', 'anisotropic'] as const
+
+function resetKeybinds() {
+	settings.value.keybinds = {
+		'key.forward': 'key.keyboard.w',
+		'key.left': 'key.keyboard.a',
+		'key.back': 'key.keyboard.s',
+		'key.right': 'key.keyboard.d',
+		'key.jump': 'key.keyboard.space',
+		'key.sneak': 'key.keyboard.left.shift',
+		'key.sprint': 'key.keyboard.left.control',
+		'key.attack': 'key.mouse.left',
+		'key.use': 'key.mouse.right',
+		'key.zoom': 'key.keyboard.c',
+	}
+}
 
 const maxFpsDisplay = computed(() => {
 	return settings.value.max_fps >= 260
@@ -288,6 +308,59 @@ onMounted(() => {
 						:items="[...presets]"
 						:format-label="(p) => p.charAt(0).toUpperCase() + p.slice(1)"
 						@update:model-value="(val) => val && (settings.graphics_preset = val)"
+					/>
+				</div>
+
+				<!-- Graphics Backend API -->
+				<div class="flex flex-col gap-2">
+					<label class="text-sm font-semibold text-contrast">
+						Graphics Backend
+					</label>
+					<SegmentedControl
+						:model-value="settings.graphics_api"
+						:items="[...graphicsApis]"
+						:format-label="(api) => api.toUpperCase()"
+						@update:model-value="(val) => val && (settings.graphics_api = val)"
+					/>
+				</div>
+
+				<!-- Shadow Quality & Anti-Aliasing (MSAA) -->
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+					<div class="flex flex-col gap-2">
+						<label class="text-xs font-semibold text-contrast">
+							Shadows
+						</label>
+						<SegmentedControl
+							:model-value="settings.shadow_quality ?? 'medium'"
+							:items="[...shadowOptions]"
+							:format-label="(s) => s.charAt(0).toUpperCase() + s.slice(1)"
+							@update:model-value="(val) => val && (settings.shadow_quality = val)"
+						/>
+					</div>
+
+					<div class="flex flex-col gap-2">
+						<label class="text-xs font-semibold text-contrast">
+							Anti-Aliasing (MSAA)
+						</label>
+						<SegmentedControl
+							:model-value="settings.msaa_samples ?? 1"
+							:items="[...msaaOptions]"
+							:format-label="(m) => m === 1 ? 'Off' : `${m}x`"
+							@update:model-value="(val) => val && (settings.msaa_samples = val)"
+						/>
+					</div>
+				</div>
+
+				<!-- Texture Filtering -->
+				<div class="flex flex-col gap-2">
+					<label class="text-xs font-semibold text-contrast">
+						Texture Filtering
+					</label>
+					<SegmentedControl
+						:model-value="settings.texture_filtering ?? 'trilinear'"
+						:items="[...filteringOptions]"
+						:format-label="(f) => f.charAt(0).toUpperCase() + f.slice(1)"
+						@update:model-value="(val) => val && (settings.texture_filtering = val)"
 					/>
 				</div>
 
@@ -510,6 +583,68 @@ onMounted(() => {
 						:format-label="(o) => (o === 'none' ? formatMessage(messages.overlayNone) : o === 'fps' ? formatMessage(messages.overlayFps) : formatMessage(messages.overlayDetailed))"
 						@update:model-value="(val) => val && (settings.performance_overlay = val)"
 					/>
+				</div>
+			</section>
+
+			<!-- Section 4: Resource Packs & Keybinds -->
+			<section class="glass-surface glass-surface--strong flex flex-col gap-5 rounded-2xl border border-solid border-surface-5 bg-surface-3 p-5">
+				<div class="flex items-start gap-3">
+					<div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400">
+						<LayersIcon class="size-5" />
+					</div>
+					<div>
+						<h2 class="m-0 text-lg font-semibold text-contrast">
+							Resource Packs & Keybinds
+						</h2>
+						<p class="m-0 mt-1 text-sm text-secondary">
+							Configured directly into the Horizon options.txt manifest for native loading.
+						</p>
+					</div>
+				</div>
+
+				<!-- Active Resource Packs -->
+				<div class="flex flex-col gap-2">
+					<label class="text-xs font-semibold text-contrast">
+						Active Resource Packs
+					</label>
+					<div class="flex flex-wrap gap-2 rounded-xl bg-surface-2 p-3">
+						<span
+							v-for="pack in (settings.resource_packs || ['vanilla'])"
+							:key="pack"
+							class="rounded-lg bg-surface-3 px-3 py-1.5 text-xs font-mono font-medium text-contrast border border-surface-4"
+						>
+							{{ pack }}
+						</span>
+					</div>
+				</div>
+
+				<!-- Keybinds mapping grid -->
+				<div class="flex flex-col gap-2">
+					<div class="flex items-center justify-between">
+						<label class="text-xs font-semibold text-contrast">
+							Keybinds
+						</label>
+						<button
+							type="button"
+							class="text-xs text-purple-400 hover:text-purple-300 transition-colors"
+							@click="resetKeybinds"
+						>
+							Reset Defaults
+						</button>
+					</div>
+
+					<div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+						<div
+							v-for="(keyVal, action) in (settings.keybinds || {})"
+							:key="action"
+							class="flex items-center justify-between rounded-lg bg-surface-2 px-3 py-2 text-xs"
+						>
+							<span class="text-secondary truncate">{{ String(action).replace('key.', '') }}</span>
+							<kbd class="rounded bg-surface-4 px-2 py-0.5 font-mono text-[10px] text-contrast font-bold border border-surface-5">
+								{{ String(keyVal).replace('key.keyboard.', '').replace('key.mouse.', 'Mouse ').toUpperCase() }}
+							</kbd>
+						</div>
+					</div>
 				</div>
 			</section>
 

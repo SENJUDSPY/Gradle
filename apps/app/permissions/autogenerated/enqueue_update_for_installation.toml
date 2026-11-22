@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-enqueue-update-for-installation"
+description = "Enables the enqueue_update_for_installation command without any pre-configured scope."
+commands.allow = ["enqueue_update_for_installation"]
+
+[[permission]]
+identifier = "deny-enqueue-update-for-installation"
+description = "Denies the enqueue_update_for_installation command without any pre-configured scope."
+commands.deny = ["enqueue_update_for_installation"]

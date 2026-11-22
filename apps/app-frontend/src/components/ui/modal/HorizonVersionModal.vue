@@ -48,7 +48,7 @@
 						{{
 							installedVersions.length > 0
 								? `Uses ${installedVersions[0]} (newest installed build)`
-								: 'Automatically uses the newest installed Horizon release'
+								: 'Automatically uses the newest installed Gradle release'
 						}}
 					</span>
 				</div>
@@ -121,6 +121,45 @@
 							<span v-if="rel.asset_size > 0">
 								{{ (rel.asset_size / (1024 * 1024)).toFixed(1) }} MB
 							</span>
+							<span v-if="idx === 0 && currentLoaderVersion && currentLoaderVersion !== rel.tag" class="rounded bg-orange/20 px-1.5 py-0.5 text-[10px] font-semibold text-orange">
+								Update Available
+							</span>
+							<span v-if="currentLoaderVersion === rel.tag" class="rounded bg-brand/20 px-1.5 py-0.5 text-[10px] font-semibold text-brand">
+								Pinned
+							</span>
+						</div>
+
+						<!-- Download Progress Bar -->
+						<div v-if="installingTag === rel.tag && downloadProgress" class="mt-2 flex flex-col gap-1 w-full">
+							<div class="flex items-center justify-between text-[11px]">
+								<span class="font-medium text-brand">
+									{{
+										downloadProgress.stage === 'verifying'
+											? 'Verifying SHA-256 Checksum...'
+											: downloadProgress.stage === 'extracting'
+											? 'Extracting binaries...'
+											: downloadProgress.stage === 'done'
+											? 'Installation complete!'
+											: 'Downloading runtime...'
+									}}
+								</span>
+								<span class="font-mono text-secondary">
+									{{ Math.round((downloadProgress.percent || 0) * 100) }}%
+									<template v-if="downloadProgress.speed_bps > 0">
+										• {{ (downloadProgress.speed_bps / 1048576).toFixed(1) }} MB/s
+									</template>
+								</span>
+							</div>
+							<div class="h-1.5 w-full overflow-hidden rounded-full bg-surface-4">
+								<div
+									class="h-full bg-brand transition-all duration-150 rounded-full"
+									:style="{ width: `${Math.round((downloadProgress.percent || 0) * 100)}%` }"
+								/>
+							</div>
+							<div v-if="downloadProgress.total" class="flex justify-between text-[10px] text-secondary">
+								<span>{{ (downloadProgress.downloaded / 1048576).toFixed(1) }} MB / {{ (downloadProgress.total / 1048576).toFixed(1) }} MB</span>
+								<span>SHA-256 Verified HTTPS</span>
+							</div>
 						</div>
 					</div>
 
@@ -210,14 +249,16 @@ import {
 } from '@modrinth/assets'
 import { Button, commonMessages, defineMessages, NewModal, useVIntl } from '@modrinth/ui'
 import { useQueryClient } from '@tanstack/vue-query'
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import {
+	type DownloadProgress,
 	getHorizonReleases,
 	getInstalledHorizonVersions,
 	type HorizonRelease,
 	installHorizonVersion,
+	onHorizonDownloadProgress,
 	removeHorizonVersion,
 } from '@/helpers/horizon'
 import { edit } from '@/helpers/instance'
@@ -236,12 +277,12 @@ const emit = defineEmits<{
 const messages = defineMessages({
 	title: {
 		id: 'app.horizon.version.title',
-		defaultMessage: 'Horizon Versions',
+		defaultMessage: 'Gradle Versions',
 	},
 	subtitle: {
 		id: 'app.horizon.version.subtitle',
 		defaultMessage:
-			'Select, install, or update Horizon native client and server builds from the release feed.',
+			'Select, install, or update Gradle native client and server builds from the release feed.',
 	},
 	installed: {
 		id: 'app.horizon.version.installed',
@@ -269,7 +310,7 @@ const messages = defineMessages({
 	},
 	noVersions: {
 		id: 'app.horizon.version.no-versions',
-		defaultMessage: 'No Horizon releases found',
+		defaultMessage: 'No Gradle releases found',
 	},
 	latest: {
 		id: 'app.horizon.version.latest',
@@ -285,7 +326,7 @@ const messages = defineMessages({
 	},
 	requiredPrompt: {
 		id: 'app.horizon.version.required-prompt',
-		defaultMessage: 'Please install a Horizon build before launching this instance.',
+		defaultMessage: 'Please install a Gradle build before launching this instance.',
 	},
 	viewPatchNotes: {
 		id: 'app.horizon.version.view-patch-notes',
@@ -303,8 +344,22 @@ const installedVersions = ref<string[]>([])
 const loading = ref(false)
 const installingTag = ref<string | null>(null)
 const removingTag = ref<string | null>(null)
+const downloadProgress = ref<DownloadProgress | null>(null)
 const error = ref<string | null>(null)
 let onInstalledLaunch: (() => void) | null = null
+let unlistenProgress: (() => void) | null = null
+
+onMounted(async () => {
+	unlistenProgress = await onHorizonDownloadProgress((prog) => {
+		if (installingTag.value === prog.tag) {
+			downloadProgress.value = prog
+		}
+	})
+})
+
+onUnmounted(() => {
+	unlistenProgress?.()
+})
 
 const currentLoaderVersion = computed(() => props.instance?.loader_version ?? null)
 
@@ -328,6 +383,7 @@ async function loadReleases() {
 
 async function handleInstall(tag: string) {
 	installingTag.value = tag
+	downloadProgress.value = null
 	error.value = null
 	try {
 		await installHorizonVersion(tag)

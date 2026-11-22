@@ -38,12 +38,12 @@ const { handleError } = injectNotificationManager()
 const messages = defineMessages({
 	pageTitle: {
 		id: 'gradle.app.settings.horizon.title',
-		defaultMessage: 'Horizon Engine',
+		defaultMessage: 'Gradle Engine',
 	},
 	pageDescription: {
 		id: 'gradle.app.settings.horizon.description',
 		defaultMessage:
-			'Configure the native Horizon Rust game client: graphics presets, distant terrain LOD up to 1024 chunks, gamepad haptics, and gameplay extras.',
+			'Configure the native Gradle Rust game client: graphics presets, distant terrain LOD up to 1024 chunks, gamepad haptics, and gameplay extras.',
 	},
 	graphicsSectionTitle: {
 		id: 'gradle.app.settings.horizon.graphics.title',
@@ -52,7 +52,7 @@ const messages = defineMessages({
 	graphicsSectionDesc: {
 		id: 'gradle.app.settings.horizon.graphics.desc',
 		defaultMessage:
-			'Horizon renders Minecraft 26.3 natively with wgpu/Vulkan shaders. Distant terrain extends local worlds far beyond vanilla limits.',
+			'Gradle renders Minecraft 26.3 natively with wgpu/Vulkan shaders. Distant terrain extends local worlds far beyond vanilla limits.',
 	},
 	graphicsPresetTitle: {
 		id: 'gradle.app.settings.horizon.preset.title',
@@ -153,7 +153,7 @@ const messages = defineMessages({
 	},
 	extrasSectionTitle: {
 		id: 'gradle.app.settings.horizon.extras.title',
-		defaultMessage: 'Horizon Extras',
+		defaultMessage: 'Gradle Extras',
 	},
 	extrasSectionDesc: {
 		id: 'gradle.app.settings.horizon.extras.desc',
@@ -196,7 +196,7 @@ const messages = defineMessages({
 	agentSectionDesc: {
 		id: 'gradle.app.settings.horizon.agent.desc',
 		defaultMessage:
-			'Expose Horizon as a Model Context Protocol (MCP) server so AI coding assistants (Claude Code, Cursor, Codex) can observe the world and play the game.',
+			'Expose Gradle as a Model Context Protocol (MCP) server so AI coding assistants (Claude Code, Cursor, Codex) can observe the world and play the game.',
 	},
 	allowAiAgentsTitle: {
 		id: 'gradle.app.settings.horizon.agent.allow-ai-agents.title',
@@ -205,7 +205,7 @@ const messages = defineMessages({
 	allowAiAgentsDesc: {
 		id: 'gradle.app.settings.horizon.agent.allow-ai-agents.desc',
 		defaultMessage:
-			'Off by default. When enabled, Horizon starts with a local control socket and horizon-ctl exposes 80+ tools over stdio JSON-RPC.',
+			'Off by default. When enabled, Gradle starts with a local control socket and horizon-ctl exposes 80+ tools over stdio JSON-RPC.',
 	},
 	ctlInstalled: {
 		id: 'gradle.app.settings.horizon.agent.ctl-installed',
@@ -225,7 +225,7 @@ const messages = defineMessages({
 	},
 	connectAgentDesc: {
 		id: 'gradle.app.settings.horizon.agent.connect.desc',
-		defaultMessage: 'Add the Horizon MCP server to your AI assistant configuration.',
+		defaultMessage: 'Add the Gradle MCP server to your AI assistant configuration.',
 	},
 	oneClickCli: {
 		id: 'gradle.app.settings.horizon.agent.one-click-cli',

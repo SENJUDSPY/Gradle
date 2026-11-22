@@ -15,6 +15,23 @@ use std::path::Path;
 use zip::ZipArchive;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ModpackCompatibilityLevel {
+    Supported,
+    PartiallySupported,
+    Unsupported,
+}
+
+impl ModpackCompatibilityLevel {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Self::Supported => "Supported",
+            Self::PartiallySupported => "Partially Supported",
+            Self::Unsupported => "Unsupported",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ModpackItemCategory {
     ResourcePack,
     DataPack,
@@ -47,6 +64,8 @@ pub struct ModpackAnalysis {
     pub total_items: usize,
     pub compatible_count: usize,
     pub incompatible_count: usize,
+    pub compatibility_level: ModpackCompatibilityLevel,
+    pub compatibility_summary: String,
     pub items: Vec<ModpackAnalyzedItem>,
 }
 
@@ -232,6 +251,8 @@ fn analyze_modrinth_pack(
     let total_items = items.len();
     let compatible_count = items.iter().filter(|i| i.is_compatible).count();
     let incompatible_count = total_items.saturating_sub(compatible_count);
+    let (compatibility_level, compatibility_summary) =
+        evaluate_compatibility(compatible_count, incompatible_count);
 
     Ok(ModpackAnalysis {
         pack_format: "Modrinth (.mrpack)".to_string(),
@@ -244,6 +265,8 @@ fn analyze_modrinth_pack(
         total_items,
         compatible_count,
         incompatible_count,
+        compatibility_level,
+        compatibility_summary,
         items,
     })
 }
@@ -320,6 +343,8 @@ fn analyze_curseforge_pack(
     let total_items = items.len();
     let compatible_count = items.iter().filter(|i| i.is_compatible).count();
     let incompatible_count = total_items.saturating_sub(compatible_count);
+    let (compatibility_level, compatibility_summary) =
+        evaluate_compatibility(compatible_count, incompatible_count);
 
     Ok(ModpackAnalysis {
         pack_format: "CurseForge (.zip)".to_string(),
@@ -332,8 +357,36 @@ fn analyze_curseforge_pack(
         total_items,
         compatible_count,
         incompatible_count,
+        compatibility_level,
+        compatibility_summary,
         items,
     })
+}
+
+fn evaluate_compatibility(
+    compatible_count: usize,
+    incompatible_count: usize,
+) -> (ModpackCompatibilityLevel, String) {
+    if incompatible_count == 0 {
+        (
+            ModpackCompatibilityLevel::Supported,
+            "Fully Supported: All modpack assets (resource packs, data packs, shaders, and configs) run natively on Rust Edition.".to_string(),
+        )
+    } else if compatible_count > 0 {
+        (
+            ModpackCompatibilityLevel::PartiallySupported,
+            format!(
+                "Partially Supported: {compatible_count} asset/config files are supported, but {incompatible_count} Java bytecode mods (.jar) will be skipped because Rust Edition does not run a JVM."
+            ),
+        )
+    } else {
+        (
+            ModpackCompatibilityLevel::Unsupported,
+            format!(
+                "Unsupported: All {incompatible_count} items are Java bytecode mods requiring a Java Virtual Machine (JVM). Import into Java Edition to play this pack."
+            ),
+        )
+    }
 }
 
 fn classify_path(
@@ -538,6 +591,11 @@ mod tests {
         assert_eq!(analysis.total_items, 4);
         assert_eq!(analysis.compatible_count, 3); // resourcepack, datapack, config
         assert_eq!(analysis.incompatible_count, 1); // sodium-fabric.jar
+        assert_eq!(
+            analysis.compatibility_level,
+            ModpackCompatibilityLevel::PartiallySupported
+        );
+        assert!(analysis.compatibility_summary.contains("Partially Supported"));
 
         // Test extraction to target
         let target = dir.path().join("instance");

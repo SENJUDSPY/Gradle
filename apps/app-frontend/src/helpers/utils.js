@@ -74,6 +74,14 @@ export async function showAppDbBackupsFolder() {
 	return await invoke('plugin:utils|show_app_db_backups_folder', {})
 }
 
+export async function restoreLatestDbBackup() {
+	return await invoke('plugin:utils|restore_latest_db_backup', {})
+}
+
+export async function resetAppDatabase() {
+	return await invoke('plugin:utils|reset_app_database', {})
+}
+
 // Opens an instance's folder in the OS file explorer
 export async function showInstanceInFolder(instanceId) {
 	const fullPath = await get_full_path(instanceId)

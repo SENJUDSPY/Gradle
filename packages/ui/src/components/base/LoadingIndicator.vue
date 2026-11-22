@@ -53,12 +53,22 @@
 		position: absolute;
 		inset: 0;
 		background-image: linear-gradient(
-			-45deg,
-			transparent 30%,
-			rgba(196, 217, 237, 0.075) 50%,
-			transparent 70%
+			45deg,
+			transparent 25%,
+			rgba(91, 91, 240, 0.08) 40%,
+			rgba(34, 211, 238, 0.12) 50%,
+			transparent 75%
 		);
-		animation: shimmer 4s ease-in-out infinite;
+		background-size: 200% 100%;
+		animation: shimmer 2.4s ease-in-out infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		animation: none !important;
+
+		&::before {
+			animation: none !important;
+		}
 	}
 
 	&:nth-child(2)::before {

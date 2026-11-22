@@ -941,6 +941,8 @@ pub async fn launch_minecraft(
             instance,
             &instance_path,
             content_set,
+            credentials,
+            resolution,
             env_args,
             post_exit_hook,
             &quick_play_type,
@@ -1381,6 +1383,8 @@ async fn launch_horizon(
     instance: &crate::state::Instance,
     instance_path: &Path,
     content_set: &crate::state::ContentSet,
+    credentials: &Credentials,
+    resolution: &WindowSize,
     env_args: &[(String, String)],
     post_exit_hook: Option<String>,
     quick_play_type: &QuickPlayType,
@@ -1404,7 +1408,7 @@ async fn launch_horizon(
         Some(v) if !v.is_empty() => v.to_string(),
         _ => versions.first().cloned().ok_or_else(|| {
             ErrorKind::LauncherError(
-                "No installed Horizon binary found. Please install a Horizon release version first.".to_string(),
+                "No installed Gradle Engine binary found. Please install a Gradle release version first.".to_string(),
             )
         })?,
     };
@@ -1419,26 +1423,69 @@ async fn launch_horizon(
         instance_resources
     } else {
         bail!(ErrorKind::LauncherError(
-            "Horizon game resources have not been prepared yet. Please prepare game resources from your Minecraft 26.3 installation before launching.".to_string()
+            "Gradle game resources have not been prepared yet. Please prepare game resources from your Minecraft 26.3 installation before launching.".to_string()
         ));
     };
 
+    let profile = credentials.maybe_online_profile().await;
+    let horizon_settings = horizon_runtime::settings::load_horizon_settings(Some(instance_path));
+    let app_settings = crate::state::Settings::get(&state.pool).await.ok();
+    let force_fullscreen = app_settings.as_ref().map(|s| s.force_fullscreen).unwrap_or(false);
+
     let std_cmd = if is_server {
-        horizon_runtime::execution::build_server_command(
+        let mut server_builder = horizon_runtime::execution::HorizonServerArgsBuilder::new(
             &tag,
             instance_path,
             &resources_dir,
-            &[],
-        )
-        .map_err(|e| ErrorKind::LauncherError(e.to_string()))?
+        );
+        for (key, value) in env_args {
+            server_builder = server_builder.with_env(key, value);
+        }
+        server_builder
+            .build_command()
+            .map_err(|e| ErrorKind::LauncherError(e.to_string()))?
     } else {
-        horizon_runtime::execution::build_client_command(
+        let mut client_builder = horizon_runtime::execution::HorizonClientArgsBuilder::new(
             &tag,
             instance_path,
             &resources_dir,
-            &[],
         )
-        .map_err(|e| ErrorKind::LauncherError(e.to_string()))?
+        .with_auth(&profile.name, Some(profile.id.to_string()))
+        .with_window_size(resolution.0 as u32, resolution.1 as u32)
+        .with_fullscreen(force_fullscreen)
+        .with_ai_agents(horizon_settings.allow_ai_agents);
+
+        if !horizon_settings.graphics_api.is_empty() {
+            client_builder = client_builder.with_graphics_backend(&horizon_settings.graphics_api);
+        }
+
+        match quick_play_type {
+            QuickPlayType::Server(server) => {
+                let (host, port) = match server {
+                    ServerAddress::Unresolved(addr) => {
+                        match parse_server_address(addr) {
+                            Ok((h, p)) => (h.to_string(), p),
+                            Err(_) => (addr.clone(), 25565),
+                        }
+                    }
+                    ServerAddress::Resolved {
+                        resolved_host,
+                        resolved_port,
+                        ..
+                    } => (resolved_host.clone(), *resolved_port),
+                };
+                client_builder = client_builder.with_server(host, Some(port));
+            }
+            _ => {}
+        }
+
+        for (key, value) in env_args {
+            client_builder = client_builder.with_env(key, value);
+        }
+
+        client_builder
+            .build_command()
+            .map_err(|e| ErrorKind::LauncherError(e.to_string()))?
     };
 
     let mut mc_command = Command::from(std_cmd);

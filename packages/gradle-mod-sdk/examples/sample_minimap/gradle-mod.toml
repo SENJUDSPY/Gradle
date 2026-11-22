@@ -1,0 +1,18 @@
+[mod]
+id = "sample_minimap"
+name = "Sample Minimap"
+version = "1.0.0"
+authors = ["Gradle Team"]
+description = "A native WebAssembly HUD minimap overlay demonstration"
+license = "MIT"
+entrypoint = "gradle_init"
+
+[capabilities]
+permissions = ["rendering", "world_read"]
+
+[capabilities.limits]
+max_memory_mb = 16
+max_fuel = 5000000
+
+[dependencies]
+horizon = ">=26.3"

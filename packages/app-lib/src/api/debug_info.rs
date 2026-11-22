@@ -108,6 +108,29 @@ pub async fn export_debug_info(
                 &cancel,
             )?;
         }
+        let horizon_dir = dirs::data_dir()
+            .map(|d| d.join("gradle/horizon"))
+            .or_else(|| dirs::home_dir().map(|h| h.join(".local/share/gradle/horizon")));
+        if let Some(ref hdir) = horizon_dir {
+            if hdir.is_dir() {
+                for sub in ["logs", "crash-reports", "servers"] {
+                    collect_files(
+                        &mut files,
+                        &hdir.join(sub),
+                        &format!("horizon/{sub}"),
+                        &excluded_paths,
+                        &cancel,
+                    )?;
+                }
+                collect_files(
+                    &mut files,
+                    &hdir.join("resources/horizon-resources.json"),
+                    "horizon/horizon-resources.json",
+                    &excluded_paths,
+                    &cancel,
+                )?;
+            }
+        }
         let instances_dir = directories.instances_dir();
         match std::fs::read_dir(&instances_dir) {
             Ok(entries) => {
@@ -238,6 +261,7 @@ pub async fn export_debug_info(
                 "architecture": std::env::consts::ARCH,
                 "settings_dir": directories.settings_dir,
                 "config_dir": directories.config_dir,
+                "horizon_dir": horizon_dir,
             }),
         )?;
         archive.finish().map_err(std::io::Error::from)?.flush()?;

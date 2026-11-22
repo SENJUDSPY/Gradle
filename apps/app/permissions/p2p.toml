@@ -1,0 +1,46 @@
+[default]
+description = "Default permissions for p2p plugin"
+permissions = [
+    "allow-p2p-get-host-info",
+    "allow-p2p-get-join-info",
+    "allow-p2p-regenerate-invite",
+    "allow-p2p-respond-join-request",
+    "allow-p2p-start-host",
+    "allow-p2p-stop-host",
+    "allow-p2p-join",
+    "allow-p2p-disconnect-join",
+    "allow-p2p-revoke-invite",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for p2p plugin"
+permissions = [
+    "allow-p2p-get-host-info",
+    "allow-p2p-get-join-info",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for p2p plugin"
+permissions = [
+    "allow-p2p-regenerate-invite",
+    "allow-p2p-respond-join-request",
+]
+
+[[set]]
+identifier = "launch"
+description = "Launch commands for p2p plugin"
+permissions = [
+    "allow-p2p-start-host",
+    "allow-p2p-stop-host",
+    "allow-p2p-join",
+    "allow-p2p-disconnect-join",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for p2p plugin"
+permissions = [
+    "allow-p2p-revoke-invite",
+]

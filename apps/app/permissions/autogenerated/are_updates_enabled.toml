@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-are-updates-enabled"
+description = "Enables the are_updates_enabled command without any pre-configured scope."
+commands.allow = ["are_updates_enabled"]
+
+[[permission]]
+identifier = "deny-are-updates-enabled"
+description = "Denies the are_updates_enabled command without any pre-configured scope."
+commands.deny = ["are_updates_enabled"]

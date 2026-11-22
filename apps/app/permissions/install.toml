@@ -1,0 +1,76 @@
+[default]
+description = "Default permissions for install plugin"
+permissions = [
+    "allow-install-get-modpack-preview",
+    "allow-install-get-shared-instance-preview",
+    "allow-install-get-shared-instance-update-preview",
+    "allow-install-job-get",
+    "allow-install-job-list",
+    "allow-install-job-support-details",
+    "allow-install-accept-shared-instance-invite",
+    "allow-install-shared-instance",
+    "allow-install-update-shared-instance",
+    "allow-install-bulk-update-content",
+    "allow-install-pack-to-existing-instance",
+    "allow-install-create-instance",
+    "allow-install-create-modpack-instance",
+    "allow-install-duplicate-instance",
+    "allow-install-existing-instance",
+    "allow-install-import-instance",
+    "allow-install-job-pause",
+    "allow-install-job-resume",
+    "allow-install-job-retry",
+    "allow-install-job-cancel",
+    "allow-install-job-dismiss",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for install plugin"
+permissions = [
+    "allow-install-get-modpack-preview",
+    "allow-install-get-shared-instance-preview",
+    "allow-install-get-shared-instance-update-preview",
+    "allow-install-job-get",
+    "allow-install-job-list",
+    "allow-install-job-support-details",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for install plugin"
+permissions = [
+    "allow-install-accept-shared-instance-invite",
+    "allow-install-shared-instance",
+    "allow-install-update-shared-instance",
+    "allow-install-bulk-update-content",
+    "allow-install-pack-to-existing-instance",
+]
+
+[[set]]
+identifier = "network-install"
+description = "Network-install commands for install plugin"
+permissions = [
+    "allow-install-create-instance",
+    "allow-install-create-modpack-instance",
+    "allow-install-duplicate-instance",
+    "allow-install-existing-instance",
+    "allow-install-import-instance",
+]
+
+[[set]]
+identifier = "launch"
+description = "Launch commands for install plugin"
+permissions = [
+    "allow-install-job-pause",
+    "allow-install-job-resume",
+    "allow-install-job-retry",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for install plugin"
+permissions = [
+    "allow-install-job-cancel",
+    "allow-install-job-dismiss",
+]

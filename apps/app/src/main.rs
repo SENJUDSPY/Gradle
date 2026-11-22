@@ -13,6 +13,11 @@ use tauri_plugin_fs::FsExt;
 use theseus::prelude::*;
 
 mod api;
+#[macro_use]
+mod commands;
+
+use crate::api::files::files_save_external;
+use crate::api::instance::instance_content;
 
 #[cfg(target_os = "macos")]
 mod macos;
@@ -147,7 +152,7 @@ fn main() {
 
     let _log_guard = theseus::start_logger(&tauri_context.config().identifier);
 
-    tracing::info!("Initialized tracing subscriber. Loading Gradle App!");
+    tracing::info!("Initialized tracing subscriber. Loading Gradle!");
 
     let mut builder = tauri::Builder::default();
 
@@ -316,18 +321,7 @@ fn main() {
         .plugin(api::p2p::init())
         .manage(PendingUpdateData::default())
         .manage(RestartAfterPendingUpdate::default())
-        .invoke_handler(tauri::generate_handler![
-            initialize_state,
-            is_dev,
-            are_updates_enabled,
-            get_update_size,
-            enqueue_update_for_installation,
-            remove_enqueued_update,
-            set_restart_after_pending_update,
-            toggle_decorations,
-            show_window,
-            restart_app,
-        ]);
+        .invoke_handler(commands::app_handler!());
 
     tracing::info!("Initializing app...");
     let app = builder.build(tauri_context);
@@ -337,6 +331,12 @@ fn main() {
             app.run(|app, event| {
                 #[cfg(not(any(feature = "updater", target_os = "macos")))]
                 let _ = app;
+
+                if matches!(&event, tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit) {
+                    if let Ok(state) = tauri::async_runtime::block_on(theseus::State::get()) {
+                        let _ = tauri::async_runtime::block_on(state.process_manager.kill_all());
+                    }
+                }
 
                 if matches!(&event, tauri::RunEvent::ExitRequested { .. })
                     && let Err(error) = tauri::async_runtime::block_on(
@@ -455,7 +455,7 @@ fn main() {
                     DialogBuilder::message()
                         .set_level(MessageLevel::Error)
                         .set_title("Initialization error")
-                        .set_text("Your Microsoft Edge WebView2 installation is corrupt.\n\nMicrosoft Edge WebView2 is required to run Gradle App.\n\nLearn how to repair it at https://support.modrinth.com/en/articles/8797765-corrupted-microsoft-edge-webview2-installation")
+                        .set_text("Your Microsoft Edge WebView2 installation is corrupt.\n\nMicrosoft Edge WebView2 is required to run Gradle.\n\nLearn how to repair it at https://support.modrinth.com/en/articles/8797765-corrupted-microsoft-edge-webview2-installation")
                         .alert()
                         .show()
                         .unwrap();
@@ -476,5 +476,155 @@ fn main() {
 
             panic!("{1}: {:?}", e, "error while running tauri application")
         }
+    }
+}
+
+#[cfg(test)]
+mod acl_tests {
+    use tauri::ipc::Origin;
+
+    fn assert_allowed(
+        auth: &tauri::ipc::RuntimeAuthority,
+        cmds: &[&str],
+        plugin: Option<&str>,
+    ) {
+        for &cmd in cmds {
+            let key = match plugin {
+                Some(p) => format!("plugin:{p}|{cmd}"),
+                None => cmd.to_string(),
+            };
+            assert!(
+                auth.resolve_access(&key, "main", "main", &Origin::Local)
+                    .is_some(),
+                "Expected ACL to allow `{key}` on main window/webview"
+            );
+        }
+    }
+
+    fn assert_denied(
+        auth: &tauri::ipc::RuntimeAuthority,
+        cmds: &[&str],
+        plugin: Option<&str>,
+    ) {
+        for &cmd in cmds {
+            let key = match plugin {
+                Some(p) => format!("plugin:{p}|{cmd}"),
+                None => cmd.to_string(),
+            };
+            assert!(
+                auth.resolve_access(&key, "main", "main", &Origin::Local)
+                    .is_none(),
+                "Expected ACL to deny `{key}` (least privilege)"
+            );
+        }
+    }
+
+    #[test]
+    fn runtime_authority_allows_all_registered_app_and_plugin_commands() {
+        let mut ctx: tauri::Context<tauri::Wry> = tauri::generate_context!();
+        let auth = ctx.runtime_authority_mut();
+
+        assert_allowed(auth, crate::commands::APP_COMMANDS, None);
+        assert_allowed(auth, crate::commands::AUTH_COMMANDS, Some("auth"));
+        assert_allowed(auth, crate::commands::CACHE_COMMANDS, Some("cache"));
+        assert_allowed(auth, crate::commands::FILES_COMMANDS, Some("files"));
+        assert_allowed(auth, crate::commands::FRIENDS_COMMANDS, Some("friends"));
+        assert_allowed(auth, crate::commands::HORIZON_COMMANDS, Some("horizon"));
+        assert_allowed(auth, crate::commands::IMPORT_COMMANDS, Some("import"));
+        assert_allowed(auth, crate::commands::INSTALL_COMMANDS, Some("install"));
+        assert_allowed(auth, crate::commands::INSTANCE_COMMANDS, Some("instance"));
+        assert_allowed(auth, crate::commands::JRE_COMMANDS, Some("jre"));
+        assert_allowed(auth, crate::commands::LOGS_COMMANDS, Some("logs"));
+        assert_allowed(auth, crate::commands::METADATA_COMMANDS, Some("metadata"));
+        assert_allowed(
+            auth,
+            crate::commands::MINECRAFT_SKINS_COMMANDS,
+            Some("minecraft-skins"),
+        );
+        assert_allowed(auth, crate::commands::MR_AUTH_COMMANDS, Some("mr-auth"));
+        assert_allowed(
+            auth,
+            crate::commands::ONBOARDING_CHECKLIST_COMMANDS,
+            Some("onboarding-checklist"),
+        );
+        assert_allowed(auth, crate::commands::P2P_COMMANDS, Some("p2p"));
+        assert_allowed(auth, crate::commands::PROCESS_COMMANDS, Some("process"));
+        assert_allowed(auth, crate::commands::REPORTS_COMMANDS, Some("reports"));
+        assert_allowed(auth, crate::commands::SETTINGS_COMMANDS, Some("settings"));
+        assert_allowed(auth, crate::commands::SHORTCUTS_COMMANDS, Some("shortcuts"));
+        assert_allowed(auth, crate::commands::TAGS_COMMANDS, Some("tags"));
+        assert_allowed(auth, crate::commands::USERS_COMMANDS, Some("users"));
+        assert_allowed(auth, crate::commands::UTILS_COMMANDS, Some("utils"));
+        assert_allowed(auth, crate::commands::WORLDS_COMMANDS, Some("worlds"));
+    }
+
+    #[test]
+    fn runtime_authority_allows_required_startup_and_ui_core_commands() {
+        let mut ctx: tauri::Context<tauri::Wry> = tauri::generate_context!();
+        let auth = ctx.runtime_authority_mut();
+
+        assert_allowed(auth, &["version"], Some("app"));
+        assert_allowed(auth, &["listen", "unlisten", "emit"], Some("event"));
+        assert_allowed(
+            auth,
+            &[
+                "is_maximized",
+                "is_fullscreen",
+                "set_decorations",
+                "minimize",
+                "maximize",
+                "toggle_maximize",
+                "unmaximize",
+                "unminimize",
+                "show",
+                "hide",
+                "close",
+                "start_dragging",
+                "internal_toggle_maximize",
+            ],
+            Some("window"),
+        );
+        assert_allowed(auth, &["set_webview_zoom"], Some("webview"));
+        assert_allowed(auth, &["open", "save", "message"], Some("dialog"));
+        assert_allowed(auth, &["read_file", "exists"], Some("fs"));
+        assert_allowed(
+            auth,
+            &["open_url", "reveal_item_in_dir"],
+            Some("opener"),
+        );
+        assert_allowed(auth, &["locale"], Some("os"));
+        assert_allowed(auth, &["save_window_state"], Some("window-state"));
+        assert_allowed(
+            auth,
+            &["append", "create_default", "popup"],
+            Some("menu"),
+        );
+        assert_allowed(
+            auth,
+            &["from_bytes", "from_path", "rgba", "size"],
+            Some("image"),
+        );
+        assert_allowed(auth, &["close"], Some("resources"));
+        assert_allowed(
+            auth,
+            &["fetch", "fetch_send", "fetch_read_body", "fetch_cancel"],
+            Some("http"),
+        );
+    }
+
+    #[test]
+    fn runtime_authority_devtools_is_debug_only_and_unused_core_pruned() {
+        let mut ctx: tauri::Context<tauri::Wry> = tauri::generate_context!();
+        let auth = ctx.runtime_authority_mut();
+
+        if cfg!(debug_assertions) {
+            assert_allowed(auth, &["internal_toggle_devtools"], Some("webview"));
+        } else {
+            assert_denied(auth, &["internal_toggle_devtools"], Some("webview"));
+        }
+
+        assert_denied(auth, &["open_path"], Some("opener"));
+        assert_denied(auth, &["hostname"], Some("os"));
+        assert_denied(auth, &["write_file", "remove"], Some("fs"));
     }
 }

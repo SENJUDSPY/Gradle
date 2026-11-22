@@ -217,16 +217,6 @@ pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
 			app.manage(P2PState::default());
 			Ok(())
 		})
-		.invoke_handler(tauri::generate_handler![
-			p2p_start_host,
-			p2p_stop_host,
-			p2p_regenerate_invite,
-			p2p_revoke_invite,
-			p2p_respond_join_request,
-			p2p_get_host_info,
-			p2p_join,
-			p2p_disconnect_join,
-			p2p_get_join_info,
-		])
+		.invoke_handler(crate::commands::p2p_handler!())
 		.build()
 }

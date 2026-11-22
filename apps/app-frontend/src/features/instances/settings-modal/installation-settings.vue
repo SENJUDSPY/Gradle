@@ -62,11 +62,14 @@ debug('metadata load: start', {
 })
 
 function getSupportedModpackLoaders() {
-	return get_loaders().then((value: PlatformTag[]) =>
-		value
+	return get_loaders().then((value: PlatformTag[]) => {
+		if (instance.value.loader === 'horizon') {
+			return value.filter((item) => item.name === 'horizon')
+		}
+		return value
 			.filter((item) => item.supported_project_types.includes('modpack') || item.name === 'vanilla')
-			.sort((a, b) => (a.name === 'vanilla' ? -1 : b.name === 'vanilla' ? 1 : 0)),
-	)
+			.sort((a, b) => (a.name === 'vanilla' ? -1 : b.name === 'vanilla' ? 1 : 0))
+	})
 }
 
 const fabricVersionsQuery = useQuery({

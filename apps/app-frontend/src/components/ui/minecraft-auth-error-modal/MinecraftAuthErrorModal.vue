@@ -22,10 +22,27 @@ const debugCollapsed = ref(true)
 const copied = ref(false)
 const loadingSignIn = ref(false)
 
-function show(errorVal: { message?: string; code?: string }) {
-	rawError.value = errorVal?.message ?? String(errorVal)
+function show(errorVal: { message?: string; code?: string } | unknown) {
+	console.error('[MinecraftAuthErrorModal] Microsoft auth error:', errorVal)
+	const message =
+		typeof errorVal === 'object' && errorVal !== null
+			? (errorVal as { message?: string }).message ||
+				(() => {
+					try {
+						return JSON.stringify(errorVal, null, 2)
+					} catch {
+						return String(errorVal)
+					}
+				})()
+			: String(errorVal)
+	rawError.value = message
 
-	matchedError.value = (errorVal?.code && minecraftAuthErrors[errorVal.code]) || null
+	const code =
+		typeof errorVal === 'object' && errorVal !== null && 'code' in errorVal
+			? String((errorVal as { code: unknown }).code)
+			: null
+
+	matchedError.value = (code && minecraftAuthErrors[code]) || null
 
 	debugCollapsed.value = true
 	modal.value?.show()

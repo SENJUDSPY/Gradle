@@ -78,6 +78,8 @@ const messages = defineMessages({
 	<div
 		class="app-sidebar mt-px relative flex h-[calc(100vh-var(--top-bar-height))] w-[300px] shrink-0 flex-col overflow-visible border-0 border-l-[1px] border-solid border-[--brand-gradient-border] before:pointer-events-none before:absolute before:inset-y-0 before:-left-8 before:w-8 before:content-['']"
 		:class="{
+			'sidebar-visible': visible,
+			'sidebar-hidden': !visible,
 			'before:shadow-[-15px_0_15px_-15px_rgba(0,0,0,0.1)_inset]': appTheme.advancedRendering,
 		}"
 	>
@@ -127,7 +129,7 @@ const messages = defineMessages({
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .app-sidebar {
 	background: var(--brand-gradient-bg);
 	--color-button-bg: var(--brand-gradient-button);
@@ -136,6 +138,24 @@ const messages = defineMessages({
 	--surface-5: var(--brand-gradient-border);
 	--color-divider: var(--brand-gradient-border);
 	--color-divider-dark: var(--brand-gradient-border);
+	transition:
+		transform var(--duration-slow, 280ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		opacity var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		border-color var(--duration-standard, 220ms) ease;
+	will-change: transform, opacity;
+
+	&.sidebar-hidden {
+		opacity: 0;
+		pointer-events: none;
+		transform: translateX(16px);
+		border-color: transparent !important;
+	}
+
+	&.sidebar-visible {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateX(0);
+	}
 }
 
 .sidebar-teleport-content:empty + .sidebar-default-content.sidebar-enabled {
@@ -144,5 +164,18 @@ const messages = defineMessages({
 
 .sidebar-scroll-fade {
 	background: var(--brand-gradient-fade-out-color);
+	transition: opacity var(--duration-standard, 200ms)
+		var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.app-sidebar {
+		transition: none !important;
+		transform: none !important;
+	}
+
+	.sidebar-scroll-fade {
+		transition: none !important;
+	}
 }
 </style>

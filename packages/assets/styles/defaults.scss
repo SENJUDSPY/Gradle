@@ -33,12 +33,50 @@ body {
 	// Font Weights
 	--font-weight-regular: 400;
 	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
 	--font-weight-bold: 700;
 	--font-weight-extrabold: 800;
 
-	--font-weight-text: var(--font-weight-medium);
-	--font-weight-heading: var(--font-weight-extrabold);
-	--font-weight-title: var(--font-weight-extrabold);
+	--font-weight-text: var(--font-weight-regular);
+	--font-weight-heading: var(--font-weight-semibold);
+	--font-weight-title: var(--font-weight-semibold);
+}
+
+// Typography Scale Tokens (Linear / Spotify clarity)
+.font-display {
+	font-size: 1.75rem; // 28px
+	line-height: 2.25rem; // 36px
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}
+
+.font-title {
+	font-size: 1.25rem; // 20px
+	line-height: 1.75rem; // 28px
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+
+.font-heading {
+	font-size: 1rem; // 16px
+	line-height: 1.5rem; // 24px
+	font-weight: 600;
+}
+
+.font-body {
+	font-size: 0.875rem; // 14px
+	line-height: 1.375rem; // 22px
+	font-weight: 400;
+}
+
+.font-caption {
+	font-size: 0.75rem; // 12px
+	line-height: 1.125rem; // 18px
+	font-weight: 500;
+}
+
+.tabular-nums {
+	font-variant-numeric: tabular-nums;
 }
 
 a.uncolored {
@@ -113,10 +151,11 @@ button {
 	}
 }
 
-@media (prefers-reduced-motion) {
+@media (prefers-reduced-motion: reduce) {
 	.button-animation,
 	button {
 		transform: none !important;
+		transition: none !important;
 	}
 }
 

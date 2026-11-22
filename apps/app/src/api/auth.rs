@@ -12,20 +12,7 @@ use theseus::prelude::*;
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     tauri::plugin::Builder::<R>::new("auth")
-        .invoke_handler(tauri::generate_handler![
-            offline_login,
-            get_external_auth_providers,
-            get_external_auth_library_states,
-            install_external_auth_library,
-            select_external_auth_library,
-            authenticate_external_provider,
-            check_reachable,
-            login,
-            remove_user,
-            get_default_user,
-            set_default_user,
-            get_users,
-        ])
+        .invoke_handler(crate::commands::auth_handler!())
         .build()
 }
 

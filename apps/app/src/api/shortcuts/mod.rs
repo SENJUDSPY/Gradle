@@ -20,7 +20,7 @@ use windows::{SHORTCUT_EXTENSION, create_shortcut};
 
 pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("shortcuts")
-        .invoke_handler(tauri::generate_handler![create_instance_shortcut])
+        .invoke_handler(crate::commands::shortcuts_handler!())
         .build()
 }
 

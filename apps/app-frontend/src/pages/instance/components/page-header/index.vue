@@ -16,17 +16,17 @@
 		>
 			<PageHeaderBadgeItem
 				v-if="activeRuntime === 'horizon' || instance.loader === 'horizon'"
-				aria-label="Horizon native runtime"
-				class="!border-purple-500 !bg-purple-500/15 !text-purple-400 font-semibold"
+				aria-label="Gradle Rust Edition"
+				class="!border-brand-accent/50 !bg-brand-accent/15 !text-brand-accent font-semibold shadow-sm"
 			>
-				Horizon (Rust)
+				Gradle Rust Edition
 			</PageHeaderBadgeItem>
 			<PageHeaderBadgeItem
 				v-else
-				aria-label="Java classic runtime"
-				class="!border-amber-500 !bg-amber-500/15 !text-amber-400 font-semibold"
+				aria-label="Java Edition"
+				class="!border-orange/50 !bg-orange/15 !text-orange font-semibold shadow-sm"
 			>
-				Java (classic)
+				Java Edition
 			</PageHeaderBadgeItem>
 			<PageHeaderBadgeItem
 				v-if="instance.quarantined"
@@ -69,7 +69,7 @@
 				<PageHeaderMetadataItem
 					v-if="instance.loader === 'horizon'"
 					:icon="PackageIcon"
-					tooltip="Horizon build version (Click to manage)"
+					tooltip="Gradle build version (Click to manage)"
 					class="cursor-pointer hover:text-contrast"
 					@click="versionModal?.show()"
 				>
@@ -107,17 +107,29 @@
 					@update:model-value="(val) => val && handleRuntimeChange(val as InstanceRuntime)"
 				/>
 
+				<!-- Update Available Badge (non-intrusive) -->
+				<button
+					v-if="activeRuntime === 'horizon' && hasHorizonUpdate && !playing"
+					type="button"
+					class="mr-2 flex items-center gap-1.5 rounded-xl border border-solid border-brand/30 bg-brand/10 px-2.5 py-1.5 text-xs font-semibold text-brand transition-all hover:bg-brand/20 shadow-sm cursor-pointer"
+					:title="`Update available: ${latestReleaseTag}`"
+					@click="versionModal?.show()"
+				>
+					<SparklesIcon class="size-3.5" />
+					<span>{{ formatMessage(messages.updateAvailable) }}</span>
+				</button>
+
 				<!-- Horizon Mode Toggle: Client vs Dedicated Server -->
 				<div
 					v-if="activeRuntime === 'horizon' && !playing && !isInstalling && !instance.quarantined"
-					class="mr-1 flex items-center rounded-xl border border-solid border-surface-5 bg-surface-2 p-0.5 text-xs font-semibold"
+					class="mr-1 flex items-center rounded-xl border border-solid border-surface-5 bg-surface-2 p-0.5 text-xs font-semibold shadow-sm"
 				>
 					<button
 						type="button"
 						:class="[
-							'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all',
+							'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all duration-150',
 							horizonMode === 'client'
-								? 'bg-brand text-white shadow-sm'
+								? 'bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] text-white shadow-sm'
 								: 'text-secondary hover:text-contrast',
 						]"
 						@click="horizonMode = 'client'"
@@ -128,9 +140,9 @@
 					<button
 						type="button"
 						:class="[
-							'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all',
+							'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all duration-150',
 							horizonMode === 'server'
-								? 'bg-brand text-white shadow-sm'
+								? 'bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] text-white shadow-sm'
 								: 'text-secondary hover:text-contrast',
 						]"
 						@click="horizonMode = 'server'"
@@ -187,6 +199,36 @@
 					<DownloadIcon />
 					{{ formatMessage(messages.repair) }}
 				</Button>
+				<div
+					v-else-if="!loading && isUnsupportedNativeVersion"
+					class="flex items-center gap-2"
+				>
+					<div
+						class="flex items-center gap-2 rounded-xl border border-solid border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-300 font-medium"
+					>
+						<TriangleAlertIcon class="size-4 shrink-0 text-amber-400" />
+						<span>{{ formatMessage(messages.nativeVersionMismatch, { version: instance.game_version }) }}</span>
+					</div>
+					<Button
+						type="colored"
+						color="brand"
+						size="xl"
+						native-type="button"
+						:disabled="converting"
+						@click="handleConvertToNative"
+					>
+						<WrenchIcon />
+						{{ formatMessage(messages.convertToNative) }}
+					</Button>
+					<Button
+						type="outlined"
+						size="xl"
+						native-type="button"
+						@click="handleRuntimeChange('java')"
+					>
+						{{ formatMessage(messages.useJavaEdition) }}
+					</Button>
+				</div>
 				<SplitButton
 					v-else-if="!loading"
 					type="colored"
@@ -232,7 +274,11 @@
 		</template>
 	</PageHeader>
 
-	<HorizonRequirementsModal ref="requirementsModal" @prepare="handleRequirementsPrepare" />
+	<HorizonRequirementsModal
+		ref="requirementsModal"
+		@prepare="handleRequirementsPrepare"
+		@install-runtime="versionModal?.show()"
+	/>
 	<HorizonVersionModal ref="versionModal" :instance="instance" />
 </template>
 
@@ -251,9 +297,11 @@ import {
 	ServerIcon,
 	SettingsIcon,
 	ShieldCheckIcon,
+	SparklesIcon,
 	StopCircleIcon,
 	TagIcon,
 	TimerIcon,
+	TriangleAlertIcon,
 	UnknownIcon,
 	WrenchIcon,
 } from '@modrinth/assets'
@@ -273,11 +321,16 @@ import {
 	type ServerLoader,
 	useVIntl,
 } from '@modrinth/ui'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import HorizonRequirementsModal from '@/components/ui/modal/HorizonRequirementsModal.vue'
 import HorizonVersionModal from '@/components/ui/modal/HorizonVersionModal.vue'
-import type { InstanceRuntime } from '@/helpers/instance'
+import {
+	getHorizonReleases,
+	getInstalledHorizonVersions,
+	type HorizonRelease,
+} from '@/helpers/horizon'
+import { edit, type InstanceRuntime } from '@/helpers/instance'
 import type { GameInstance } from '@/helpers/types'
 
 import InstanceHeaderServerMetadata from './instance-page-header-server-metadata.vue'
@@ -301,15 +354,19 @@ const messages = defineMessages({
 	},
 	runtimeHorizon: {
 		id: 'instance.runtime.horizon',
-		defaultMessage: 'Horizon (Rust, optimized)',
+		defaultMessage: 'Rust Edition (Native)',
 	},
 	runtimeJava: {
 		id: 'instance.runtime.java',
-		defaultMessage: 'Java (classic)',
+		defaultMessage: 'Java Edition (Classic)',
+	},
+	updateAvailable: {
+		id: 'instance.runtime.update-available',
+		defaultMessage: 'Update available',
 	},
 	playHorizon: {
 		id: 'instance.action.play-horizon',
-		defaultMessage: 'Play with Horizon',
+		defaultMessage: 'Play with Gradle',
 	},
 	playJava: {
 		id: 'instance.action.play-java',
@@ -361,15 +418,15 @@ const messages = defineMessages({
 	},
 	launchClient: {
 		id: 'instance.action.launch-client',
-		defaultMessage: 'Launch Horizon Client',
+		defaultMessage: 'Launch Gradle Client',
 	},
 	launchServer: {
 		id: 'instance.action.launch-server',
-		defaultMessage: 'Launch Horizon Server',
+		defaultMessage: 'Launch Gradle Server',
 	},
 	checkRequirements: {
 		id: 'instance.action.check-requirements',
-		defaultMessage: 'Check Horizon Requirements',
+		defaultMessage: 'Check Gradle Requirements',
 	},
 	prepareResources: {
 		id: 'instance.action.prepare-resources',
@@ -377,7 +434,7 @@ const messages = defineMessages({
 	},
 	selectVersion: {
 		id: 'instance.action.select-version',
-		defaultMessage: 'Select Horizon Version',
+		defaultMessage: 'Select Gradle Version',
 	},
 	modeClient: {
 		id: 'app.horizon.mode.client',
@@ -390,6 +447,22 @@ const messages = defineMessages({
 	autoVersion: {
 		id: 'app.horizon.version.auto',
 		defaultMessage: 'Auto (Latest Installed)',
+	},
+	runDiagnostics: {
+		id: 'app.horizon.diagnostics.run',
+		defaultMessage: 'Run Diagnostics',
+	},
+	convertToNative: {
+		id: 'instance.action.convert-native',
+		defaultMessage: 'Convert to 26.3',
+	},
+	useJavaEdition: {
+		id: 'instance.action.use-java-edition',
+		defaultMessage: 'Use Java Edition',
+	},
+	nativeVersionMismatch: {
+		id: 'instance.notice.native-version-mismatch',
+		defaultMessage: 'Gradle Rust Edition requires Minecraft 26.3 (current: {version}).',
 	},
 })
 
@@ -440,6 +513,7 @@ const emit = defineEmits<{
 	report: [event?: MouseEvent]
 	'update:runtime': [runtime: InstanceRuntime]
 	playRuntime: [runtime: InstanceRuntime]
+	refresh: []
 }>()
 
 const installingStages = ['installing', 'pack_installing', 'minecraft_installing']
@@ -486,11 +560,64 @@ function handleRuntimeChange(val: InstanceRuntime) {
 	emit('update:runtime', val)
 }
 
+const isRustEdition = computed(
+	() => activeRuntime.value === 'horizon' || props.instance.loader === 'horizon',
+)
+const isUnsupportedNativeVersion = computed(
+	() => isRustEdition.value && props.instance.game_version !== '26.3',
+)
+
+const converting = ref(false)
+async function handleConvertToNative() {
+	try {
+		converting.value = true
+		await edit(props.instance.id, { game_version: '26.3' })
+		emit('refresh')
+	} catch (err) {
+		console.error('Failed to convert instance to 26.3:', err)
+	} finally {
+		converting.value = false
+	}
+}
+
 const requirementsModal = ref<InstanceType<typeof HorizonRequirementsModal> | null>(null)
 const versionModal = ref<InstanceType<typeof HorizonVersionModal> | null>(null)
 const horizonMode = ref<'client' | 'server'>('client')
 
+const releases = ref<HorizonRelease[]>([])
+const installedVersions = ref<string[]>([])
+
+onMounted(async () => {
+	try {
+		const [relList, instList] = await Promise.all([
+			getHorizonReleases().catch(() => []),
+			getInstalledHorizonVersions().catch(() => []),
+		])
+		releases.value = relList
+		installedVersions.value = instList
+	} catch (e) {
+		console.warn('Failed to check Horizon updates:', e)
+	}
+})
+
+const latestReleaseTag = computed(() => {
+	if (releases.value.length === 0) return null
+	const stable = releases.value.find((r) => !r.prerelease) ?? releases.value[0]
+	return stable?.tag ?? null
+})
+
+const hasHorizonUpdate = computed(() => {
+	const latest = latestReleaseTag.value
+	if (!latest) return false
+	const current = props.instance.loader_version || installedVersions.value[0]
+	if (!current) return false
+	return current !== latest
+})
+
 function handleHorizonPlay() {
+	if (isUnsupportedNativeVersion.value && activeRuntime.value === 'horizon') {
+		return
+	}
 	if (activeRuntime.value === 'horizon') {
 		if (horizonMode.value === 'server') {
 			emit('playServer')
@@ -508,7 +635,9 @@ const dualPlayOptions = computed<ButtonMenuOption[]>(() => {
 			id: 'play_horizon',
 			label: formatMessage(messages.playHorizon),
 			icon: PlayIcon,
+			disabled: isUnsupportedNativeVersion.value,
 			action: () => {
+				if (isUnsupportedNativeVersion.value) return
 				handleRuntimeChange('horizon')
 				emit('playRuntime', 'horizon')
 			},
@@ -596,6 +725,18 @@ const moreActions = computed<ButtonMenuOption[]>(() => {
 				action: () => emit('createShortcut'),
 			},
 		)
+
+		if (activeRuntime.value === 'horizon') {
+			actions.push({
+				id: 'horizon-diagnostics',
+				label: formatMessage(messages.runDiagnostics),
+				icon: WrenchIcon,
+				action: () => {
+					requirementsModal.value?.show()
+					requirementsModal.value?.switchToDiagnostics()
+				},
+			})
+		}
 	}
 
 	if (props.instance.shared_instance?.role === 'member') {

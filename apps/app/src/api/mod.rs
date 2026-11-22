@@ -19,6 +19,7 @@ pub mod reports;
 pub mod settings;
 pub mod shortcuts;
 pub mod tags;
+#[macro_use]
 mod thumbnails;
 pub mod users;
 pub mod utils;

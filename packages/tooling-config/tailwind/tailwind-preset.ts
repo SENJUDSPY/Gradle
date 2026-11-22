@@ -157,6 +157,10 @@ const config: Config = {
 				},
 				brand: {
 					DEFAULT: 'var(--color-brand)',
+					hover: 'var(--color-brand-hover, #6E6EF5)',
+					active: 'var(--color-brand-active, #4A4AD8)',
+					accent: 'var(--color-brand-accent, #22D3EE)',
+					spark: '#D946EF',
 					red: 'var(--color-red)',
 					orange: 'var(--color-orange)',
 					green: 'var(--color-green)',
@@ -230,7 +234,26 @@ const config: Config = {
 					alternateRow: 'var(--color-table-alternate-row)',
 				},
 			},
+			borderRadius: {
+				none: '0px',
+				sm: 'var(--radius-xs, 4px)',
+				DEFAULT: 'var(--radius-sm, 8px)',
+				md: 'var(--radius-sm, 8px)',
+				lg: 'var(--radius-md, 12px)',
+				xl: 'var(--radius-lg, 16px)',
+				'2xl': 'var(--radius-xl, 20px)',
+				full: 'var(--radius-full, 9999px)',
+			},
+			boxShadow: {
+				sm: 'var(--shadow-sm)',
+				DEFAULT: 'var(--shadow-sm)',
+				md: 'var(--shadow-md)',
+				lg: 'var(--shadow-lg)',
+				glow: 'var(--shadow-glow)',
+			},
 			backgroundImage: {
+				'brand-gradient': 'var(--brand-gradient)',
+				'brand-gradient-bg': 'var(--brand-gradient-bg)',
 				mazeBg: 'var(--landing-maze-bg)',
 				mazeGradientBg: 'var(--landing-maze-gradient-bg)',
 				// @ts-ignore

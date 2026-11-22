@@ -4,15 +4,7 @@ use theseus::prelude::*;
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("settings")
-        .invoke_handler(tauri::generate_handler![
-            settings_get,
-            settings_set,
-            store_usage,
-            store_cleanup,
-            store_set_cache_limit,
-            store_verify,
-            cancel_directory_change
-        ])
+        .invoke_handler(crate::commands::settings_handler!())
         .build()
 }
 

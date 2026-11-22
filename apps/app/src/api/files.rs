@@ -37,20 +37,7 @@ pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
                 });
             }
         })
-        .invoke_handler(tauri::generate_handler![
-            file_extract_zip,
-            file_save_as,
-            files_select_external,
-            files_save_external,
-            files_release_external,
-            file_read_dragged_file,
-            file_list,
-            file_read,
-            file_write,
-            file_create_directory,
-            file_rename,
-            file_delete,
-        ])
+        .invoke_handler(crate::commands::files_handler!())
         .build()
 }
 

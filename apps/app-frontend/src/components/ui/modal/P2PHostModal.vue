@@ -260,7 +260,7 @@ const messages = defineMessages({
 	subtitle: {
 		id: 'p2p.host.subtitle',
 		defaultMessage:
-			'Tunnel your local Minecraft/Horizon server over peer-to-peer QUIC with automatic NAT hole punching and relay fallback.',
+			'Tunnel your local Minecraft/Gradle server over peer-to-peer QUIC with automatic NAT hole punching and relay fallback.',
 	},
 	port: {
 		id: 'p2p.host.port',

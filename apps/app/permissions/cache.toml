@@ -1,0 +1,52 @@
+[default]
+description = "Default permissions for cache plugin"
+permissions = [
+    "allow-get-project",
+    "allow-get-project-many",
+    "allow-get-project-v3",
+    "allow-get-project-v3-many",
+    "allow-get-version",
+    "allow-get-version-many",
+    "allow-get-user",
+    "allow-get-user-many",
+    "allow-get-team",
+    "allow-get-team-many",
+    "allow-get-organization",
+    "allow-get-organization-many",
+    "allow-get-search-results",
+    "allow-get-search-results-many",
+    "allow-get-search-results-v3",
+    "allow-get-search-results-v3-many",
+    "allow-get-project-versions",
+    "allow-purge-cache-types",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for cache plugin"
+permissions = [
+    "allow-get-project",
+    "allow-get-project-many",
+    "allow-get-project-v3",
+    "allow-get-project-v3-many",
+    "allow-get-version",
+    "allow-get-version-many",
+    "allow-get-user",
+    "allow-get-user-many",
+    "allow-get-team",
+    "allow-get-team-many",
+    "allow-get-organization",
+    "allow-get-organization-many",
+    "allow-get-search-results",
+    "allow-get-search-results-many",
+    "allow-get-search-results-v3",
+    "allow-get-search-results-v3-many",
+    "allow-get-project-versions",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for cache plugin"
+permissions = [
+    "allow-purge-cache-types",
+]

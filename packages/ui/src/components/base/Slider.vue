@@ -60,11 +60,11 @@
 				class="slider-track pointer-events-none absolute inset-x-0 top-1/2 h-[6px] -translate-y-1/2 rounded-full bg-surface-5"
 			>
 				<div
-					class="filled-slider-track h-full rounded-full bg-brand relative"
+					class="filled-slider-track h-full rounded-full bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] relative"
 					:style="{ width: `${currentPercentage}%` }"
 				>
 					<div
-						class="slider-thumb absolute h-8 w-[10px] rounded-full bg-brand top-[-13px] right-[-5px]"
+						class="slider-thumb absolute h-6 w-3.5 rounded-full bg-white shadow-md top-[-9px] right-[-7px] border border-surface-5/50"
 					></div>
 				</div>
 			</div>
@@ -276,6 +276,32 @@ function onInput(event: Event) {
 		outline-offset: 3px;
 	}
 
+	&:hover ~ .slider-track .slider-thumb {
+		transform: scale(1.12);
+		box-shadow:
+			0 2px 8px 0 rgba(0, 0, 0, 0.3),
+			0 0 10px -2px rgba(91, 91, 240, 0.45);
+	}
+
+	&:active ~ .slider-track .slider-thumb {
+		transform: scale(1.25);
+		box-shadow:
+			0 4px 14px 0 rgba(91, 91, 240, 0.5),
+			0 0 0 4px rgba(91, 91, 240, 0.2);
+		border-color: rgba(91, 91, 240, 0.6);
+		transition:
+			transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+			box-shadow var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+	}
+
+	&:active ~ .slider-track .filled-slider-track {
+		transition: none;
+	}
+
+	&:active ~ .snap-points .snap-points-filled {
+		transition: none;
+	}
+
 	&:hover,
 	&:focus-visible {
 		& ~ .slider-track .filled-slider-track,
@@ -283,6 +309,17 @@ function onInput(event: Event) {
 			filter: brightness(var(--hover-brightness));
 		}
 	}
+}
+
+.slider-thumb {
+	transform: scale(1);
+	will-change: transform;
+	transform-origin: center center;
+	transition:
+		transform var(--duration-standard, 220ms)
+			var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+		box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		border-color var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 }
 
 .slider-value :deep(input[type='number']) {
@@ -298,16 +335,28 @@ function onInput(event: Event) {
 }
 
 .filled-slider-track {
-	transition: width 0.25s var(--ease-out-expo);
-	@media (prefers-reduced-motion) {
-		transition: none;
-	}
+	transition: width var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 }
 
 .snap-points-filled {
-	transition: clip-path 0.25s var(--ease-out-expo);
-	@media (prefers-reduced-motion) {
-		transition: none;
+	transition: clip-path var(--duration-standard, 220ms)
+		var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.slider-thumb {
+		transition: none !important;
+		transform: none !important;
+	}
+
+	.slider:hover ~ .slider-track .slider-thumb,
+	.slider:active ~ .slider-track .slider-thumb {
+		transform: none !important;
+	}
+
+	.filled-slider-track,
+	.snap-points-filled {
+		transition: none !important;
 	}
 }
 </style>

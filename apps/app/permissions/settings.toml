@@ -1,0 +1,36 @@
+[default]
+description = "Default permissions for settings plugin"
+permissions = [
+    "allow-settings-get",
+    "allow-store-usage",
+    "allow-store-verify",
+    "allow-settings-set",
+    "allow-store-set-cache-limit",
+    "allow-cancel-directory-change",
+    "allow-store-cleanup",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for settings plugin"
+permissions = [
+    "allow-settings-get",
+    "allow-store-usage",
+    "allow-store-verify",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for settings plugin"
+permissions = [
+    "allow-settings-set",
+    "allow-store-set-cache-limit",
+    "allow-cancel-directory-change",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for settings plugin"
+permissions = [
+    "allow-store-cleanup",
+]

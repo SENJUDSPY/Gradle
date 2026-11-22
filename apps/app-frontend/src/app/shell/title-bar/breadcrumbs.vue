@@ -132,7 +132,7 @@ watch(breadcrumbs, () => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .breadcrumbs-scroll {
 	animation: breadcrumb-scroll 10s ease-in-out infinite;
 }
@@ -147,6 +147,24 @@ watch(breadcrumbs, () => {
 	}
 	100% {
 		transform: translateX(0);
+	}
+}
+
+:deep(a),
+:deep(span) {
+	transition:
+		color var(--duration-quick, 140ms) ease,
+		opacity var(--duration-quick, 140ms) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.breadcrumbs-scroll {
+		animation: none !important;
+	}
+
+	:deep(a),
+	:deep(span) {
+		transition: none !important;
 	}
 }
 </style>

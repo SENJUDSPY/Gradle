@@ -79,20 +79,6 @@ pub async fn get_blocked_users() -> Result<Vec<String>> {
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("users")
-        .invoke_handler(tauri::generate_handler![
-            search_user,
-            get_user_profile,
-            get_user_projects,
-            get_user_organizations,
-            get_user_collections,
-            get_user_preferences,
-            patch_user_preferences,
-            patch_user,
-            change_user_avatar,
-            delete_user_avatar,
-            block_user,
-            unblock_user,
-            get_blocked_users,
-        ])
+        .invoke_handler(crate::commands::users_handler!())
         .build()
 }

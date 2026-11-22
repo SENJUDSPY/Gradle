@@ -10,7 +10,7 @@
 			'subpage-active': isSubpage && isSubpage(route),
 			disabled: disabled,
 		}"
-		class="nav-button border-none text-primary cursor-pointer w-12 rounded-full h-12 flex items-center justify-center text-2xl transition-all bg-transparent hover:bg-button-bg hover:text-contrast"
+		class="nav-button border-none text-secondary cursor-pointer w-11 h-11 rounded-xl flex items-center justify-center text-xl bg-transparent hover:text-contrast"
 		@click="onClick"
 	>
 		<slot />
@@ -55,39 +55,186 @@ defineOptions({
 <style lang="scss" scoped>
 .nav-button {
 	position: relative;
+	outline: none !important;
+	border: none !important;
+	transform: translateZ(0);
+	transition:
+		transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		color var(--duration-quick, 150ms) ease,
+		background-color var(--duration-quick, 150ms) ease;
+	will-change: transform;
 
+	&:focus,
+	&:focus-visible {
+		outline: none !important;
+		box-shadow: none !important;
+	}
+
+	// Ambient depth & primary interaction
+	&:hover:not(.disabled) {
+		transform: translateY(-1px) scale(1.04);
+		background-color: var(--brand-gradient-button, rgba(255, 255, 255, 0.08));
+		color: var(--color-contrast, #ffffff);
+	}
+
+	&:active:not(.disabled) {
+		transform: translateY(1px) scale(0.94);
+		transition-duration: 80ms;
+	}
+
+	&.disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+		pointer-events: none;
+		transform: none !important;
+	}
+
+	// Secondary Layer: Glowing backplate on active
 	&::before {
 		content: '';
 		position: absolute;
 		inset: 0;
-		background-color: var(--color-button-bg-selected);
-		border-radius: 50%;
+		background: var(
+			--brand-gradient,
+			linear-gradient(135deg, #5b5bf0 0%, #3b82f6 50%, #22d3ee 100%)
+		);
+		border-radius: var(--radius-md, 12px);
 		opacity: 0;
-		scale: 0.4;
+		transform: scale(0.7);
 		z-index: -1;
 		transition:
-			opacity 0.25s var(--ease-out-expo),
-			scale 0.25s var(--ease-out-expo);
+			opacity var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+			transform var(--duration-standard, 220ms)
+				var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+			box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+		box-shadow: 0 0 16px -2px var(--color-brand-shadow, rgba(91, 91, 240, 0.45));
+	}
+
+	&:hover:not(.router-link-active):not(.disabled)::before {
+		opacity: 0.12;
+		transform: scale(0.95);
+		box-shadow: 0 0 10px 0 var(--color-brand-shadow, rgba(91, 91, 240, 0.25));
+	}
+
+	// Secondary Layer: Fluid Active Indicator Pill on the left edge
+	&::after {
+		content: '';
+		position: absolute;
+		left: -5px;
+		top: 50%;
+		transform: translateY(-50%) scaleY(0) scaleX(0.7);
+		width: 3.5px;
+		height: 22px;
+		border-radius: 9999px;
+		background: var(--color-brand-accent, #22d3ee);
+		box-shadow:
+			0 0 8px 1px var(--color-brand-accent, #22d3ee),
+			0 0 16px 2px rgba(34, 211, 238, 0.4);
+		opacity: 0;
+		transition:
+			transform var(--duration-standard, 240ms)
+				var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+			opacity var(--duration-quick, 140ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+			height var(--duration-standard, 240ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+	}
+}
+
+// Icon micro-motion & directional feedback
+.nav-button {
+	svg,
+	:deep(svg) {
+		transition:
+			transform var(--duration-quick, 150ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+			filter var(--duration-standard, 220ms) ease;
+		will-change: transform;
+	}
+
+	&:hover:not(.disabled) {
+		svg,
+		:deep(svg) {
+			transform: scale(1.1) translateY(-0.5px);
+		}
+	}
+
+	&:active:not(.disabled) {
+		svg,
+		:deep(svg) {
+			transform: scale(0.9) translateY(0.5px);
+		}
 	}
 }
 
 .router-link-active,
 .subpage-active {
-	svg {
-		filter: drop-shadow(0 0 0.5rem black);
+	svg,
+	:deep(svg) {
+		filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
 	}
 }
 
 .router-link-active {
-	@apply text-[--color-button-text-selected];
+	color: #ffffff !important;
+
 	&::before {
-		background-color: var(--color-button-bg-selected);
-		scale: 1;
+		transform: scale(1);
 		opacity: 1;
+		box-shadow:
+			0 0 20px -2px var(--color-brand-shadow, rgba(91, 91, 240, 0.55)),
+			0 4px 12px rgba(0, 0, 0, 0.25);
+	}
+
+	&::after {
+		transform: translateY(-50%) scaleY(1) scaleX(1);
+		opacity: 1;
+		height: 22px;
+	}
+
+	&:hover:not(.disabled) {
+		transform: translateY(-1px) scale(1.03);
+		&::before {
+			box-shadow:
+				0 0 24px 0px var(--color-brand-shadow, rgba(91, 91, 240, 0.65)),
+				0 6px 16px rgba(0, 0, 0, 0.3);
+		}
+	}
+
+	&:active:not(.disabled) {
+		transform: translateY(1px) scale(0.96);
 	}
 }
 
 .subpage-active {
-	@apply text-contrast bg-button-bg;
+	color: var(--color-contrast, #ffffff) !important;
+	background-color: var(--surface-4, rgba(255, 255, 255, 0.08));
+	border-radius: var(--radius-md, 12px);
+
+	&::after {
+		transform: translateY(-50%) scaleY(0.7) scaleX(1);
+		opacity: 0.85;
+		height: 16px;
+		box-shadow: 0 0 6px 1px var(--color-brand-accent, #22d3ee);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.nav-button,
+	.nav-button::before,
+	.nav-button::after,
+	.nav-button svg,
+	.nav-button :deep(svg) {
+		transition: none !important;
+		animation: none !important;
+		transform: none !important;
+	}
+
+	.nav-button.router-link-active::after {
+		transform: translateY(-50%) scaleY(1) !important;
+		opacity: 1 !important;
+	}
+
+	.nav-button.subpage-active::after {
+		transform: translateY(-50%) scaleY(0.7) !important;
+		opacity: 1 !important;
+	}
 }
 </style>

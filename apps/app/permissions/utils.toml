@@ -1,0 +1,58 @@
+[default]
+description = "Default permissions for utils plugin"
+permissions = [
+    "allow-get-os",
+    "allow-is-network-metered",
+    "allow-should-disable-mouseover",
+    "allow-get-opening-command",
+    "allow-progress-bars-list",
+    "allow-get-image-thumbnail",
+    "allow-open-path",
+    "allow-highlight-in-folder",
+    "allow-show-launcher-logs-folder",
+    "allow-show-app-db-backups-folder",
+    "allow-init-update-launcher",
+    "allow-cancel-debug-info-export",
+    "allow-export-debug-info",
+    "allow-restore-latest-db-backup",
+    "allow-reset-app-database",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for utils plugin"
+permissions = [
+    "allow-get-os",
+    "allow-is-network-metered",
+    "allow-should-disable-mouseover",
+    "allow-get-opening-command",
+    "allow-progress-bars-list",
+    "allow-get-image-thumbnail",
+]
+
+[[set]]
+identifier = "filesystem"
+description = "Filesystem commands for utils plugin"
+permissions = [
+    "allow-open-path",
+    "allow-highlight-in-folder",
+    "allow-show-launcher-logs-folder",
+    "allow-show-app-db-backups-folder",
+]
+
+[[set]]
+identifier = "network-install"
+description = "Network-install commands for utils plugin"
+permissions = [
+    "allow-init-update-launcher",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for utils plugin"
+permissions = [
+    "allow-cancel-debug-info-export",
+    "allow-export-debug-info",
+    "allow-restore-latest-db-backup",
+    "allow-reset-app-database",
+]

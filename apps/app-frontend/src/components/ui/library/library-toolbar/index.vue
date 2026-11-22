@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PlusIcon, SearchIcon, SquarePlusIcon } from '@modrinth/assets'
 import { Button, defineMessages, Input, useVIntl } from '@modrinth/ui'
-import { computed, inject } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref } from 'vue'
 
 import FilterMenu from '@/components/ui/library/library-toolbar/filter-menu.vue'
 import NewGroupModal from '@/components/ui/library/library-toolbar/new-group-modal.vue'
@@ -21,6 +21,28 @@ const selectedInstanceIds = computed(
 		new Set([...selectedLibraryInstances.value.values()].map((selection) => selection.instanceId)),
 )
 
+const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform)
+const searchInputRef = ref()
+
+function handleKeyDown(e: KeyboardEvent) {
+	if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+		e.preventDefault()
+		const inputEl =
+			searchInputRef.value?.element?.querySelector?.('input') ??
+			(document.querySelector('input[placeholder*="Search"]') as HTMLInputElement | null)
+		inputEl?.focus()
+		inputEl?.select()
+	}
+}
+
+onMounted(() => {
+	window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeyDown)
+})
+
 function openNewGroup() {
 	openNewGroupModal(selectedInstanceIds.value)
 }
@@ -29,14 +51,27 @@ function openNewGroup() {
 <template>
 	<div class="flex flex-col gap-2">
 		<div class="flex flex-wrap gap-2">
-			<Input
-				v-model="search"
-				:icon="SearchIcon"
-				type="text"
-				:placeholder="formatMessage(messages.search)"
-				clearable
-				wrapper-class="min-w-[16rem] flex-1"
-			/>
+			<div class="relative min-w-[16rem] flex-1">
+				<Input
+					ref="searchInputRef"
+					v-model="search"
+					:icon="SearchIcon"
+					type="text"
+					:placeholder="formatMessage(messages.search)"
+					clearable
+					wrapper-class="w-full"
+				/>
+				<div
+					v-if="!search"
+					class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 flex items-center"
+				>
+					<kbd
+						class="hidden sm:inline-flex items-center justify-center h-5 px-1.5 text-[10px] font-semibold text-secondary bg-surface-2 rounded border border-surface-5 shadow-xs"
+					>
+						{{ isMac ? '⌘K' : 'Ctrl+K' }}
+					</kbd>
+				</div>
+			</div>
 			<Button @click="openNewGroup">
 				<SquarePlusIcon />
 				{{ formatMessage(messages.newGroup) }}

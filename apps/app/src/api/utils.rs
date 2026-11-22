@@ -3,7 +3,11 @@ use tauri::{Manager, Runtime};
 use tauri_plugin_opener::OpenerExt;
 use theseus::{
     emit_warning, handler,
-    prelude::{CommandPayload, DirectoryInfo, app_db_backup_dir},
+    prelude::{
+        CommandPayload, DirectoryInfo, app_db_backup_dir,
+        reset_app_db_with_backup as lib_reset_app_db,
+        restore_latest_db_backup as lib_restore_latest_backup,
+    },
 };
 
 use crate::api::Result;
@@ -13,6 +17,7 @@ use crate::api::oauth_utils::auth_code_reply::{
 use dashmap::DashMap;
 use std::path::{Path, PathBuf};
 use theseus::prelude::canonicalize;
+use super::thumbnails::get_image_thumbnail;
 use theseus::util::gradle::utils;
 use tokio_util::sync::CancellationToken;
 use url::Url;
@@ -40,21 +45,7 @@ pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
                 }
             }
         })
-        .invoke_handler(tauri::generate_handler![
-            init_update_launcher,
-            get_os,
-            is_network_metered,
-            should_disable_mouseover,
-            highlight_in_folder,
-            open_path,
-            show_launcher_logs_folder,
-            show_app_db_backups_folder,
-            export_debug_info,
-            cancel_debug_info_export,
-            progress_bars_list,
-            get_opening_command,
-            super::thumbnails::get_image_thumbnail,
-        ])
+        .invoke_handler(crate::commands::utils_handler!())
         .build()
 }
 
@@ -174,6 +165,22 @@ pub async fn show_app_db_backups_folder<R: Runtime>(
     tokio::fs::create_dir_all(&path).await?;
     open_path(app, path).await;
     Ok(())
+}
+
+#[tauri::command]
+pub async fn restore_latest_db_backup<R: Runtime>(
+	_app: tauri::AppHandle<R>,
+) -> Result<String> {
+	let path = lib_restore_latest_backup("GradleApp").await?;
+	Ok(path.to_string_lossy().to_string())
+}
+
+#[tauri::command]
+pub async fn reset_app_database<R: Runtime>(
+	_app: tauri::AppHandle<R>,
+) -> Result<String> {
+	let path = lib_reset_app_db("GradleApp").await?;
+	Ok(path.to_string_lossy().to_string())
 }
 
 #[tauri::command]

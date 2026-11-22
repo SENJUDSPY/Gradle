@@ -1,0 +1,12 @@
+[Desktop Entry]
+Categories=Game;Utility;
+Comment=Modern Minecraft launcher with native Rust and classic Java runtimes
+Exec=Gradle %U
+Icon={{icon}}
+Name=Gradle
+StartupWMClass=Gradle
+Terminal=false
+Type=Application
+{{#if mime_type}}
+MimeType={{mime_type}};
+{{/if}}

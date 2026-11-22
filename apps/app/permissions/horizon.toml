@@ -1,0 +1,126 @@
+[default]
+description = "Default permissions for horizon plugin"
+permissions = [
+    "allow-horizon-list-servers",
+    "allow-horizon-get-releases",
+    "allow-horizon-get-installed-versions",
+    "allow-horizon-get-installed-version-info",
+    "allow-horizon-get-settings",
+    "allow-horizon-get-agent-control-status",
+    "allow-horizon-get-agent-configs",
+    "allow-horizon-get-latest-crash",
+    "allow-horizon-get-tailscale-ip",
+    "allow-horizon-get-resources-manifest",
+    "allow-horizon-has-sounds",
+    "allow-horizon-is-resources-prepared",
+    "allow-horizon-check-requirements",
+    "allow-horizon-classify-instance-mods",
+    "allow-horizon-classify-mod-file",
+    "allow-horizon-run-diagnostics",
+    "allow-horizon-analyze-modpack",
+    "allow-horizon-test-mcp-server",
+    "allow-horizon-create-server",
+    "allow-horizon-update-server",
+    "allow-horizon-save-settings",
+    "allow-horizon-set-agent-control-enabled",
+    "allow-horizon-backup-server",
+    "allow-horizon-start-server",
+    "allow-horizon-stop-server",
+    "allow-horizon-delete-server",
+    "allow-horizon-remove-version",
+    "allow-horizon-clear-crash",
+    "allow-horizon-cancel-preparation",
+    "allow-horizon-install-version",
+    "allow-horizon-prepare-resources",
+    "allow-horizon-extract-modpack-assets",
+    "allow-horizon-get-mod-catalog",
+    "allow-horizon-update-mod-catalog",
+    "allow-horizon-lookup-catalog-entry",
+    "allow-horizon-validate-mod-license",
+    "allow-horizon-extract-mod-assets",
+    "allow-horizon-get-extracted-content-summaries",
+    "allow-horizon-get-load-order",
+    "allow-horizon-update-load-order",
+    "allow-horizon-toggle-extracted-mod",
+    "allow-horizon-remerge-extracted-content",
+    "allow-horizon-run-porting-assistant",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for horizon plugin"
+permissions = [
+    "allow-horizon-list-servers",
+    "allow-horizon-get-releases",
+    "allow-horizon-get-installed-versions",
+    "allow-horizon-get-installed-version-info",
+    "allow-horizon-get-settings",
+    "allow-horizon-get-agent-control-status",
+    "allow-horizon-get-agent-configs",
+    "allow-horizon-get-latest-crash",
+    "allow-horizon-get-tailscale-ip",
+    "allow-horizon-get-resources-manifest",
+    "allow-horizon-has-sounds",
+    "allow-horizon-is-resources-prepared",
+    "allow-horizon-check-requirements",
+    "allow-horizon-classify-instance-mods",
+    "allow-horizon-classify-mod-file",
+    "allow-horizon-run-diagnostics",
+    "allow-horizon-analyze-modpack",
+    "allow-horizon-test-mcp-server",
+    "allow-horizon-get-mod-catalog",
+    "allow-horizon-lookup-catalog-entry",
+    "allow-horizon-validate-mod-license",
+    "allow-horizon-get-extracted-content-summaries",
+    "allow-horizon-get-load-order",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for horizon plugin"
+permissions = [
+    "allow-horizon-create-server",
+    "allow-horizon-update-server",
+    "allow-horizon-save-settings",
+    "allow-horizon-set-agent-control-enabled",
+    "allow-horizon-backup-server",
+    "allow-horizon-update-load-order",
+    "allow-horizon-toggle-extracted-mod",
+]
+
+[[set]]
+identifier = "launch"
+description = "Launch commands for horizon plugin"
+permissions = [
+    "allow-horizon-start-server",
+    "allow-horizon-stop-server",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for horizon plugin"
+permissions = [
+    "allow-horizon-delete-server",
+    "allow-horizon-remove-version",
+    "allow-horizon-clear-crash",
+    "allow-horizon-cancel-preparation",
+]
+
+[[set]]
+identifier = "network-install"
+description = "Network-install commands for horizon plugin"
+permissions = [
+    "allow-horizon-install-version",
+    "allow-horizon-prepare-resources",
+    "allow-horizon-update-mod-catalog",
+]
+
+[[set]]
+identifier = "filesystem"
+description = "Filesystem commands for horizon plugin"
+permissions = [
+    "allow-horizon-extract-modpack-assets",
+    "allow-horizon-extract-mod-assets",
+    "allow-horizon-remerge-extracted-content",
+    "allow-horizon-run-porting-assistant",
+]

@@ -3,12 +3,7 @@ use theseus::prelude::{UserFriend, UserStatus};
 
 pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {
     tauri::plugin::Builder::new("friends")
-        .invoke_handler(tauri::generate_handler![
-            friends,
-            friend_statuses,
-            add_friend,
-            remove_friend
-        ])
+        .invoke_handler(crate::commands::friends_handler!())
         .build()
 }
 

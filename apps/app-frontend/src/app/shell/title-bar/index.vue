@@ -37,24 +37,24 @@ const messages = defineMessages({
 				<IconButton
 					type="outlined"
 					:label="formatMessage(messages.goBack)"
-					class="!h-7 !min-w-7 !w-7 !border !border-surface-4 !p-0 !opacity-100"
+					class="nav-history-button nav-back-button !h-7 !min-w-7 !w-7 !border !border-surface-4 !p-0 !opacity-100"
 					:disabled="!canNavigateBack"
 					@click="router.back()"
 				>
 					<ChevronLeftIcon
-						class="!size-4 !text-primary"
+						class="nav-history-icon !size-4 !text-primary"
 						:class="{ 'opacity-20': !canNavigateBack }"
 					/>
 				</IconButton>
 				<IconButton
 					type="outlined"
 					:label="formatMessage(messages.goForward)"
-					class="!h-7 !min-w-7 !w-7 !border !border-surface-4 !p-0 !opacity-100"
+					class="nav-history-button nav-forward-button !h-7 !min-w-7 !w-7 !border !border-surface-4 !p-0 !opacity-100"
 					:disabled="!canNavigateForward"
 					@click="router.forward()"
 				>
 					<ChevronRightIcon
-						class="!size-4 !text-primary"
+						class="nav-history-icon !size-4 !text-primary"
 						:class="{ 'opacity-20': !canNavigateForward }"
 					/>
 				</IconButton>
@@ -66,11 +66,11 @@ const messages = defineMessages({
 				v-if="showSidebarToggle"
 				:type="sidebarToggled ? 'base' : 'quiet'"
 				:label="formatMessage(messages.nextImage)"
-				class="mr-3 transition-transform"
+				class="sidebar-toggle-btn mr-3"
 				:class="{ 'rotate-180': !sidebarToggled }"
 				@click="emit('toggle-sidebar')"
 			>
-				<RightArrowIcon />
+				<RightArrowIcon class="sidebar-toggle-icon" />
 			</IconButton>
 			<div class="flex mr-3">
 				<Suspense>
@@ -82,9 +82,87 @@ const messages = defineMessages({
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .app-title-bar {
 	height: var(--top-bar-height);
 	padding-right: var(--window-controls-width, 0px);
+}
+
+.nav-history-button {
+	transition:
+		transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		background-color var(--duration-quick, 120ms) ease,
+		border-color var(--duration-quick, 120ms) ease;
+	will-change: transform;
+
+	&:hover:not(:disabled) {
+		transform: scale(1.06);
+	}
+
+	&:active:not(:disabled) {
+		transform: scale(0.92);
+		transition-duration: 80ms;
+	}
+
+	.nav-history-icon {
+		transition: transform var(--duration-quick, 140ms)
+			var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+	}
+
+	&.nav-back-button:hover:not(:disabled) .nav-history-icon {
+		transform: translateX(-1.5px);
+	}
+
+	&.nav-forward-button:hover:not(:disabled) .nav-history-icon {
+		transform: translateX(1.5px);
+	}
+}
+
+.sidebar-toggle-btn {
+	transition:
+		transform var(--duration-slow, 280ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		background-color var(--duration-quick, 140ms) ease,
+		box-shadow var(--duration-quick, 140ms) ease;
+	will-change: transform;
+
+	.sidebar-toggle-icon {
+		transition: transform var(--duration-slow, 280ms)
+			var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+	}
+
+	&:hover:not(:disabled) {
+		transform: scale(1.06);
+
+		&.rotate-180 {
+			transform: rotate(180deg) scale(1.06);
+		}
+	}
+
+	&:active:not(:disabled) {
+		transform: scale(0.94);
+		transition-duration: 80ms;
+
+		&.rotate-180 {
+			transform: rotate(180deg) scale(0.94);
+		}
+	}
+
+	&.rotate-180 {
+		transform: rotate(180deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.nav-history-button,
+	.nav-history-button .nav-history-icon,
+	.sidebar-toggle-btn,
+	.sidebar-toggle-btn .sidebar-toggle-icon {
+		transition: none !important;
+		transform: none !important;
+	}
+
+	.sidebar-toggle-btn.rotate-180 {
+		transform: rotate(180deg) !important;
+	}
 }
 </style>

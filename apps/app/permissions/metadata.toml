@@ -1,0 +1,14 @@
+[default]
+description = "Default permissions for metadata plugin"
+permissions = [
+    "allow-metadata-get-game-versions",
+    "allow-metadata-get-loader-versions",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for metadata plugin"
+permissions = [
+    "allow-metadata-get-game-versions",
+    "allow-metadata-get-loader-versions",
+]

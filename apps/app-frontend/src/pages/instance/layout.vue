@@ -30,7 +30,13 @@
 				@reported="handleSharedInstanceReported"
 			/>
 			<HorizonPreparationModal ref="horizonPreparationModal" />
+			<HorizonRequirementsModal
+				ref="horizonRequirementsModal"
+				@prepare="() => horizonPreparationModal?.show()"
+				@install-runtime="() => horizonVersionModal?.show()"
+			/>
 			<HorizonVersionModal ref="horizonVersionModal" :instance="instance" />
+			<HorizonSetupModal ref="horizonSetupModal" :instance="instance" />
 			<HorizonJavaModIncompatibilityModal ref="horizonJavaModIncompatibilityModal" />
 			<HorizonWorldBackupModal ref="horizonWorldBackupModal" />
 			<InstancePageHeader
@@ -60,6 +66,7 @@
 				@export="() => !instance?.quarantined && exportModal?.show()"
 				@create-shortcut="() => createShortcut()"
 				@report="reportSharedInstance"
+				@refresh="refreshInstance"
 			/>
 		</div>
 		<div :class="['px-6', { 'shrink-0': isFixedRender }]">
@@ -76,6 +83,32 @@
 				@published="refreshInstance"
 				@delete="requestInstanceDeletion"
 			/>
+			<div
+				v-if="latestCrash"
+				class="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4"
+			>
+				<div class="flex items-start gap-3">
+					<TriangleAlertIcon class="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
+					<div class="flex flex-col gap-1">
+						<div class="text-sm font-bold text-contrast">
+							Minecraft (Rust Edition) Crashed &mdash; {{ latestCrash.error_category }}
+						</div>
+						<div class="text-xs text-secondary">{{ latestCrash.crash_reason }}</div>
+						<div class="text-xs font-medium text-purple-400">{{ latestCrash.actionable_fix }}</div>
+					</div>
+				</div>
+				<div class="flex shrink-0 items-center gap-2 self-end md:self-center">
+					<Button size="small" variant="secondary" @click="handleCopyCrashReport">
+						Copy Crash Report
+					</Button>
+					<Button size="small" variant="secondary" @click="navigateToLogs">
+						View Logs
+					</Button>
+					<Button size="small" variant="ghost" @click="handleDismissCrash">
+						Dismiss
+					</Button>
+				</div>
+			</div>
 		</div>
 		<div :class="['p-6 pt-4', { 'min-h-0 flex-1 overflow-y-auto': isFixedRender }]">
 			<RouterView v-slot="{ Component }">
@@ -105,9 +138,11 @@ import {
 	PlusIcon,
 	StopCircleIcon,
 	TerminalSquareIcon,
+	TriangleAlertIcon,
 	UserPlusIcon,
 } from '@modrinth/assets'
 import {
+	Button,
 	commonMessages,
 	ContextMenu,
 	defineMessages,
@@ -127,6 +162,8 @@ import ExportModal from '@/components/ui/ExportModal.vue'
 import ConfirmDeleteInstanceModal from '@/components/ui/modal/ConfirmDeleteInstanceModal.vue'
 import HorizonJavaModIncompatibilityModal from '@/components/ui/modal/HorizonJavaModIncompatibilityModal.vue'
 import HorizonPreparationModal from '@/components/ui/modal/HorizonPreparationModal.vue'
+import HorizonRequirementsModal from '@/components/ui/modal/HorizonRequirementsModal.vue'
+import HorizonSetupModal from '@/components/ui/modal/HorizonSetupModal.vue'
 import HorizonVersionModal from '@/components/ui/modal/HorizonVersionModal.vue'
 import HorizonWorldBackupModal from '@/components/ui/modal/HorizonWorldBackupModal.vue'
 import UpdateToPlayModal from '@/components/ui/modal/UpdateToPlayModal.vue'
@@ -143,7 +180,12 @@ import { useInstanceConsole } from '@/composables/useInstanceConsole'
 import InstanceSettingsModal from '@/features/instances/settings-modal/index.vue'
 import { trackEvent } from '@/helpers/analytics'
 import { toError } from '@/helpers/errors'
-import { getInstalledHorizonVersions, isHorizonResourcesPrepared } from '@/helpers/horizon'
+import {
+	checkHorizonRequirements,
+	classifyInstanceMods,
+	getInstalledHorizonVersions,
+	isHorizonResourcesPrepared,
+} from '@/helpers/horizon'
 import {
 	getSharedInstanceUnavailableReason,
 	install_existing_instance,
@@ -153,8 +195,12 @@ import {
 	type SharedInstanceUnavailableReason,
 } from '@/helpers/install'
 import {
+	clearLatestCrash,
+	get_content_items,
 	get_full_path,
 	getInstanceIconUrl,
+	getLatestCrash,
+	type HorizonCrashReport,
 	type InstanceRuntime,
 	kill,
 	refresh_content_updates,
@@ -388,7 +434,9 @@ const sharedInstanceReportModal = ref<InstanceType<typeof SharedInstanceInstallM
 const deleteConfirmModal = ref<InstanceType<typeof ConfirmDeleteInstanceModal>>()
 const settingsModal = ref<InstanceType<typeof InstanceSettingsModal>>()
 const horizonPreparationModal = ref<InstanceType<typeof HorizonPreparationModal>>()
+const horizonRequirementsModal = ref<InstanceType<typeof HorizonRequirementsModal>>()
 const horizonVersionModal = ref<InstanceType<typeof HorizonVersionModal>>()
+const horizonSetupModal = ref<InstanceType<typeof HorizonSetupModal>>()
 const horizonJavaModIncompatibilityModal =
 	ref<InstanceType<typeof HorizonJavaModIncompatibilityModal>>()
 const horizonWorldBackupModal = ref<InstanceType<typeof HorizonWorldBackupModal>>()
@@ -626,7 +674,25 @@ const launchInstance = async (context: string, runtimeOverride?: InstanceRuntime
 		await run(currentInstance.id, null, false, targetRuntime)
 		queryClient.setQueryData(instanceKeys.processes(currentInstance.id), [true])
 	} catch (err) {
-		handleSevereError(err, { instanceId: currentInstance.id })
+		const msg = err instanceof Error ? err.message : String(err)
+		if (
+			targetRuntime === 'horizon' &&
+			(msg.includes('Gradle Engine') ||
+				msg.includes('not been prepared yet') ||
+				msg.includes('Please install a Gradle release'))
+		) {
+			horizonSetupModal.value?.show({
+				onLaunch: async () => {
+					await launchInstance(context, 'horizon')
+				},
+				onSwitchToJava: async () => {
+					await handleRuntimeUpdate('java')
+					await startInstance(context, 'java')
+				},
+			})
+		} else {
+			handleSevereError(err, { instanceId: currentInstance.id })
+		}
 	}
 	loading.value = false
 
@@ -727,30 +793,70 @@ const startInstance = async (context: string, runtimeOverride?: InstanceRuntime)
 	}
 
 	if (targetRuntime === 'horizon') {
-		// 1. Check for incompatible Java mod JARs
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const contentData = queryClient.getQueryData<any>(instanceKeys.content(instanceId))
-		const items = contentData?.contentItems ?? []
-		const incompatibleJavaMods = items.filter(
+		// 1. Analyze and classify all mods in the instance using the native Rust mod classifier
+		try {
+			const report = await classifyInstanceMods(instanceId)
+			if (report && report.total_mods > 0 && report.skipped_count > 0) {
+				horizonJavaModIncompatibilityModal.value?.showReport(report, {
+					playJava: () => {
+						void handleRuntimeUpdate('java')
+						void startInstance(context, 'java')
+					},
+					continueHorizon: () => {
+						void checkWorldsAndLaunchHorizon(context)
+					},
+					cancel: () => {},
+				})
+				return
+			}
+		} catch (e) {
+			console.warn('Rust mod classifier fallback to content items:', e)
+			// fallback to legacy content item scan if classification IPC fails
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			(item: any) =>
-				item.project_type === 'mod' &&
-				item.enabled &&
-				!item.file_name?.toLowerCase().endsWith('.wasm') &&
-				!item.file_name?.toLowerCase().endsWith('.hmod'),
-		)
-		if (incompatibleJavaMods.length > 0) {
-			horizonJavaModIncompatibilityModal.value?.show(incompatibleJavaMods, {
-				playJava: () => {
-					void handleRuntimeUpdate('java')
-					void startInstance(context, 'java')
-				},
-				continueHorizon: () => {
-					void checkWorldsAndLaunchHorizon(context)
-				},
-				cancel: () => {},
-			})
-			return
+			let items = queryClient.getQueryData<any>(instanceKeys.content(instanceId))?.contentItems
+			if (!items || items.length === 0) {
+				items = await get_content_items(instanceId).catch(() => [])
+			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const allMods = (items || []).filter(
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				(item: any) => item.project_type === 'mod' && item.enabled,
+			)
+			const skippedMods = allMods.filter(
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				(item: any) =>
+					!item.file_name?.toLowerCase().endsWith('.wasm') &&
+					!item.file_name?.toLowerCase().endsWith('.hmod'),
+			)
+			const supportedMods = allMods.filter(
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				(item: any) =>
+					item.file_name?.toLowerCase().endsWith('.wasm') ||
+					item.file_name?.toLowerCase().endsWith('.hmod'),
+			)
+
+			const isModpack = !!instance.value?.link || allMods.length > 0
+			if (isModpack && skippedMods.length > 0) {
+				horizonJavaModIncompatibilityModal.value?.show(
+					skippedMods,
+					{
+						playJava: () => {
+							void handleRuntimeUpdate('java')
+							void startInstance(context, 'java')
+						},
+						continueHorizon: () => {
+							void checkWorldsAndLaunchHorizon(context)
+						},
+						cancel: () => {},
+					},
+					{
+						supported: supportedMods.length,
+						total: allMods.length,
+						skipped: skippedMods.length,
+					},
+				)
+				return
+			}
 		}
 
 		await checkWorldsAndLaunchHorizon(context)
@@ -790,19 +896,27 @@ async function checkWorldsAndLaunchHorizon(context: string) {
 }
 
 async function proceedHorizonLaunch(context: string) {
-	const prepared = await isHorizonResourcesPrepared().catch(() => false)
-	if (!prepared) {
-		horizonPreparationModal.value?.show(async () => {
-			await proceedHorizonLaunch(context)
+	const [prepared, installed, preflight] = await Promise.all([
+		isHorizonResourcesPrepared().catch(() => false),
+		getInstalledHorizonVersions().catch(() => []),
+		checkHorizonRequirements().catch(() => null),
+	])
+
+	if (installed.length === 0 || !prepared) {
+		horizonSetupModal.value?.show({
+			onLaunch: async () => {
+				await launchInstance(context, 'horizon')
+			},
+			onSwitchToJava: async () => {
+				await handleRuntimeUpdate('java')
+				await startInstance(context, 'java')
+			},
 		})
 		return
 	}
 
-	const installed = await getInstalledHorizonVersions().catch(() => [])
-	if (installed.length === 0) {
-		horizonVersionModal.value?.show(async () => {
-			await launchInstance(context, 'horizon')
-		})
+	if (preflight && !preflight.all_passed) {
+		horizonRequirementsModal.value?.show()
 		return
 	}
 
@@ -828,19 +942,25 @@ const handlePlayServer = async () => {
 	if (!instance.value || instance.value.quarantined) return
 	if (activeRuntime.value === 'horizon') {
 		const currentInstance = instance.value
-		const prepared = await isHorizonResourcesPrepared().catch(() => false)
-		if (!prepared) {
-			horizonPreparationModal.value?.show(async () => {
-				await handlePlayServer()
+		const [prepared, installed, preflight] = await Promise.all([
+			isHorizonResourcesPrepared().catch(() => false),
+			getInstalledHorizonVersions().catch(() => []),
+			checkHorizonRequirements().catch(() => null),
+		])
+		if (installed.length === 0 || !prepared) {
+			horizonSetupModal.value?.show({
+				onLaunch: async () => {
+					await handlePlayServer()
+				},
+				onSwitchToJava: async () => {
+					await handleRuntimeUpdate('java')
+				},
 			})
 			return
 		}
 
-		const installed = await getInstalledHorizonVersions().catch(() => [])
-		if (installed.length === 0) {
-			horizonVersionModal.value?.show(async () => {
-				await handlePlayServer()
-			})
+		if (preflight && !preflight.all_passed) {
+			horizonRequirementsModal.value?.show()
 			return
 		}
 
@@ -1058,6 +1178,47 @@ watch(instanceId, (currentInstanceId, previousInstanceId) => {
 	destroyInstanceConsole(previousInstanceId)
 })
 
+const latestCrash = ref<HorizonCrashReport | null>(null)
+
+async function refreshCrashStatus() {
+	if (instanceId.value) {
+		latestCrash.value = await getLatestCrash(instanceId.value)
+	} else {
+		latestCrash.value = null
+	}
+}
+
+watch(
+	instanceId,
+	() => {
+		void refreshCrashStatus()
+	},
+	{ immediate: true },
+)
+
+async function handleCopyCrashReport() {
+	if (!latestCrash.value) return
+	await navigator.clipboard.writeText(latestCrash.value.report_text)
+	addNotification({
+		title: 'Copied',
+		text: 'Crash report copied to clipboard!',
+		type: 'success',
+	})
+}
+
+async function handleDismissCrash() {
+	if (instanceId.value) {
+		await clearLatestCrash(instanceId.value)
+	}
+	latestCrash.value = null
+}
+
+function navigateToLogs() {
+	if (instanceId.value) {
+		void router.push({ path: `/instance/${instanceId.value}/logs` })
+	}
+}
+
 useAppEvent('instance', async (event) => {
 	if (event.instance_id !== instanceId.value || event.event !== 'removed') return
 	if (route.path !== '/') await router.push({ path: '/' })
@@ -1069,8 +1230,10 @@ useAppEvent('process', (event) => {
 		queryClient.setQueryData(instanceKeys.processes(event.instance_id), [])
 		useInstanceConsole(event.instance_id).invalidate()
 		void queryClient.invalidateQueries({ queryKey: instanceKeys.logs(event.instance_id) })
+		void refreshCrashStatus()
 	} else if (event.event === 'launched') {
 		queryClient.setQueryData(instanceKeys.processes(event.instance_id), [true])
+		latestCrash.value = null
 	}
 })
 

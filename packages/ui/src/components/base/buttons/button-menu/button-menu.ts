@@ -12,13 +12,13 @@ import type {
 } from '../types'
 
 export const buttonMenuItemClasses =
-	'button-menu-item flex min-h-10 z-10 w-full items-center gap-2 rounded-[10px] border-0 bg-transparent px-3 py-2 text-left text-base font-semibold leading-5 text-contrast no-underline ' +
-	'cursor-pointer whitespace-nowrap hover:bg-surface-4 focus-visible:bg-surface-4 focus-visible:outline-none ' +
+	'button-menu-item flex min-h-9 z-10 w-full items-center gap-2 rounded-lg border-0 bg-transparent px-3 py-1.5 text-left text-sm font-medium leading-5 text-contrast no-underline ' +
+	'cursor-pointer whitespace-nowrap transition-colors duration-150 hover:bg-surface-4/70 hover:text-contrast focus-visible:bg-surface-4 focus-visible:outline-none ' +
 	'disabled:cursor-not-allowed disabled:opacity-50 [&[aria-disabled=true]]:cursor-not-allowed [&[aria-disabled=true]]:opacity-50 ' +
-	'[&>svg]:size-5 [&>svg]:shrink-0 [&>svg]:text-primary'
+	'[&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-primary'
 
 export const buttonMenuPanelClasses =
-	'fixed isolate z-[9999] rounded-[14px] bg-surface-3 shadow-lg ring-1 ring-surface-5 select-none'
+	'fixed isolate z-[9999] rounded-xl bg-surface-3 shadow-lg border border-solid border-surface-5 select-none'
 
 export const menuPanelPadding = 8
 export const submenuGap = 2

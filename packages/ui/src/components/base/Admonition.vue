@@ -1,7 +1,7 @@
 <template>
 	<div
 		:class="[
-			'relative grid grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-2 rounded-2xl border border-solid p-4 text-contrast',
+			'relative grid grid-cols-[1.5rem_minmax(0,1fr)_auto] gap-x-3 rounded-xl border border-solid p-4 text-contrast shadow-sm',
 			centerContent ? 'items-center' : 'items-start',
 			progress != null ? 'overflow-hidden pb-5' : '',
 			typeClasses[type],
@@ -170,13 +170,13 @@ const timestampTooltip = computed(() => {
 })
 
 const typeClasses = {
-	info: 'border-brand-blue bg-bg-blue',
-	warning: 'border-brand-orange bg-bg-orange',
-	'circle-warning': 'border-brand-orange bg-bg-orange',
-	critical: 'border-brand-red bg-bg-red',
-	success: 'border-brand-green bg-bg-green',
-	moderation: 'border-brand-orange bg-bg-orange',
-	neutral: 'border-surface-4 bg-surface-3',
+	info: 'border-blue/30 bg-blue/10 text-contrast',
+	warning: 'border-orange/30 bg-orange/10 text-contrast',
+	'circle-warning': 'border-orange/30 bg-orange/10 text-contrast',
+	critical: 'border-red/30 bg-red/10 text-contrast',
+	success: 'border-green/30 bg-green/10 text-contrast',
+	moderation: 'border-orange/30 bg-orange/10 text-contrast',
+	neutral: 'border-surface-5 bg-surface-3 text-contrast',
 }
 
 const iconClasses = {

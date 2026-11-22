@@ -1,0 +1,20 @@
+[default]
+description = "Default permissions for tags plugin"
+permissions = [
+    "allow-tags-get-categories",
+    "allow-tags-get-donation-platforms",
+    "allow-tags-get-game-versions",
+    "allow-tags-get-loaders",
+    "allow-tags-get-report-types",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for tags plugin"
+permissions = [
+    "allow-tags-get-categories",
+    "allow-tags-get-donation-platforms",
+    "allow-tags-get-game-versions",
+    "allow-tags-get-loaders",
+    "allow-tags-get-report-types",
+]

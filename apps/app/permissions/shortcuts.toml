@@ -1,0 +1,12 @@
+[default]
+description = "Default permissions for shortcuts plugin"
+permissions = [
+    "allow-create-instance-shortcut",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for shortcuts plugin"
+permissions = [
+    "allow-create-instance-shortcut",
+]

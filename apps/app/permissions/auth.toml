@@ -1,0 +1,58 @@
+[default]
+description = "Default permissions for auth plugin"
+permissions = [
+    "allow-get-users",
+    "allow-get-default-user",
+    "allow-get-external-auth-providers",
+    "allow-get-external-auth-library-states",
+    "allow-check-reachable",
+    "allow-set-default-user",
+    "allow-select-external-auth-library",
+    "allow-login",
+    "allow-offline-login",
+    "allow-authenticate-external-provider",
+    "allow-remove-user",
+    "allow-install-external-auth-library",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for auth plugin"
+permissions = [
+    "allow-get-users",
+    "allow-get-default-user",
+    "allow-get-external-auth-providers",
+    "allow-get-external-auth-library-states",
+    "allow-check-reachable",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for auth plugin"
+permissions = [
+    "allow-set-default-user",
+    "allow-select-external-auth-library",
+]
+
+[[set]]
+identifier = "launch"
+description = "Launch commands for auth plugin"
+permissions = [
+    "allow-login",
+    "allow-offline-login",
+    "allow-authenticate-external-provider",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for auth plugin"
+permissions = [
+    "allow-remove-user",
+]
+
+[[set]]
+identifier = "network-install"
+description = "Network-install commands for auth plugin"
+permissions = [
+    "allow-install-external-auth-library",
+]

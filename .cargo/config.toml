@@ -1,3 +1,11 @@
+[build]
+rustflags = [
+    "--remap-path-prefix=/home/godxzailas/Downloads/AstralRinth-AR-0.22.01/astralrinth=/build/gradle",
+    "--remap-path-prefix=/home/godxzailas/.cargo=/cargo",
+    "--remap-path-prefix=/home/godxzailas/.local=/build/local",
+    "--remap-path-prefix=/home/godxzailas=/build",
+]
+
 # Windows has stack overflows when calling from Tauri, so we increase the default stack size used by the compiler
 [target."cfg(windows)"]
 rustflags = ["-C", "link-args=/STACK:16777220"]

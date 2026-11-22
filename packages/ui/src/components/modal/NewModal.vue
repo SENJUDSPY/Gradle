@@ -41,17 +41,17 @@
 					aria-modal="true"
 					tabindex="-1"
 					:aria-labelledby="headerId"
-					class="modal-body flex flex-col bg-bg-raised rounded-2xl border border-solid border-surface-5 outline-none"
+					class="modal-body flex flex-col bg-surface-3 rounded-2xl border border-solid border-surface-5 shadow-lg outline-none"
 					v-bind="$attrs"
 				>
 					<div
 						v-if="!hideHeader"
 						data-tauri-drag-region
-						class="grid grid-cols-[1fr_auto] items-center gap-4 p-6 border-solid border-0 border-b-[1px] border-surface-5 max-w-full"
+						class="grid grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 border-solid border-0 border-b border-surface-5 max-w-full bg-surface-2/60 rounded-t-2xl"
 					>
 						<div :id="headerId" class="flex text-wrap break-words items-center gap-3 min-w-0">
 							<slot name="title">
-								<span v-if="header" class="text-2xl font-semibold text-contrast">
+								<span v-if="header" class="text-xl font-semibold text-contrast">
 									{{ header }}
 								</span>
 							</slot>
@@ -142,8 +142,8 @@
 
 					<div
 						v-if="$slots.actions"
-						:class="{ 'pt-4 border-0 border-t border-solid border-surface-5': actionsDivider }"
-						class="p-4"
+						:class="{ 'border-0 border-t border-solid border-surface-5': actionsDivider }"
+						class="px-6 py-4 flex items-center justify-end gap-3 bg-surface-2/40 rounded-b-2xl"
 					>
 						<slot name="actions" />
 					</div>
@@ -337,7 +337,7 @@ useResizeObserver(modalBodyRef, ([entry]) => {
 
 	const animation = entry.target.animate(
 		[{ height: `${fromHeight}px` }, { height: `${height}px` }],
-		{ duration: 200, easing: 'ease-in-out' },
+		{ duration: 220, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
 	)
 	resizeAnimation = animation
 	animation.onfinish = () => {
@@ -360,7 +360,7 @@ if (typeof window !== 'undefined') {
 	useEventListener(
 		getModalWindow,
 		'keydown',
-		(event) => {
+		(event: KeyboardEvent) => {
 			if (event.metaKey || event.altKey || event.ctrlKey) {
 				return
 			}
@@ -394,7 +394,7 @@ function isFocusInsideModal() {
 }
 
 function focusElement(el: HTMLElement) {
-	el.focus({ preventScroll: true, focusVisible: inputModality.keyboard })
+	;(el as any).focus({ preventScroll: true, focusVisible: inputModality.keyboard })
 }
 
 function focusModal() {
@@ -498,7 +498,7 @@ function hide(): boolean {
 	hideTimeout = setTimeout(() => {
 		finishHide()
 		nextTick(() => props.onAfterHide?.())
-	}, 300)
+	}, 200)
 	return true
 }
 
@@ -621,8 +621,12 @@ function trapFocus(event: KeyboardEvent) {
 	const last = focusable[focusable.length - 1]
 	const active = getModalDocument().activeElement
 	const inside = dialog.contains(active)
-	const beforeFirst = !!(active?.compareDocumentPosition(first) & Node.DOCUMENT_POSITION_FOLLOWING)
-	const afterLast = !!(active?.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_PRECEDING)
+	const beforeFirst = active
+		? !!(active.compareDocumentPosition(first) & Node.DOCUMENT_POSITION_FOLLOWING)
+		: false
+	const afterLast = active
+		? !!(active.compareDocumentPosition(last) & Node.DOCUMENT_POSITION_PRECEDING)
+		: false
 
 	if (!inside) {
 		event.preventDefault()
@@ -665,18 +669,16 @@ defineOptions({
 	opacity: 0;
 	visibility: hidden;
 	pointer-events: none;
-	transition: all 0.2s ease-out;
-	//transform: translate(
-	//    calc((-50vw + var(--_mouse-x, 50vw) * 1px) / 2),
-	//    calc((-50vh + var(--_mouse-y, 50vh) * 1px) / 2)
-	//  )
-	//  scaleX(0.8) scaleY(0.5);
+	backdrop-filter: blur(0px);
+	transition:
+		opacity 180ms cubic-bezier(0.3, 0, 1, 1),
+		backdrop-filter 180ms cubic-bezier(0.3, 0, 1, 1),
+		visibility 180ms cubic-bezier(0.3, 0, 1, 1);
 	border-radius: 180px;
-	//filter: blur(5px);
 
 	// Fade variants
 	&.standard {
-		background: linear-gradient(to bottom, rgba(29, 48, 43, 0.52) 0%, rgba(14, 21, 26, 0.95) 100%);
+		background: linear-gradient(to bottom, rgba(26, 33, 66, 0.65) 0%, rgba(11, 16, 32, 0.95) 100%);
 	}
 
 	&.warning {
@@ -687,15 +689,16 @@ defineOptions({
 		background: linear-gradient(to bottom, rgba(43, 18, 26, 0.52) 0%, rgba(49, 10, 15, 0.95) 100%);
 	}
 
-	@media (prefers-reduced-motion) {
-		transition: none !important;
-	}
-
 	&.shown {
 		opacity: 1;
 		visibility: visible;
 		pointer-events: auto;
-		backdrop-filter: blur(5px);
+		backdrop-filter: blur(8px);
+		background-color: rgba(11, 16, 32, 0.72);
+		transition:
+			opacity 200ms cubic-bezier(0.05, 0.7, 0.1, 1),
+			backdrop-filter 200ms cubic-bezier(0.05, 0.7, 0.1, 1),
+			visibility 200ms cubic-bezier(0.05, 0.7, 0.1, 1);
 	}
 
 	&.noblur {
@@ -722,42 +725,65 @@ defineOptions({
 	visibility: hidden;
 	pointer-events: none;
 	transform: translate(var(--modal-mouse-x-offset), var(--modal-mouse-y-offset));
-	transition: none;
+	transition:
+		transform 180ms cubic-bezier(0.3, 0, 1, 1),
+		visibility 180ms cubic-bezier(0.3, 0, 1, 1);
 
 	&.shown {
 		visibility: visible;
 		transform: translate(0, 0);
-		transition: all 0.2s ease-out;
+		transition:
+			transform 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
+			visibility 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
 
 		> .modal-body {
 			opacity: 1;
 			visibility: visible;
-			scale: 1;
+			transform: scale(1);
+			transition:
+				transform 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
+				opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
+				visibility 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
 		}
 	}
 
 	> .modal-body {
 		position: fixed;
-		box-shadow: 4px 4px 26px 10px rgba(0, 0, 0, 0.08);
+		box-shadow:
+			var(--shadow-lg),
+			0 0 0 1px var(--surface-5);
+		border-radius: var(--radius-lg, 16px);
+		background-color: var(--surface-3);
 		max-height: calc(100% - 2 * var(--gap-lg));
 		max-width: min(var(--modal-max-width), calc(100% - 2 * var(--gap-lg)));
 		overflow-y: hidden;
 		overflow-x: hidden;
 		width: var(--modal-width);
 		pointer-events: auto;
-		scale: 0.97;
+		transform: scale(0.96);
 
 		visibility: hidden;
 		opacity: 0;
-		transition: all 0.2s ease-in-out;
-
-		@media (prefers-reduced-motion) {
-			transition: none !important;
-		}
+		transition:
+			transform 180ms cubic-bezier(0.3, 0, 1, 1),
+			opacity 180ms cubic-bezier(0.3, 0, 1, 1),
+			visibility 180ms cubic-bezier(0.3, 0, 1, 1);
 
 		@media screen and (max-width: 640px) {
 			width: calc(100% - 2 * var(--gap-lg));
 		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.modal-overlay,
+	.modal-overlay.shown,
+	.modal-container,
+	.modal-container.shown,
+	.modal-container > .modal-body,
+	.modal-container.shown > .modal-body {
+		transition: none !important;
+		transform: none !important;
 	}
 }
 </style>

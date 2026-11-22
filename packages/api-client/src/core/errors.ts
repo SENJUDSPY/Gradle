@@ -60,6 +60,26 @@ export class ModrinthApiError extends Error {
 			})
 		}
 
+		if (typeof error === 'object' && error !== null) {
+			const obj = error as Record<string, unknown>
+			const message =
+				(typeof obj.message === 'string' && obj.message) ||
+				(typeof obj.error === 'string' && obj.error) ||
+				(typeof obj.description === 'string' && obj.description) ||
+				(typeof obj.details === 'string' && obj.details) ||
+				(() => {
+					try {
+						return JSON.stringify(error)
+					} catch {
+						return String(error)
+					}
+				})()
+			return new ModrinthApiError(message, {
+				context,
+				responseData: error,
+			})
+		}
+
 		return new ModrinthApiError(String(error), { context })
 	}
 }

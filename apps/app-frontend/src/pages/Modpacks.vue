@@ -73,15 +73,38 @@
 							<span class="rounded bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-brand">
 								{{ analysis.pack_format }}
 							</span>
+							<span
+								:class="[
+									'rounded-full px-2.5 py-0.5 text-xs font-semibold border',
+									analysis.compatibility_level === 'Supported'
+										? 'bg-green-500/20 text-green-300 border-green-500/40'
+										: analysis.compatibility_level === 'PartiallySupported'
+											? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+											: 'bg-red-500/20 text-red-300 border-red-500/40',
+								]"
+							>
+								{{
+									analysis.compatibility_level === 'Supported'
+										? 'Fully Supported'
+										: analysis.compatibility_level === 'PartiallySupported'
+											? 'Partially Supported'
+											: 'Unsupported'
+								}}
+							</span>
 						</div>
 						<p v-if="analysis.summary" class="m-0 text-xs text-secondary max-w-2xl">
 							{{ analysis.summary }}
 						</p>
 					</div>
 
-					<Button size="sm" type="outlined" @click="handleClear">
-						{{ formatMessage(messages.chooseAnother) }}
-					</Button>
+					<div class="flex items-center gap-2">
+						<Button size="sm" type="outlined" @click="compatModalRef?.show(analysis)">
+							Compatibility Report
+						</Button>
+						<Button size="sm" type="outlined" @click="handleClear">
+							{{ formatMessage(messages.chooseAnother) }}
+						</Button>
+					</div>
 				</div>
 
 				<!-- Stats bar -->
@@ -115,10 +138,22 @@
 
 				<!-- Horizon Compatibility Notice -->
 				<div
-					class="flex items-center gap-2 rounded-xl bg-brand/10 p-3 text-xs text-brand font-medium"
+					:class="[
+						'flex items-start gap-2.5 rounded-xl p-3 text-xs font-medium border',
+						analysis.compatibility_level === 'Supported'
+							? 'bg-green-500/10 border-green-500/30 text-green-400'
+							: 'bg-amber-500/10 border-amber-500/30 text-amber-300',
+					]"
 				>
-					<SparklesIcon class="size-4 shrink-0" />
-					<span>{{ formatMessage(messages.compatibilityExplainer) }}</span>
+					<SparklesIcon class="size-4 shrink-0 mt-0.5" />
+					<div class="flex flex-col gap-0.5">
+						<span class="font-bold">
+							Compatibility: {{ analysis.compatibility_level === 'Supported' ? 'Fully Supported' : analysis.compatibility_level === 'PartiallySupported' ? 'Partially Supported' : 'Unsupported' }}
+						</span>
+						<span class="leading-relaxed">
+							{{ analysis.compatibility_summary || formatMessage(messages.compatibilityExplainer) }}
+						</span>
+					</div>
 				</div>
 			</div>
 
@@ -219,7 +254,7 @@
 						<span class="text-xs font-semibold text-contrast">
 							{{ formatMessage(messages.profileNameLabel) }}
 						</span>
-						<Input v-model="profileName" placeholder="Horizon Profile Name" />
+						<Input v-model="profileName" placeholder="Gradle Profile Name" />
 					</div>
 
 					<Button
@@ -259,13 +294,20 @@
 						</div>
 						<div class="flex flex-col">
 							<span class="text-sm font-bold text-contrast">{{ prof.name }}</span>
-							<span class="text-xs text-secondary">Horizon · 26.3</span>
+							<span class="text-xs text-secondary">Gradle · 26.3</span>
 						</div>
 					</div>
 					<PlayIcon class="size-4 text-brand" />
 				</router-link>
 			</div>
 		</div>
+
+		<!-- Modpack Compatibility Modal -->
+		<HorizonModpackCompatibilityModal
+			ref="compatModalRef"
+			@import-rust="onModalImportRust"
+			@import-java="onModalImportJava"
+		/>
 	</div>
 </template>
 
@@ -286,10 +328,11 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { analyzeModpackFile, extractModpackAssets, type ModpackAnalysis } from '@/helpers/horizon'
-import { install_create_instance } from '@/helpers/install'
+import { install_create_instance, install_create_modpack_instance } from '@/helpers/install'
 import { get, list } from '@/helpers/instance'
 import type { GameInstance } from '@/helpers/types'
 import { useRootBreadcrumb } from '@/shared/breadcrumbs'
+import HorizonModpackCompatibilityModal from '@/components/ui/modal/HorizonModpackCompatibilityModal.vue'
 
 const { formatMessage } = useVIntl()
 const router = useRouter()
@@ -303,6 +346,7 @@ useRootBreadcrumb({
 })
 
 const selectedPackPath = ref<string | null>(null)
+const compatModalRef = ref<InstanceType<typeof HorizonModpackCompatibilityModal> | null>(null)
 const analyzing = ref(false)
 const analysis = ref<ModpackAnalysis | null>(null)
 const filter = ref<'all' | 'compatible' | 'incompatible'>('all')
@@ -316,12 +360,12 @@ const instances = ref<GameInstance[]>([])
 const messages = defineMessages({
 	title: {
 		id: 'modpacks.page.title',
-		defaultMessage: 'Modpack Porter for Horizon',
+		defaultMessage: 'Modpack Porter for Gradle',
 	},
 	subtitle: {
 		id: 'modpacks.page.subtitle',
 		defaultMessage:
-			'Import Modrinth (.mrpack) and CurseForge (.zip) modpacks. Horizon carries over compatible data packs, resource packs, shaders, configs, and assets into an instant native profile.',
+			'Import Modrinth (.mrpack) and CurseForge (.zip) modpacks. Gradle carries over compatible data packs, resource packs, shaders, configs, and assets into an instant native profile.',
 	},
 	dropzoneTitle: {
 		id: 'modpacks.page.dropzone-title',
@@ -355,7 +399,7 @@ const messages = defineMessages({
 	},
 	compatibleItems: {
 		id: 'modpacks.page.compatible-items',
-		defaultMessage: 'Compatible with Horizon',
+		defaultMessage: 'Compatible with Gradle',
 	},
 	incompatibleItems: {
 		id: 'modpacks.page.incompatible-items',
@@ -364,7 +408,7 @@ const messages = defineMessages({
 	compatibilityExplainer: {
 		id: 'modpacks.page.compatibility-explainer',
 		defaultMessage:
-			'Horizon runs Minecraft 26.3 natively in Rust with wgpu/Vulkan shaders. Data packs, resource packs, shaders, and configs run natively. Java code mods (.jar) require JVM and are excluded.',
+			'Gradle runs Minecraft 26.3 natively in Rust with wgpu/Vulkan shaders. Data packs, resource packs, shaders, and configs run natively. Java code mods (.jar) require JVM and are excluded.',
 	},
 	filterAll: {
 		id: 'modpacks.page.filter-all',
@@ -392,11 +436,11 @@ const messages = defineMessages({
 	},
 	profileNameLabel: {
 		id: 'modpacks.page.profile-name-label',
-		defaultMessage: 'Horizon Profile Name',
+		defaultMessage: 'Gradle Profile Name',
 	},
 	createProfileButton: {
 		id: 'modpacks.page.create-profile-button',
-		defaultMessage: 'Create & Play Horizon Profile',
+		defaultMessage: 'Create & Play Gradle Profile',
 	},
 	creatingProfileButton: {
 		id: 'modpacks.page.creating-profile-button',
@@ -404,7 +448,7 @@ const messages = defineMessages({
 	},
 	yourProfiles: {
 		id: 'modpacks.page.your-profiles',
-		defaultMessage: 'Your Horizon Profiles',
+		defaultMessage: 'Your Gradle Profiles',
 	},
 })
 
@@ -460,12 +504,38 @@ async function handleSelectFile() {
 
 		const report = await analyzeModpackFile(file)
 		analysis.value = report
-		profileName.value = `${report.pack_name} (Horizon)`
+		profileName.value = `${report.pack_name} (Gradle)`
+		if (report.compatibility_level !== 'Supported') {
+			compatModalRef.value?.show(report)
+		}
 	} catch (e: unknown) {
 		creationError.value = e instanceof Error ? e.message : String(e)
 	} finally {
 		analyzing.value = false
 	}
+}
+
+async function onModalImportJava(report: ModpackAnalysis) {
+	if (!selectedPackPath.value) return
+	creatingProfile.value = true
+	creationError.value = null
+	try {
+		await install_create_modpack_instance({
+			type: 'fromFile',
+			path: selectedPackPath.value,
+		})
+		creationSuccess.value = `Modpack "${report.pack_name}" imported successfully as standard Java Edition instance!`
+		await fetchInstances()
+	} catch (e: unknown) {
+		creationError.value = e instanceof Error ? e.message : String(e)
+	} finally {
+		creatingProfile.value = false
+	}
+}
+
+function onModalImportRust(report: ModpackAnalysis) {
+	analysis.value = report
+	profileName.value = `${report.pack_name} (Gradle)`
 }
 
 function handleClear() {

@@ -1,0 +1,42 @@
+[default]
+description = "Default permissions for mr-auth plugin"
+permissions = [
+    "allow-get",
+    "allow-get-all",
+    "allow-set-active",
+    "allow-modrinth-login",
+    "allow-logout",
+    "allow-remove-account",
+    "allow-cancel-modrinth-login",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for mr-auth plugin"
+permissions = [
+    "allow-get",
+    "allow-get-all",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for mr-auth plugin"
+permissions = [
+    "allow-set-active",
+]
+
+[[set]]
+identifier = "launch"
+description = "Launch commands for mr-auth plugin"
+permissions = [
+    "allow-modrinth-login",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for mr-auth plugin"
+permissions = [
+    "allow-logout",
+    "allow-remove-account",
+    "allow-cancel-modrinth-login",
+]

@@ -1,9 +1,9 @@
 {
   "app.horizon.runtime": {
-    "message": "Horizon Runtime"
+    "message": "Gradle Runtime"
   },
   "app.horizon.badge": {
-    "message": "Horizon (Rust)"
+    "message": "Gradle (Rust)"
   },
   "app.horizon.native-rust": {
     "message": "Minecraft Java 26.3 rewritten in native Rust (no JVM)"
@@ -15,7 +15,7 @@
     "message": "Dedicated Server"
   },
   "app.horizon.requirements.title": {
-    "message": "Horizon System Requirements"
+    "message": "Gradle System Requirements"
   },
   "app.horizon.requirements.check": {
     "message": "Check Requirements"
@@ -24,28 +24,28 @@
     "message": "Choose 26.3.jar..."
   },
   "app.horizon.requirements.all-passed": {
-    "message": "All requirements met. Horizon is ready to play."
+    "message": "All requirements met. Gradle is ready to play."
   },
   "app.horizon.requirements.missing": {
     "message": "One or more requirements are missing."
   },
   "app.horizon.preparation.title": {
-    "message": "Prepare Horizon Game Files"
+    "message": "Prepare Gradle Game Files"
   },
   "app.horizon.preparation.subtitle": {
-    "message": "Rebuild native Horizon game resources locally from your genuine Minecraft 26.3 copy. The launcher never downloads or redistributes Mojang game files."
+    "message": "Rebuild native Gradle game resources locally from your genuine Minecraft 26.3 copy. The launcher never downloads or redistributes Mojang game files."
   },
   "app.horizon.preparation.status.ready": {
     "message": "Minecraft 26.3 client jar detected and verified. Ready to prepare resources."
   },
   "app.horizon.preparation.status.not-prepared": {
-    "message": "Horizon game files are not yet prepared. Preparation is required to launch the game."
+    "message": "Gradle game files are not yet prepared. Preparation is required to launch the game."
   },
   "app.horizon.preparation.status.prepared": {
-    "message": "Horizon resources are prepared and up to date."
+    "message": "Gradle resources are prepared and up to date."
   },
   "app.horizon.preparation.status.preparing": {
-    "message": "Preparing Horizon game resources..."
+    "message": "Preparing Gradle game resources..."
   },
   "app.horizon.preparation.button.prepare": {
     "message": "Prepare Resources"
@@ -66,7 +66,7 @@
     "message": "Minecraft Directory (Sounds)"
   },
   "app.horizon.preparation.success": {
-    "message": "Horizon resources prepared successfully!"
+    "message": "Gradle resources prepared successfully!"
   },
   "app.horizon.preparation.sound-notice": {
     "message": "Audio sounds extracted from local asset store."
@@ -84,10 +84,10 @@
     "message": "Default system Minecraft directory will be scanned for audio files"
   },
   "app.horizon.version.title": {
-    "message": "Horizon Versions"
+    "message": "Gradle Versions"
   },
   "app.horizon.version.subtitle": {
-    "message": "Select, install, or update Horizon native client and server builds from the release feed."
+    "message": "Select, install, or update Gradle native client and server builds from the release feed."
   },
   "app.horizon.version.installed": {
     "message": "Installed"
@@ -108,7 +108,7 @@
     "message": "Uninstall"
   },
   "app.horizon.version.no-versions": {
-    "message": "No Horizon releases found"
+    "message": "No Gradle releases found"
   },
   "app.horizon.version.latest": {
     "message": "Latest"
@@ -120,7 +120,7 @@
     "message": "Auto (Latest Installed)"
   },
   "app.horizon.version.required-prompt": {
-    "message": "Please install a Horizon build before launching this instance."
+    "message": "Please install a Gradle build before launching this instance."
   },
   "app.horizon.version.view-patch-notes": {
     "message": "Patch Notes"
@@ -129,10 +129,10 @@
     "message": "Patch notes"
   },
   "patch-notes.page.title": {
-    "message": "Horizon Patch Notes"
+    "message": "Gradle Patch Notes"
   },
   "patch-notes.page.subtitle": {
-    "message": "Changelogs, new features, and fixes across native Horizon runtime releases."
+    "message": "Changelogs, new features, and fixes across native Gradle runtime releases."
   },
   "patch-notes.page.channel-engine": {
     "message": "Engine Changelog"
@@ -192,7 +192,7 @@
     "message": "Share Server via P2P"
   },
   "p2p.host.subtitle": {
-    "message": "Tunnel your local Minecraft/Horizon server over peer-to-peer QUIC with automatic NAT hole punching and relay fallback."
+    "message": "Tunnel your local Minecraft/Gradle server over peer-to-peer QUIC with automatic NAT hole punching and relay fallback."
   },
   "p2p.host.port": {
     "message": "Local Server Port"
@@ -324,7 +324,7 @@
     "message": "Any friend connected to your Tailscale network can enter this IP directly into their Minecraft multiplayer menu."
   },
   "tailscale.modal.setup-guide-title": {
-    "message": "How to use Tailscale with Horizon"
+    "message": "How to use Tailscale with Gradle"
   },
   "tailscale.modal.step-1": {
     "message": "Install Tailscale on your PC and invite friends to your tailnet (tailscale.com)."
@@ -342,7 +342,7 @@
     "message": "Copied!"
   },
   "servers.page.tab.horizon": {
-    "message": "Horizon Dedicated Servers"
+    "message": "Gradle Dedicated Servers"
   },
   "servers.page.tab.cloud": {
     "message": "Modrinth Cloud Hosting"
@@ -357,10 +357,10 @@
     "message": "Join via Invite Code"
   },
   "servers.page.create-server": {
-    "message": "Create Horizon Server"
+    "message": "Create Gradle Server"
   },
   "servers.page.create-modal-title": {
-    "message": "Create Native Horizon Server"
+    "message": "Create Native Gradle Server"
   },
   "servers.page.server-name-label": {
     "message": "Server Name"
@@ -369,7 +369,7 @@
     "message": "Server Port"
   },
   "servers.page.no-servers-title": {
-    "message": "No Horizon servers yet"
+    "message": "No Gradle servers yet"
   },
   "servers.page.no-servers-desc": {
     "message": "Create a native Minecraft 26.3 server that starts instantly, uses under 150MB of RAM, and can be shared over peer-to-peer invite tunnels."
@@ -405,10 +405,10 @@
     "message": "World backup saved successfully!"
   },
   "modpacks.page.title": {
-    "message": "Modpack Porter for Horizon"
+    "message": "Modpack Porter for Gradle"
   },
   "modpacks.page.subtitle": {
-    "message": "Import Modrinth (.mrpack) and CurseForge (.zip) modpacks. Horizon carries over compatible data packs, resource packs, shaders, configs, and assets into an instant native profile."
+    "message": "Import Modrinth (.mrpack) and CurseForge (.zip) modpacks. Gradle carries over compatible data packs, resource packs, shaders, configs, and assets into an instant native profile."
   },
   "modpacks.page.dropzone-title": {
     "message": "Select or Drop a Modpack File"
@@ -432,13 +432,13 @@
     "message": "Total Pack Items"
   },
   "modpacks.page.compatible-items": {
-    "message": "Compatible with Horizon"
+    "message": "Compatible with Gradle"
   },
   "modpacks.page.incompatible-items": {
     "message": "Java Bytecode (Skipped)"
   },
   "modpacks.page.compatibility-explainer": {
-    "message": "Horizon runs Minecraft 26.3 natively in Rust with wgpu/Vulkan shaders. Data packs, resource packs, shaders, and configs run natively. Java code mods (.jar) require JVM and are excluded."
+    "message": "Gradle runs Minecraft 26.3 natively in Rust with wgpu/Vulkan shaders. Data packs, resource packs, shaders, and configs run natively. Java code mods (.jar) require JVM and are excluded."
   },
   "modpacks.page.filter-all": {
     "message": "All Components"
@@ -459,16 +459,16 @@
     "message": "Skipped (Java)"
   },
   "modpacks.page.profile-name-label": {
-    "message": "Horizon Profile Name"
+    "message": "Gradle Profile Name"
   },
   "modpacks.page.create-profile-button": {
-    "message": "Create & Play Horizon Profile"
+    "message": "Create & Play Gradle Profile"
   },
   "modpacks.page.creating-profile-button": {
     "message": "Creating Profile..."
   },
   "modpacks.page.your-profiles": {
-    "message": "Your Horizon Profiles"
+    "message": "Your Gradle Profiles"
   },
   "app.action-bar.downloading-java": {
     "message": "Downloading Java {version}"
@@ -656,48 +656,48 @@
   "app.auth-servers.unreachable.header": {
     "message": "Cannot reach authentication servers"
   },
-	"app.icon-editor.apply-icons-modal.apply-error": {
-		"message": "Failed to apply random icons to instances."
-	},
-	"app.icon-editor.apply-icons-modal.apply-success": {
-		"message": "Randomized icon for {num, plural, one {# instance} other {# instances}}."
-	},
-	"app.icon-editor.apply-icons-modal.badge": {
-		"message": "New this update"
-	},
-	"app.icon-editor.apply-icons-modal.close": {
-		"message": "Close"
-	},
-	"app.icon-editor.apply-icons-modal.description": {
-		"message": "Create custom icons for your instances right in Gradle. Mix and match backgrounds with symbols from Minecraft and popular mods!"
-	},
-	"app.icon-editor.apply-icons-modal.instances-without-icons": {
-		"message": "{count, plural, one {# instance doesn’t} other {# instances don’t}} have icons yet. Want us to give {count, plural, one {it} other {them}} random ones to get started?"
-	},
-	"app.icon-editor.apply-icons-modal.random-icons": {
-		"message": "Random icons"
-	},
-	"app.icon-editor.apply-icons-modal.skip": {
-		"message": "Skip"
-	},
-	"app.icon-editor.apply-icons-modal.title": {
-		"message": "Custom icon editor"
-	},
-	"app.icon-editor.notification.close": {
-		"message": "Close"
-	},
-	"app.icon-editor.notification.description": {
-		"message": "Personalize your instances!"
-	},
-	"app.icon-editor.notification.dismiss": {
-		"message": "Dismiss"
-	},
-	"app.icon-editor.notification.title": {
-		"message": "New icon editor"
-	},
-	"app.icon-editor.notification.view-update": {
-		"message": "View update"
-	},
+  "app.icon-editor.apply-icons-modal.apply-error": {
+    "message": "Failed to apply random icons to instances."
+  },
+  "app.icon-editor.apply-icons-modal.apply-success": {
+    "message": "Randomized icon for {num, plural, one {# instance} other {# instances}}."
+  },
+  "app.icon-editor.apply-icons-modal.badge": {
+    "message": "New this update"
+  },
+  "app.icon-editor.apply-icons-modal.close": {
+    "message": "Close"
+  },
+  "app.icon-editor.apply-icons-modal.description": {
+    "message": "Create custom icons for your instances right in Gradle. Mix and match backgrounds with symbols from Minecraft and popular mods!"
+  },
+  "app.icon-editor.apply-icons-modal.instances-without-icons": {
+    "message": "{count, plural, one {# instance doesn’t} other {# instances don’t}} have icons yet. Want us to give {count, plural, one {it} other {them}} random ones to get started?"
+  },
+  "app.icon-editor.apply-icons-modal.random-icons": {
+    "message": "Random icons"
+  },
+  "app.icon-editor.apply-icons-modal.skip": {
+    "message": "Skip"
+  },
+  "app.icon-editor.apply-icons-modal.title": {
+    "message": "Custom icon editor"
+  },
+  "app.icon-editor.notification.close": {
+    "message": "Close"
+  },
+  "app.icon-editor.notification.description": {
+    "message": "Personalize your instances!"
+  },
+  "app.icon-editor.notification.dismiss": {
+    "message": "Dismiss"
+  },
+  "app.icon-editor.notification.title": {
+    "message": "New icon editor"
+  },
+  "app.icon-editor.notification.view-update": {
+    "message": "View update"
+  },
   "gradle.app.launcher-update.available.action": {
     "message": "View update"
   },
@@ -771,19 +771,19 @@
     "message": "Visual"
   },
   "gradle.app.settings.tabs.horizon": {
-    "message": "Horizon Engine"
+    "message": "Gradle Engine"
   },
   "gradle.app.settings.horizon.title": {
-    "message": "Horizon Engine"
+    "message": "Gradle Engine"
   },
   "gradle.app.settings.horizon.description": {
-    "message": "Configure the native Horizon Rust game client: graphics presets, distant terrain LOD up to 1024 chunks, gamepad haptics, and gameplay extras."
+    "message": "Configure the native Gradle Rust game client: graphics presets, distant terrain LOD up to 1024 chunks, gamepad haptics, and gameplay extras."
   },
   "gradle.app.settings.horizon.graphics.title": {
     "message": "Graphics & Distant Terrain"
   },
   "gradle.app.settings.horizon.graphics.desc": {
-    "message": "Horizon renders Minecraft 26.3 natively with wgpu/Vulkan shaders. Distant terrain extends local worlds far beyond vanilla limits."
+    "message": "Gradle renders Minecraft 26.3 natively with wgpu/Vulkan shaders. Distant terrain extends local worlds far beyond vanilla limits."
   },
   "gradle.app.settings.horizon.preset.title": {
     "message": "Graphics Preset"
@@ -858,7 +858,7 @@
     "message": "Menu Navigation Mode"
   },
   "gradle.app.settings.horizon.extras.title": {
-    "message": "Horizon Extras"
+    "message": "Gradle Extras"
   },
   "gradle.app.settings.horizon.extras.desc": {
     "message": "Optional native additions engineered directly into the Rust game client with zero mod overhead."
@@ -888,13 +888,13 @@
     "message": "AI Agent Control & MCP Server"
   },
   "gradle.app.settings.horizon.agent.desc": {
-    "message": "Expose Horizon as a Model Context Protocol (MCP) server so AI coding assistants (Claude Code, Cursor, Codex) can observe the world and play the game."
+    "message": "Expose Gradle as a Model Context Protocol (MCP) server so AI coding assistants (Claude Code, Cursor, Codex) can observe the world and play the game."
   },
   "gradle.app.settings.horizon.agent.allow-ai-agents.title": {
     "message": "Allow AI agents"
   },
   "gradle.app.settings.horizon.agent.allow-ai-agents.desc": {
-    "message": "Off by default. When enabled, Horizon starts with a local control socket and horizon-ctl exposes 80+ tools over stdio JSON-RPC."
+    "message": "Off by default. When enabled, Gradle Rust Edition starts with a local control socket and horizon-ctl exposes 80+ tools over stdio JSON-RPC."
   },
   "gradle.app.settings.horizon.agent.ctl-installed": {
     "message": "Installed & Ready"
@@ -909,7 +909,7 @@
     "message": "Connect an AI Agent"
   },
   "gradle.app.settings.horizon.agent.connect.desc": {
-    "message": "Add the Horizon MCP server to your AI assistant configuration."
+    "message": "Add the Gradle MCP server to your AI assistant configuration."
   },
   "gradle.app.settings.horizon.agent.one-click-cli": {
     "message": "Terminal command (one-step add)"
@@ -926,18 +926,18 @@
   "gradle.app.settings.visual.description": {
     "message": "Customize the visual effects used by Gradle without changing the selected theme."
   },
-	"gradle.app.settings.visual.glass-level.matte": {
-		"message": "Matte"
-	},
-	"gradle.app.settings.visual.glass-level.standard": {
-		"message": "Standard"
-	},
-	"gradle.app.settings.visual.glass-level.title": {
-		"message": "Glass level"
-	},
-	"gradle.app.settings.visual.glass-level.transparent": {
-		"message": "Transparent"
-	},
+  "gradle.app.settings.visual.glass-level.matte": {
+    "message": "Matte"
+  },
+  "gradle.app.settings.visual.glass-level.standard": {
+    "message": "Standard"
+  },
+  "gradle.app.settings.visual.glass-level.title": {
+    "message": "Glass level"
+  },
+  "gradle.app.settings.visual.glass-level.transparent": {
+    "message": "Transparent"
+  },
   "gradle.app.settings.visual.liquid-glass.description": {
     "message": "Use translucent surfaces, blur, and layered depth across the app. Turn this off if the effects impact performance or readability."
   },
@@ -965,24 +965,24 @@
   "gradle.app.settings.updates.description": {
     "message": "Inspect the Gradle release channel, distribution status, and update-provider diagnostics."
   },
-	"gradle.app.settings.updates.os": {
-		"message": "Operating system"
-	},
-	"gradle.app.settings.updates.arch": {
-		"message": "Architecture"
-	},
-	"gradle.app.settings.updates.app-commit": {
-		"message": "Commit"
-	},
-	"gradle.app.settings.updates.system-information-unavailable": {
-		"message": "System information is unavailable."
-	},
+  "gradle.app.settings.updates.os": {
+    "message": "Operating system"
+  },
+  "gradle.app.settings.updates.arch": {
+    "message": "Architecture"
+  },
+  "gradle.app.settings.updates.app-commit": {
+    "message": "Commit"
+  },
+  "gradle.app.settings.updates.system-information-unavailable": {
+    "message": "System information is unavailable."
+  },
   "gradle.app.settings.updates.api-url": {
     "message": "Update provider API URL"
   },
-	"gradle.app.settings.updates.libraries-api-url": {
-		"message": "Libraries provider API URL"
-	},
+  "gradle.app.settings.updates.libraries-api-url": {
+    "message": "Libraries provider API URL"
+  },
   "gradle.app.settings.updates.downloadable-files": {
     "message": "Downloadable files"
   },
@@ -1028,12 +1028,12 @@
   "gradle.app.skins.unsupported-account.title": {
     "message": "Microsoft account required"
   },
-	"gradle.app.skins.sign-in.description": {
-		"message": "Choose a sign-in method to add your Minecraft account."
-	},
-	"gradle.app.skins.sign-in.title": {
-		"message": "Sign in to manage skins"
-	},
+  "gradle.app.skins.sign-in.description": {
+    "message": "Choose a sign-in method to add your Minecraft account."
+  },
+  "gradle.app.skins.sign-in.title": {
+    "message": "Sign in to manage skins"
+  },
   "gradle.app.skins.sign-in-methods.button": {
     "message": "Sign-in methods"
   },
@@ -1112,30 +1112,30 @@
   "gradle.app.launcher-update-modal.update.title": {
     "message": "A new version of the Gradle launcher is available."
   },
-	"gradle.app.news.empty": {
-		"message": "No Gradle news yet."
-	},
-	"gradle.app.news.error": {
-		"message": "Could not load Gradle news."
-	},
-	"gradle.app.news.loading": {
-		"message": "Loading Gradle news…"
-	},
-	"gradle.app.news.rate-limited": {
-		"message": "Too many requests."
-	},
-	"gradle.app.news.recent-available": {
-		"message": "Recent news available"
-	},
-	"gradle.app.news.new": {
-		"message": "New"
-	},
-	"gradle.app.news.open-article": {
-		"message": "Go to"
-	},
-	"gradle.app.news.title": {
-		"message": "Gradle news"
-	},
+  "gradle.app.news.empty": {
+    "message": "No Gradle news yet."
+  },
+  "gradle.app.news.error": {
+    "message": "Could not load Gradle news."
+  },
+  "gradle.app.news.loading": {
+    "message": "Loading Gradle news…"
+  },
+  "gradle.app.news.rate-limited": {
+    "message": "Too many requests."
+  },
+  "gradle.app.news.recent-available": {
+    "message": "Recent news available"
+  },
+  "gradle.app.news.new": {
+    "message": "New"
+  },
+  "gradle.app.news.open-article": {
+    "message": "Go to"
+  },
+  "gradle.app.news.title": {
+    "message": "Gradle news"
+  },
   "gradle.app.minecraft-account.error.input-offline.description": {
     "message": "An error occurred while adding the offline account. Please follow the instructions below."
   },
@@ -1242,13 +1242,13 @@
     "message": "Discover servers"
   },
   "app.browse.horizon.notice-title": {
-    "message": "Horizon Profile Active"
+    "message": "Gradle Profile Active"
   },
   "app.browse.horizon.java-mods-notice": {
-    "message": "Horizon runs native WebAssembly mods (.wasm, .hmod) and data/asset packs. Standard Java mod JARs (.jar) require JVM (Fabric/NeoForge) and will not execute."
+    "message": "Gradle runs native WebAssembly mods (.wasm, .hmod) and data/asset packs. Standard Java mod JARs (.jar) require JVM (Fabric/NeoForge) and will not execute."
   },
   "app.browse.horizon.assets-compatible-notice": {
-    "message": "Horizon natively supports resource packs, shaders (wgpu/Vulkan), and data packs from Gradle."
+    "message": "Gradle natively supports resource packs, shaders (wgpu/Vulkan), and data packs."
   },
   "app.browse.hide-added-servers": {
     "message": "Hide servers already added"
@@ -1701,10 +1701,10 @@
     "message": "{count, plural, one {Instance} other {Instances ({count})}}"
   },
   "app.instance.content.horizon.notice-title": {
-    "message": "Horizon Native Profile (Minecraft 26.3)"
+    "message": "Gradle Native Profile (Minecraft 26.3)"
   },
   "app.instance.content.horizon.notice-desc": {
-    "message": "Horizon runs natively in Rust (wgpu/Vulkan). It supports WebAssembly mods (.wasm, .hmod), data packs, resource packs, and shaders. Standard Java JAR bytecode mods are not supported."
+    "message": "Gradle runs natively in Rust (wgpu/Vulkan). It supports WebAssembly mods (.wasm, .hmod), data packs, resource packs, and shaders. Standard Java JAR bytecode mods are not supported."
   },
   "app.instance.content.managed-content.modpack-header": {
     "message": "Modpack content"
@@ -4716,13 +4716,13 @@
     "message": "Export modpack"
   },
   "instance.action.play-horizon": {
-    "message": "Play with Horizon"
+    "message": "Play with Gradle"
   },
   "instance.action.play-java": {
     "message": "Play with Java"
   },
   "instance.runtime.horizon": {
-    "message": "Horizon (Rust, optimized)"
+    "message": "Gradle (Rust, optimized)"
   },
   "instance.runtime.java": {
     "message": "Java (classic)"
@@ -4734,22 +4734,22 @@
     "message": "Launch instance"
   },
   "instance.action.launch-client": {
-    "message": "Launch Horizon Client"
+    "message": "Launch Gradle Client"
   },
   "instance.action.launch-server": {
-    "message": "Launch Horizon Server"
+    "message": "Launch Gradle Server"
   },
   "instance.action.check-requirements": {
-    "message": "Check Horizon Requirements"
+    "message": "Check Gradle Requirements"
   },
   "instance.action.prepare-resources": {
     "message": "Prepare Game Files"
   },
   "instance.action.select-version": {
-    "message": "Select Horizon Version"
+    "message": "Select Gradle Version"
   },
   "instance.action.check-updates": {
-    "message": "Check for Horizon Updates"
+    "message": "Check for Gradle Updates"
   },
   "instance.action.more-actions": {
     "message": "More actions"

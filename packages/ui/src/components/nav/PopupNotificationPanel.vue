@@ -359,7 +359,7 @@ withDefaults(
 	position: fixed;
 	top: calc(var(--top-bar-height, 3rem) + 1.5rem);
 	right: 1.5rem;
-	z-index: 200;
+	z-index: 40;
 	width: min(440px, calc(100vw - 1.5rem));
 	min-width: min(440px, calc(100vw - 1.5rem));
 	max-width: min(440px, calc(100vw - 1.5rem));

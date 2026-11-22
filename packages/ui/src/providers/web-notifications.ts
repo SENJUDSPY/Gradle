@@ -32,7 +32,8 @@ export interface WebNotification {
 export type NotificationPanelLocation = 'left' | 'right'
 
 export abstract class AbstractWebNotificationManager {
-	protected readonly DEFAULT_AUTO_DISMISS_DELAY_MS = 30 * 1000
+	protected readonly DEFAULT_AUTO_DISMISS_DELAY_MS = 7 * 1000
+	protected readonly ERROR_AUTO_DISMISS_DELAY_MS = 10 * 1000
 
 	abstract getNotifications(): WebNotification[]
 	abstract getNotificationLocation(): NotificationPanelLocation
@@ -66,9 +67,51 @@ export abstract class AbstractWebNotificationManager {
 	handleError = (error: unknown): void => {
 		if (isCancelledError(error)) return
 
+		console.error('[NotificationManager] Handled error:', error)
+
+		let message: string
+		if (error instanceof Error) {
+			message = error.message
+		} else if (typeof error === 'string') {
+			message = error
+		} else if (typeof error === 'object' && error !== null) {
+			const obj = error as Record<string, unknown>
+			message =
+				(typeof obj.message === 'string' && obj.message) ||
+				(typeof obj.error === 'string' && obj.error) ||
+				(typeof obj.description === 'string' && obj.description) ||
+				(typeof obj.details === 'string' && obj.details) ||
+				(() => {
+					try {
+						return JSON.stringify(error)
+					} catch {
+						return String(error)
+					}
+				})()
+		} else {
+			message = String(error)
+		}
+
+		if (
+			message.includes('not allowed by ACL') ||
+			message.includes('not permitted by ACL') ||
+			message.includes('denied by ACL') ||
+			message.includes('blocked by ACL') ||
+			message.includes('Permissions associated with this command:') ||
+			/\b[a-z0-9_-]+(?:\|[a-z0-9_]+|\.[a-z0-9_]+)\s+not allowed(?:\.| on\b)/i.test(message)
+		) {
+			message = `A security rule blocked an internal action: ${message}`
+		}
+
+		const errorCode =
+			typeof error === 'object' && error !== null && 'code' in error
+				? String((error as { code: unknown }).code)
+				: undefined
+
 		this.addNotification({
 			title: 'An error occurred',
-			text: ModrinthApiError.fromUnknown(error).message,
+			text: message,
+			errorCode,
 			type: 'error',
 		})
 	}
@@ -114,7 +157,10 @@ export abstract class AbstractWebNotificationManager {
 
 		if (notification.autoCloseMs === null) return
 
-		const delay = notification.autoCloseMs ?? this.DEFAULT_AUTO_DISMISS_DELAY_MS
+		const isError = notification.type === 'error'
+		const delay =
+			notification.autoCloseMs ??
+			(isError ? this.ERROR_AUTO_DISMISS_DELAY_MS : this.DEFAULT_AUTO_DISMISS_DELAY_MS)
 
 		notification.timer = setTimeout(() => {
 			this.removeNotification(notification.id)

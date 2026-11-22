@@ -1,0 +1,527 @@
+//! Single Source of Truth for Tauri commands and ACL registration
+//!
+//! Both `build.rs` (for Tauri v2 InlinedPlugin/AppManifest ACL permissions)
+//! and backend invoke handlers consume these exact command definitions.
+//!
+//! Copyright (c) 2026 Gradle contributors (MIT License).
+
+#![allow(dead_code, unused_imports)]
+
+macro_rules! define_plugin_commands {
+    ($handler_name:ident, $const_name:ident, [ $($cmd:ident),* $(,)? ]) => {
+        #[allow(dead_code)]
+        pub const $const_name: &[&str] = &[ $( stringify!($cmd) ),* ];
+        #[allow(unused_macros)]
+        macro_rules! $handler_name {
+            () => {
+                tauri::generate_handler![ $($cmd),* ]
+            };
+        }
+        #[allow(unused_imports)]
+        pub(crate) use $handler_name;
+    };
+}
+
+define_plugin_commands!(
+    app_handler,
+    APP_COMMANDS,
+    [
+        are_updates_enabled,
+        enqueue_update_for_installation,
+        files_save_external,
+        get_update_size,
+        initialize_state,
+        instance_content,
+        is_dev,
+        remove_enqueued_update,
+        restart_app,
+        set_restart_after_pending_update,
+        show_window,
+        toggle_decorations,
+    ]
+);
+
+define_plugin_commands!(
+    auth_handler,
+    AUTH_COMMANDS,
+    [
+        authenticate_external_provider,
+        check_reachable,
+        get_default_user,
+        get_external_auth_library_states,
+        get_external_auth_providers,
+        get_users,
+        install_external_auth_library,
+        login,
+        offline_login,
+        remove_user,
+        select_external_auth_library,
+        set_default_user,
+    ]
+);
+
+define_plugin_commands!(
+    cache_handler,
+    CACHE_COMMANDS,
+    [
+        get_organization,
+        get_organization_many,
+        get_project,
+        get_project_many,
+        get_project_v3,
+        get_project_v3_many,
+        get_project_versions,
+        get_search_results,
+        get_search_results_many,
+        get_search_results_v3,
+        get_search_results_v3_many,
+        get_team,
+        get_team_many,
+        get_user,
+        get_user_many,
+        get_version,
+        get_version_many,
+        purge_cache_types,
+    ]
+);
+
+define_plugin_commands!(
+    files_handler,
+    FILES_COMMANDS,
+    [
+        file_create_directory,
+        file_delete,
+        file_extract_zip,
+        file_list,
+        file_read,
+        file_read_dragged_file,
+        file_rename,
+        file_save_as,
+        file_write,
+        files_release_external,
+        files_save_external,
+        files_select_external,
+    ]
+);
+
+define_plugin_commands!(
+    friends_handler,
+    FRIENDS_COMMANDS,
+    [
+        add_friend,
+        friend_statuses,
+        friends,
+        remove_friend,
+    ]
+);
+
+define_plugin_commands!(
+    horizon_handler,
+    HORIZON_COMMANDS,
+    [
+        horizon_analyze_modpack,
+        horizon_backup_server,
+        horizon_cancel_preparation,
+        horizon_check_requirements,
+        horizon_classify_instance_mods,
+        horizon_classify_mod_file,
+        horizon_clear_crash,
+        horizon_create_server,
+        horizon_delete_server,
+        horizon_extract_mod_assets,
+        horizon_extract_modpack_assets,
+        horizon_get_agent_configs,
+        horizon_get_agent_control_status,
+        horizon_get_extracted_content_summaries,
+        horizon_get_installed_version_info,
+        horizon_get_installed_versions,
+        horizon_get_latest_crash,
+        horizon_get_load_order,
+        horizon_get_mod_catalog,
+        horizon_get_releases,
+        horizon_get_resources_manifest,
+        horizon_get_settings,
+        horizon_get_tailscale_ip,
+        horizon_has_sounds,
+        horizon_install_version,
+        horizon_is_resources_prepared,
+        horizon_list_servers,
+        horizon_lookup_catalog_entry,
+        horizon_prepare_resources,
+        horizon_remerge_extracted_content,
+        horizon_remove_version,
+        horizon_run_diagnostics,
+        horizon_save_settings,
+        horizon_set_agent_control_enabled,
+        horizon_start_server,
+        horizon_stop_server,
+        horizon_test_mcp_server,
+        horizon_toggle_extracted_mod,
+        horizon_update_load_order,
+        horizon_update_mod_catalog,
+        horizon_update_server,
+        horizon_validate_mod_license,
+        horizon_run_porting_assistant,
+    ]
+);
+
+define_plugin_commands!(
+    import_handler,
+    IMPORT_COMMANDS,
+    [
+        get_default_launcher_path,
+        get_importable_instances,
+        is_valid_importable_instance,
+    ]
+);
+
+define_plugin_commands!(
+    install_handler,
+    INSTALL_COMMANDS,
+    [
+        install_accept_shared_instance_invite,
+        install_bulk_update_content,
+        install_create_instance,
+        install_create_modpack_instance,
+        install_duplicate_instance,
+        install_existing_instance,
+        install_get_modpack_preview,
+        install_get_shared_instance_preview,
+        install_get_shared_instance_update_preview,
+        install_import_instance,
+        install_job_cancel,
+        install_job_dismiss,
+        install_job_get,
+        install_job_list,
+        install_job_pause,
+        install_job_resume,
+        install_job_retry,
+        install_job_support_details,
+        install_pack_to_existing_instance,
+        install_shared_instance,
+        install_update_shared_instance,
+    ]
+);
+
+define_plugin_commands!(
+    instance_handler,
+    INSTANCE_COMMANDS,
+    [
+        instance_add_project_from_path,
+        instance_add_project_from_version,
+        instance_cache_generated_icon,
+        instance_check_installed,
+        instance_content,
+        instance_create_group,
+        instance_create_screenshot_group,
+        instance_delete_group,
+        instance_delete_screenshot_group,
+        instance_delete_screenshots,
+        instance_desync_pack,
+        instance_edit,
+        instance_edit_generated_icon,
+        instance_edit_icon,
+        instance_export_mrpack,
+        instance_export_screenshots,
+        instance_get,
+        instance_get_command_history,
+        instance_get_content_items,
+        instance_get_dependencies_as_content_items,
+        instance_get_full_path,
+        instance_get_game_setting_locale_labels,
+        instance_get_global_synced_options,
+        instance_get_initialized_synced_options,
+        instance_get_install_candidates,
+        instance_get_installed_project_ids,
+        instance_get_linked_modpack_content,
+        instance_get_linked_modpack_info,
+        instance_get_local_game_options_config,
+        instance_get_many,
+        instance_get_mod_full_path,
+        instance_get_optimal_jre_key,
+        instance_get_pack_export_candidates,
+        instance_get_pack_sync_preview,
+        instance_get_projects,
+        instance_get_recent_icon_configs,
+        instance_get_runtime,
+        instance_get_synced_game_options_config,
+        instance_get_synced_option_join_preview,
+        instance_get_synced_options_overview,
+        instance_import_screenshot_groups,
+        instance_install_project_with_dependencies,
+        instance_is_file_on_modrinth,
+        instance_kill,
+        instance_list,
+        instance_list_all_screenshots,
+        instance_list_game_options_sync_sources,
+        instance_list_groups,
+        instance_list_screenshot_groups,
+        instance_list_screenshots,
+        instance_list_synced_packs,
+        instance_list_synced_screenshots,
+        instance_list_synced_servers,
+        instance_move_screenshots,
+        instance_open_screenshot,
+        instance_open_synced_options_folder,
+        instance_preview_local_game_option_changes,
+        instance_preview_synced_game_option_changes,
+        instance_rebuild_synced_options,
+        instance_refresh_content_updates,
+        instance_remove,
+        instance_remove_project,
+        instance_remove_synced_pack,
+        instance_remove_synced_server,
+        instance_rename_group,
+        instance_rename_screenshot_group,
+        instance_repair_managed_modrinth,
+        instance_restart,
+        instance_run,
+        instance_save_edited_screenshot,
+        instance_save_local_game_option_changes,
+        instance_save_synced_game_option_changes,
+        instance_set_command_history,
+        instance_set_global_synced_option,
+        instance_set_group_memberships,
+        instance_set_group_order,
+        instance_set_project_locked,
+        instance_set_runtime,
+        instance_set_screenshot_group_memberships,
+        instance_set_synced_option,
+        instance_set_synced_pack_enabled,
+        instance_share_can_current_user_use,
+        instance_share_create_invite_link,
+        instance_share_get_invites,
+        instance_share_get_publish_preview,
+        instance_share_get_users,
+        instance_share_invite_users,
+        instance_share_publish,
+        instance_share_publish_support_details,
+        instance_share_remove_users,
+        instance_share_revoke_invite,
+        instance_share_unlink,
+        instance_share_unpublish,
+        instance_switch_project_version_with_dependencies,
+        instance_sync_content_files,
+        instance_sync_pack,
+        instance_toggle_disable_project,
+        instance_update_managed_modrinth_version,
+        instance_update_project,
+        instance_update_synced_server,
+        instance_upload_synced_pack,
+    ]
+);
+
+define_plugin_commands!(
+    jre_handler,
+    JRE_COMMANDS,
+    [
+        get_java_versions,
+        jre_auto_install_java,
+        jre_find_filtered_jres,
+        jre_get_jre,
+        jre_get_max_memory,
+        jre_test_jre,
+        set_java_version,
+    ]
+);
+
+define_plugin_commands!(
+    logs_handler,
+    LOGS_COMMANDS,
+    [
+        logs_clear_live_log_buffer,
+        logs_delete_logs,
+        logs_delete_logs_by_filename,
+        logs_get_latest_log_cursor,
+        logs_get_live_log_buffer,
+        logs_get_logs,
+        logs_get_logs_by_filename,
+        logs_get_output_by_filename,
+        logs_log_webview,
+    ]
+);
+
+define_plugin_commands!(
+    metadata_handler,
+    METADATA_COMMANDS,
+    [
+        metadata_get_game_versions,
+        metadata_get_loader_versions,
+    ]
+);
+
+define_plugin_commands!(
+    minecraft_skins_handler,
+    MINECRAFT_SKINS_COMMANDS,
+    [
+        add_and_equip_custom_skin,
+        equip_skin,
+        flush_pending_skin_change,
+        flush_pending_skin_change_for_profile,
+        get_available_capes,
+        get_available_skins,
+        get_dragged_skin_data,
+        normalize_skin_texture,
+        remove_custom_skin,
+        save_custom_skin,
+        set_custom_skin_order,
+        unequip_skin,
+    ]
+);
+
+define_plugin_commands!(
+    mr_auth_handler,
+    MR_AUTH_COMMANDS,
+    [
+        cancel_modrinth_login,
+        get,
+        get_all,
+        logout,
+        modrinth_login,
+        remove_account,
+        set_active,
+    ]
+);
+
+define_plugin_commands!(
+    onboarding_checklist_handler,
+    ONBOARDING_CHECKLIST_COMMANDS,
+    [
+        get_onboarding_checklist,
+    ]
+);
+
+define_plugin_commands!(
+    p2p_handler,
+    P2P_COMMANDS,
+    [
+        p2p_disconnect_join,
+        p2p_get_host_info,
+        p2p_get_join_info,
+        p2p_join,
+        p2p_regenerate_invite,
+        p2p_respond_join_request,
+        p2p_revoke_invite,
+        p2p_start_host,
+        p2p_stop_host,
+    ]
+);
+
+define_plugin_commands!(
+    process_handler,
+    PROCESS_COMMANDS,
+    [
+        process_get_all,
+        process_get_by_instance_id,
+        process_kill,
+        process_wait_for,
+    ]
+);
+
+define_plugin_commands!(
+    reports_handler,
+    REPORTS_COMMANDS,
+    [
+        reports_create,
+    ]
+);
+
+define_plugin_commands!(
+    settings_handler,
+    SETTINGS_COMMANDS,
+    [
+        cancel_directory_change,
+        settings_get,
+        settings_set,
+        store_cleanup,
+        store_set_cache_limit,
+        store_usage,
+        store_verify,
+    ]
+);
+
+define_plugin_commands!(
+    shortcuts_handler,
+    SHORTCUTS_COMMANDS,
+    [
+        create_instance_shortcut,
+    ]
+);
+
+define_plugin_commands!(
+    tags_handler,
+    TAGS_COMMANDS,
+    [
+        tags_get_categories,
+        tags_get_donation_platforms,
+        tags_get_game_versions,
+        tags_get_loaders,
+        tags_get_report_types,
+    ]
+);
+
+define_plugin_commands!(
+    users_handler,
+    USERS_COMMANDS,
+    [
+        block_user,
+        change_user_avatar,
+        delete_user_avatar,
+        get_blocked_users,
+        get_user_collections,
+        get_user_organizations,
+        get_user_preferences,
+        get_user_profile,
+        get_user_projects,
+        patch_user,
+        patch_user_preferences,
+        search_user,
+        unblock_user,
+    ]
+);
+
+define_plugin_commands!(
+    utils_handler,
+    UTILS_COMMANDS,
+    [
+        cancel_debug_info_export,
+        export_debug_info,
+        get_image_thumbnail,
+        get_opening_command,
+        get_os,
+        highlight_in_folder,
+        init_update_launcher,
+        is_network_metered,
+        open_path,
+        progress_bars_list,
+        reset_app_database,
+        restore_latest_db_backup,
+        should_disable_mouseover,
+        show_app_db_backups_folder,
+        show_launcher_logs_folder,
+    ]
+);
+
+define_plugin_commands!(
+    worlds_handler,
+    WORLDS_COMMANDS,
+    [
+        add_server_to_instance,
+        backup_world,
+        delete_world,
+        desync_server,
+        edit_server_in_instance,
+        ensure_managed_server_in_instance,
+        get_instance_protocol_version,
+        get_instance_worlds,
+        get_recent_worlds,
+        get_server_status,
+        get_singleplayer_world,
+        remove_server_from_instance,
+        rename_world,
+        reset_world_icon,
+        set_world_display_status,
+        start_join_server,
+        start_join_singleplayer_world,
+    ]
+);

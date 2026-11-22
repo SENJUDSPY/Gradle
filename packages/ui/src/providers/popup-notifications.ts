@@ -133,7 +133,8 @@ export interface PopupNotificationDownloadState {
 }
 
 export abstract class AbstractPopupNotificationManager {
-	protected readonly DEFAULT_AUTO_CLOSE_MS = 30 * 1000
+	protected readonly DEFAULT_AUTO_CLOSE_MS = 7 * 1000
+	protected readonly ERROR_AUTO_CLOSE_MS = 10 * 1000
 	private readonly hiddenDownloadItemKeys: Ref<Set<string>> = ref(new Set())
 
 	abstract getNotifications(): PopupNotification[]
@@ -171,7 +172,38 @@ export abstract class AbstractPopupNotificationManager {
 	protected abstract removeNotificationFromStorage(id: string | number): void
 	protected abstract clearAllNotificationsFromStorage(): void
 
+	private findExistingNotification(
+		notification: PopupNotificationInput,
+	): PopupNotification | undefined {
+		if (notification.contentType === 'standard') {
+			return this.getNotifications().find(
+				(existing) =>
+					existing.contentType === 'standard' &&
+					existing.title === notification.title &&
+					existing.text === notification.text &&
+					existing.type === notification.type,
+			)
+		}
+		if (notification.contentType === 'toast') {
+			return this.getNotifications().find(
+				(existing) =>
+					existing.contentType === 'toast' &&
+					existing.title === notification.title &&
+					existing.type === notification.type &&
+					existing.entityName === notification.entityName &&
+					existing.actorName === notification.actorName,
+			)
+		}
+		return undefined
+	}
+
 	addPopupNotification = ((notification: PopupNotificationInput) => {
+		const existing = this.findExistingNotification(notification)
+		if (existing) {
+			this.setNotificationTimer(existing)
+			return existing as StoredPopupNotification<PopupNotificationInput>
+		}
+
 		const newNotification = {
 			...notification,
 			...(notification.contentType === 'custom'
@@ -246,7 +278,11 @@ export abstract class AbstractPopupNotificationManager {
 
 		if (notification.autoCloseMs === null) return
 
-		const delay = notification.autoCloseMs ?? this.DEFAULT_AUTO_CLOSE_MS
+		const isError =
+			notification.contentType === 'standard' && notification.type === 'error'
+		const delay =
+			notification.autoCloseMs ??
+			(isError ? this.ERROR_AUTO_CLOSE_MS : this.DEFAULT_AUTO_CLOSE_MS)
 		notification.timer = setTimeout(() => {
 			this.removeNotification(notification.id)
 		}, delay)

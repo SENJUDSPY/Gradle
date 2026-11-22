@@ -9,17 +9,28 @@
 	"bundle": {
 		"active": true,
 		"category": "Game",
-		"copyright": "",
+		"copyright": "Copyright 2026 Xorison",
+		"publisher": "Gradle Team <support@gradle.app>",
 		"targets": "all",
 		"externalBin": [],
-		"icon": ["icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+		"icon": [
+			"icons/32x32.png",
+			"icons/64x64.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/256x256.png",
+			"icons/512x512.png",
+			"icons/icon.png",
+			"icons/icon.icns",
+			"icons/icon.ico"
+		],
 		"windows": {
 			"nsis": {
 				"installMode": "currentUser",
 				"installerHooks": "./nsis/hooks.nsi"
 			}
 		},
-		"longDescription": "",
+		"longDescription": "Gradle is a modern, high-performance Minecraft launcher supporting both optimized native Rust and classic Java runtimes.",
 		"macOS": {
 			"entitlements": "App.entitlements",
 			"exceptionDomain": "",
@@ -42,27 +53,28 @@
 				}
 			}
 		},
-		"shortDescription": "",
+		"shortDescription": "Modern Minecraft launcher with native Rust and classic Java runtimes",
+		"homepage": "https://xorison.dev",
 		"linux": {
 			"deb": {
-				"depends": []
+				"section": "games",
+				"depends": [
+					"libayatana-appindicator3-1",
+					"libc6 (>= 2.39)"
+				],
+				"desktopTemplate": "./desktop-template.desktop"
 			}
 		},
-		"fileAssociations": [
-			{
-				"ext": ["mrpack"],
-				"mimeType": "application/x-modrinth-modpack+zip"
-			}
-		]
+		"fileAssociations": []
 	},
-	"productName": "Gradle",
+	"productName": "gradle-launcher",
 	"version": "../app-frontend/package.json",
 	"mainBinaryName": "Gradle",
 	"identifier": "GradleApp",
 	"plugins": {
 		"deep-link": {
 			"desktop": {
-				"schemes": ["modrinth", "gradle"]
+				"schemes": ["gradle"]
 			},
 			"mobile": []
 		}
@@ -99,15 +111,15 @@
 				],
 				"enable": true
 			},
-			"capabilities": ["core", "plugins"],
+			"capabilities": ["main", "debug-devtools"],
 			"csp": {
 				"default-src": "'self' customprotocol: asset:",
-				"connect-src": "ipc: https://xorison.dev https://*.xorison.dev https://authserver.ely.by https://account.ely.by https://ely.by http://ipc.localhost https://modrinth.com https://*.modrinth.com https://*.nodes.modrinth.com https://*.sentry.io https://api.mclo.gs http://textures.minecraft.net https://textures.minecraft.net https://js.stripe.com https://*.stripe.com wss://*.stripe.com https://*.intercom.io wss://*.intercom.io https://*.intercomcdn.com https://www.intercom-reporting.com https://app.getsentry.com wss://*.nodes.modrinth.com https://*.taila228c5.ts.net https://*.taila228c5.ts.net wss://*.taila228c5.ts.net https://fill.papermc.io https://api.purpurmc.org 'self' data: blob:",
-				"font-src": ["https://cdn.modrinth.com/fonts/", "https://js.intercomcdn.com"],
+				"connect-src": "ipc: https://xorison.dev https://*.xorison.dev https://authserver.ely.by https://account.ely.by https://ely.by http://ipc.localhost https://modrinth.com https://*.modrinth.com https://*.nodes.modrinth.com https://api.mclo.gs http://textures.minecraft.net https://textures.minecraft.net wss://*.nodes.modrinth.com https://fill.papermc.io https://api.purpurmc.org 'self' data: blob:",
+				"font-src": ["https://cdn.modrinth.com/fonts/"],
 				"img-src": "https: 'unsafe-inline' 'self' asset: http://asset.localhost http://textures.minecraft.net blob: data:",
 				"style-src": "'unsafe-inline' 'self'",
-				"script-src": "https://js.stripe.com https://widget.intercom.io https://js.intercomcdn.com https://tally.so/widgets/embed.js 'self'",
-				"frame-src": "https://www.youtube.com https://www.youtube-nocookie.com https://discord.com https://tally.so/popup/ https://js.stripe.com https://hooks.stripe.com https://*.intercom.io https://intercom-sheets.com https://www.intercom-reporting.com https://app.intercom.com 'self'",
+				"script-src": "'self'",
+				"frame-src": "https://discord.com 'self'",
 				"media-src": "https://*.githubusercontent.com"
 			}
 		}

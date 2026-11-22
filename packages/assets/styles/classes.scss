@@ -502,11 +502,27 @@ a:not(.no-click-animation),
 	min-height: var(--font-size-2xl);
 
 	background-color: var(--surface-3);
-	border-radius: var(--radius-lg);
-	border: 1px solid var(--surface-4);
+	border-radius: var(--radius-md);
+	border: 1px solid var(--surface-5);
+	box-shadow: var(--shadow-sm);
+	transition:
+		box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		border-color var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		transform var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 
 	margin-bottom: var(--gap-md);
 	outline: 2px solid transparent;
+
+	&:hover {
+		box-shadow: var(--shadow-card-hover, var(--shadow-md));
+		border-color: rgba(91, 91, 240, 0.35);
+		transform: translateY(-2px);
+	}
+
+	&:active {
+		transform: translateY(0) scale(0.99);
+		transition-duration: var(--duration-quick, 120ms);
+	}
 
 	.card__overlay {
 		position: absolute;
@@ -528,6 +544,175 @@ a:not(.no-click-animation),
 			color: var(--color-blue);
 			text-decoration: underline;
 		}
+	}
+}
+
+// Elevated & Interactive Card Surfaces
+.card-elevated {
+	@extend .base-card;
+	box-shadow: var(--shadow-card-elevated, var(--shadow-md));
+	border-color: rgba(91, 91, 240, 0.2);
+
+	&:hover {
+		box-shadow: var(--shadow-card-hover, var(--shadow-lg));
+		border-color: rgba(91, 91, 240, 0.45);
+		transform: translateY(-3px);
+	}
+}
+
+// Ambient Glow Utilities
+.ambient-glow {
+	box-shadow: var(--shadow-glow);
+}
+
+.ambient-glow-cyan {
+	box-shadow: var(--shadow-glow-cyan);
+}
+
+.ambient-glow-subtle {
+	box-shadow: var(--shadow-glow-subtle);
+}
+
+.glow-hover {
+	transition:
+		box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		border-color var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		transform var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+
+	&:hover {
+		box-shadow: var(--shadow-glow);
+		border-color: rgba(91, 91, 240, 0.4);
+		transform: translateY(-2px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.base-card,
+	.base-card:hover,
+	.base-card:active,
+	.card-elevated,
+	.card-elevated:hover,
+	.glow-hover,
+	.glow-hover:hover {
+		transform: none !important;
+		transition: none !important;
+	}
+}
+
+// MOTION: Skeletons, Shimmer & Staggered Transitions
+.skeleton-shimmer {
+	position: relative;
+	overflow: hidden;
+	background-color: var(--surface-2);
+
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		transform: translateX(-100%);
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(255, 255, 255, 0.04) 20%,
+			rgba(91, 91, 240, 0.1) 40%,
+			rgba(34, 211, 238, 0.14) 50%,
+			rgba(255, 255, 255, 0.04) 60%,
+			transparent 100%
+		);
+		animation: skeleton-shimmer-anim 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+		pointer-events: none;
+	}
+}
+
+@keyframes skeleton-shimmer-anim {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+// Shimmer Utility Classes
+.shimmer {
+	@extend .skeleton-shimmer;
+}
+
+.skeleton-box {
+	@extend .skeleton-shimmer;
+	border-radius: var(--radius-sm);
+	min-height: 1.5rem;
+}
+
+.skeleton-avatar {
+	@extend .skeleton-shimmer;
+	border-radius: var(--radius-full);
+	aspect-ratio: 1 / 1;
+}
+
+.skeleton-pill {
+	@extend .skeleton-shimmer;
+	border-radius: var(--radius-full);
+	height: 1.5rem;
+	width: 5rem;
+}
+
+.skeleton-text {
+	@extend .skeleton-shimmer;
+	border-radius: var(--radius-xs);
+	height: 1rem;
+	margin-block: 0.25rem;
+}
+
+.skeleton-title {
+	@extend .skeleton-shimmer;
+	border-radius: var(--radius-xs);
+	height: 1.5rem;
+	width: 60%;
+	margin-block: 0.5rem;
+}
+
+.skeleton-pulse {
+	animation: skeleton-pulse-anim 1.6s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse-anim {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.45;
+	}
+}
+
+.stagger-item {
+	animation: staggerFadeIn 200ms cubic-bezier(0.05, 0.7, 0.1, 1) both;
+}
+
+@for $i from 1 through 6 {
+	.stagger-item:nth-child(#{$i}) {
+		animation-delay: #{$i * 30}ms;
+	}
+}
+
+@keyframes staggerFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.skeleton-shimmer::after,
+	.shimmer::after,
+	.skeleton-pulse,
+	.stagger-item {
+		animation: none !important;
+		transform: none !important;
 	}
 }
 

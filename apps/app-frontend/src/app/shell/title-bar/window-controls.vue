@@ -112,8 +112,34 @@ const handleClose = async () => {
 	await getCurrentWindow().close()
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .close-button:hover {
 	color: var(--color-accent-contrast) !important;
+}
+
+:deep(.icon-button),
+.icon-button {
+	transition:
+		transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		background-color var(--duration-quick, 120ms) ease,
+		color var(--duration-quick, 120ms) ease;
+	will-change: transform;
+
+	&:hover {
+		transform: scale(1.08);
+	}
+
+	&:active {
+		transform: scale(0.92);
+		transition-duration: 80ms;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:deep(.icon-button),
+	.icon-button {
+		transition: none !important;
+		transform: none !important;
+	}
 }
 </style>

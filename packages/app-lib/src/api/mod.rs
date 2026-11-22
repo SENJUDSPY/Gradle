@@ -51,7 +51,13 @@ pub mod prelude {
         event::CommandPayload,
         install, instance, jre, metadata, minecraft_auth, mr_auth,
         onboarding_checklist, pack, process, settings,
-        state::{ReleaseChannel, db_backup::app_db_backup_dir},
+        state::{
+            ReleaseChannel,
+            db_backup::{
+                app_db_backup_dir, reset_app_db_with_backup,
+                restore_latest_db_backup,
+            },
+        },
         util::{
             io::{IOError, canonicalize},
             network::{is_network_metered, tcp_listen_any_loopback},

@@ -46,10 +46,38 @@ defineExpose({ element })
 		</span>
 		<span
 			v-if="checked"
-			class="flex size-6 shrink-0 items-center justify-center rounded-full bg-brand text-brand-inverted"
+			class="flex size-6 shrink-0 items-center justify-center rounded-full bg-brand text-brand-inverted check-circle-badge"
 		>
-			<CheckIcon class="size-4" aria-hidden="true" />
+			<CheckIcon class="size-4 check-circle-icon" aria-hidden="true" />
 		</span>
 		<span v-else class="size-6 shrink-0 rounded-full border border-solid border-surface-5" />
 	</ButtonFrame>
 </template>
+
+<style scoped>
+.check-circle-badge {
+	animation: check-circle-pop 180ms var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275))
+		forwards;
+}
+
+@keyframes check-circle-pop {
+	0% {
+		transform: scale(0.5);
+		opacity: 0;
+	}
+	70% {
+		transform: scale(1.15);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.check-circle-badge {
+		animation: none !important;
+	}
+}
+</style>

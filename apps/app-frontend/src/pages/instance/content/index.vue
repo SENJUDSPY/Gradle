@@ -77,6 +77,16 @@
 				</div>
 			</div>
 			<ContentPageLayout :highlighted-item-id="highlightedItemId">
+				<template #itemTitleBadges="{ item }">
+					<span
+						v-if="activeRuntime === 'horizon' && isJavaModTableItem(item)"
+						v-tooltip="'Unsupported on Rust Edition (JVM mod will be skipped)'"
+						class="inline-flex items-center gap-1 rounded bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-300 border border-amber-500/30"
+					>
+						<TriangleAlertIcon class="size-3 text-amber-400" />
+						Java Bytecode (Skipped)
+					</span>
+				</template>
 				<template #modals>
 					<SyncedContentModal ref="syncedContentModal" />
 					<UnknownFileWarningModal
@@ -185,6 +195,7 @@ import {
 	ConfirmDisableModal,
 	ConfirmModpackUpdateModal,
 	ContentCardLayout as ContentPageLayout,
+	type ContentCardTableItem,
 	type ContentItem,
 	type ContentOwner,
 	ContentUpdaterModal,
@@ -236,6 +247,15 @@ import {
 	update_managed_modrinth_version,
 } from '@/helpers/instance'
 import { type InstanceContentData, loadInstanceContentData } from '@/helpers/instance-content'
+import {
+	extractHorizonModAssets,
+	getExtractedContentSummaries,
+	getHorizonLoadOrder,
+	updateHorizonLoadOrder,
+	toggleExtractedMod,
+	type ExtractionSummary,
+	type LoadOrderItem,
+} from '@/helpers/horizon'
 import { get as getSettings, set as setSettings } from '@/helpers/settings'
 import { set_synced_pack_enabled, syncedPackKeys } from '@/helpers/synced-packs'
 import type { CacheBehaviour } from '@/helpers/types'
@@ -249,12 +269,12 @@ import { injectSharedInstance } from '../shared-instance-context'
 const messages = defineMessages({
 	horizonProfileNoticeTitle: {
 		id: 'app.instance.content.horizon.notice-title',
-		defaultMessage: 'Horizon Native Profile (Minecraft 26.3)',
+		defaultMessage: 'Gradle Native Profile (Minecraft 26.3)',
 	},
 	horizonProfileNoticeDesc: {
 		id: 'app.instance.content.horizon.notice-desc',
 		defaultMessage:
-			'Horizon runs natively in Rust (wgpu/Vulkan). It supports WebAssembly mods (.wasm, .hmod), data packs, resource packs, and shaders. Standard Java JAR bytecode mods are not supported.',
+			'Gradle runs natively in Rust (wgpu/Vulkan). It supports WebAssembly mods (.wasm, .hmod), data packs, resource packs, and shaders. Standard Java JAR bytecode mods are not supported.',
 	},
 	tabActive: {
 		id: 'app.instance.content.tab.active',
@@ -262,7 +282,7 @@ const messages = defineMessages({
 	},
 	tabHorizonMods: {
 		id: 'app.instance.content.tab.horizon-mods',
-		defaultMessage: 'Horizon Mods (Wasm)',
+		defaultMessage: 'Gradle Mods (Wasm)',
 	},
 	tabJavaMods: {
 		id: 'app.instance.content.tab.java-mods',
@@ -286,7 +306,7 @@ const messages = defineMessages({
 	},
 	runtimeHorizonActiveNotice: {
 		id: 'app.instance.content.runtime-active.horizon',
-		defaultMessage: 'Horizon (Rust, native)',
+		defaultMessage: 'Gradle (Rust, native)',
 	},
 	runtimeJavaActiveNotice: {
 		id: 'app.instance.content.runtime-active.java',
@@ -294,11 +314,15 @@ const messages = defineMessages({
 	},
 	javaModsIsolatedNotice: {
 		id: 'app.instance.content.java-mods-isolated.notice',
-		defaultMessage: '{count, plural, one {# Java mod (.jar) is} other {# Java mods (.jar) are}} installed but isolated from Horizon. Switch to Java to run them.',
+		defaultMessage: '{count, plural, one {# Java mod (.jar) is} other {# Java mods (.jar) are}} installed but isolated from Gradle. Switch to Java to run them.',
 	},
 	playWithJavaInstead: {
 		id: 'app.instance.content.play-with-java-instead',
 		defaultMessage: 'Play with Java instead',
+	},
+	assetsExtractedTitle: {
+		id: 'app.instance.content.assets-extracted.title',
+		defaultMessage: 'Assets Imported from {name}',
 	},
 	modpackContentHeader: {
 		id: 'app.instance.content.managed-content.modpack-header',
@@ -455,6 +479,11 @@ function isJavaMod(item: ContentItem): boolean {
 	)
 }
 
+function isJavaModTableItem(item: ContentCardTableItem): boolean {
+	const name = (item.version?.file_name || item.project.title || '').toLowerCase()
+	return name.endsWith('.jar') || name.endsWith('.jar.disabled')
+}
+
 const horizonModsCount = computed(
 	() => mergedProjects.value.filter((i) => i.project_type === 'mod' && isHorizonMod(i)).length,
 )
@@ -496,45 +525,64 @@ const partitionedProjects = computed<ContentItem[]>(() => {
 	}
 })
 
-const partitionTabs = computed(() => [
-	{
-		id: 'active' as const,
-		label: formatMessage(messages.tabActive, {
-			runtime: activeRuntime.value === 'horizon' ? 'Horizon' : 'Java',
-		}),
-		count: partitionedProjects.value.length,
-	},
-	{
-		id: 'horizon' as const,
-		label: formatMessage(messages.tabHorizonMods),
-		count: horizonModsCount.value,
-	},
-	{
-		id: 'java' as const,
-		label: formatMessage(messages.tabJavaMods),
-		count: javaModsCount.value,
-	},
-	{
-		id: 'resourcepack' as const,
-		label: formatMessage(messages.tabResourcePacks),
-		count: resourcePacksCount.value,
-	},
-	{
-		id: 'datapack' as const,
-		label: formatMessage(messages.tabDataPacks),
-		count: dataPacksCount.value,
-	},
-	{
-		id: 'shader' as const,
-		label: formatMessage(messages.tabShaders),
-		count: shadersCount.value,
-	},
-	{
-		id: 'all' as const,
-		label: formatMessage(messages.tabAll),
-		count: mergedProjects.value.length,
-	},
-])
+const isRustEdition = computed(
+	() => instance.value?.loader === 'horizon' || activeRuntime.value === 'horizon',
+)
+
+const partitionTabs = computed(() => {
+	const tabs = [
+		{
+			id: 'active' as const,
+			label: formatMessage(messages.tabActive, {
+				runtime: activeRuntime.value === 'horizon' ? 'Rust Edition' : 'Java',
+			}),
+			count: partitionedProjects.value.length,
+		},
+		{
+			id: 'horizon' as const,
+			label: isRustEdition.value ? 'Native Mods (Wasm)' : formatMessage(messages.tabHorizonMods),
+			count: horizonModsCount.value,
+		},
+	]
+
+	if (!isRustEdition.value) {
+		tabs.push({
+			id: 'java' as const,
+			label: formatMessage(messages.tabJavaMods),
+			count: javaModsCount.value,
+		})
+	} else if (javaModsCount.value > 0) {
+		tabs.push({
+			id: 'java' as const,
+			label: 'Java Mods (Unsupported)',
+			count: javaModsCount.value,
+		})
+	}
+
+	tabs.push(
+		{
+			id: 'resourcepack' as const,
+			label: formatMessage(messages.tabResourcePacks),
+			count: resourcePacksCount.value,
+		},
+		{
+			id: 'datapack' as const,
+			label: formatMessage(messages.tabDataPacks),
+			count: dataPacksCount.value,
+		},
+		{
+			id: 'shader' as const,
+			label: formatMessage(messages.tabShaders),
+			count: shadersCount.value,
+		},
+		{
+			id: 'all' as const,
+			label: formatMessage(messages.tabAll),
+			count: mergedProjects.value.length,
+		},
+	)
+	return tabs
+})
 
 async function handlePlayWithJavaInstead() {
 	await instancePage.setRuntime('java')
@@ -1022,6 +1070,23 @@ async function handleUploadFiles() {
 	]
 
 	await initProjects('must_revalidate')
+
+	for (const { path, filename } of confirmedFiles) {
+		if (filename.toLowerCase().endsWith('.jar')) {
+			try {
+				const extraction = await extractHorizonModAssets(instance.value.id, path)
+				if (extraction && extraction.total_recovered > 0) {
+					addNotification({
+						type: 'info',
+						title: formatMessage(messages.assetsExtractedTitle, { name: extraction.mod_name }),
+						text: extraction.formatted_report,
+					})
+				}
+			} catch (e) {
+				console.warn('Horizon mod asset extraction error:', e)
+			}
+		}
+	}
 
 	if (uniqueAddedFiles.length > 0) {
 		const names = uniqueAddedFiles.map(({ filename, installedPath }) => {
@@ -1957,6 +2022,11 @@ provideContentManager({
 			: undefined,
 		external: item.external ?? !item.project,
 		enabled: canMutateContent(item) ? item.enabled : undefined,
+		toggleDisabled: activeRuntime.value === 'horizon' && isJavaMod(item) ? true : undefined,
+		toggleDisabledTooltip:
+			activeRuntime.value === 'horizon' && isJavaMod(item)
+				? 'Unsupported on Rust Edition (Java bytecode mod requires JVM)'
+				: undefined,
 		synced: !!item.synced_pack,
 		syncUpdatePending: item.synced_pack?.update_pending,
 		locked: item.locked,

@@ -549,17 +549,17 @@ onBeforeUnmount(() => {
 const messages = defineMessages({
 	horizonActiveInstanceNoticeTitle: {
 		id: 'app.browse.horizon.notice-title',
-		defaultMessage: 'Horizon Profile Active',
+		defaultMessage: 'Gradle Profile Active',
 	},
 	horizonJavaModsNotice: {
 		id: 'app.browse.horizon.java-mods-notice',
 		defaultMessage:
-			'Horizon runs native WebAssembly mods (.wasm, .hmod) and data/asset packs. Standard Java mod JARs (.jar) require JVM (Fabric/NeoForge) and will not execute.',
+			'Gradle runs native WebAssembly mods (.wasm, .hmod) and data/asset packs. Standard Java mod JARs (.jar) require JVM (Fabric/NeoForge) and will not execute.',
 	},
 	horizonAssetsCompatibleNotice: {
 		id: 'app.browse.horizon.assets-compatible-notice',
 		defaultMessage:
-			'Horizon natively supports resource packs, shaders (wgpu/Vulkan), and data packs from Gradle.',
+			'Gradle natively supports resource packs, shaders (wgpu/Vulkan), and data packs.',
 	},
 	addServersToInstance: {
 		id: 'app.browse.add-servers-to-instance',

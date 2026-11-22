@@ -93,3 +93,7 @@ references/
 # Gradle ignores
 cmp_*.patch
 .pnpm-store
+
+# Skills
+.agents/
+skills-lock.json

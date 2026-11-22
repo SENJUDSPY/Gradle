@@ -49,7 +49,7 @@
 						<div class="flex items-center gap-2">
 							<span class="text-secondary capitalize">{{ inst.loader }} {{ inst.game_version }}</span>
 							<span class="rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-purple-300 border border-purple-500/30">
-								Horizon (default)
+								Gradle (default)
 							</span>
 						</div>
 					</div>
@@ -92,7 +92,7 @@ import type { GameInstance } from '@/helpers/types'
 const messages = defineMessages({
 	title: {
 		id: 'app.horizon.migration.title',
-		defaultMessage: 'Horizon Runtime Upgrade',
+		defaultMessage: 'Gradle Runtime Upgrade',
 	},
 	bannerTitle: {
 		id: 'app.horizon.migration.banner-title',
@@ -101,7 +101,7 @@ const messages = defineMessages({
 	bannerDescription: {
 		id: 'app.horizon.migration.banner-desc',
 		defaultMessage:
-			'Every instance now supports both the native Horizon (Rust, optimized) engine and classic Java Minecraft. Horizon is recommended for ultra-low memory, instant chunk loading, and smooth framerates.',
+			'Every instance now supports both the native Gradle (Rust, optimized) engine and classic Java Minecraft. Gradle is recommended for ultra-low memory, instant chunk loading, and smooth framerates.',
 	},
 	summaryTitle: {
 		id: 'app.horizon.migration.summary-title',
@@ -109,7 +109,7 @@ const messages = defineMessages({
 	},
 	bulletHorizonDefault: {
 		id: 'app.horizon.migration.bullet-horizon',
-		defaultMessage: 'Horizon will be added as the default launch runtime for all existing instances.',
+		defaultMessage: 'Gradle will be added as the default launch runtime for all existing instances.',
 	},
 	bulletJavaClassic: {
 		id: 'app.horizon.migration.bullet-java',
@@ -129,7 +129,7 @@ const messages = defineMessages({
 	},
 	applyUpgrade: {
 		id: 'app.horizon.migration.apply',
-		defaultMessage: 'Upgrade to Horizon (Recommended)',
+		defaultMessage: 'Upgrade to Gradle (Recommended)',
 	},
 })
 

@@ -2,7 +2,7 @@
 	<Transition name="splash-fade" @after-leave="onAfterLeave">
 		<div v-if="!doneLoading" class="splash-screen" :class="`${theme.active}-mode`">
 			<div class="app-logo-wrapper" data-tauri-drag-region>
-				<img class="app-logo" :src="gradleAppLogo" alt="Gradle App" />
+				<img class="app-logo" :src="gradleAppLogo" alt="Gradle" />
 				<ProgressBar class="loading-bar" :progress="Math.min(loadingProgress, 100)" />
 				<span v-if="message">{{ message }}</span>
 			</div>

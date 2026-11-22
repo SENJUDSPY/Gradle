@@ -1,0 +1,24 @@
+[default]
+description = "Default permissions for process plugin"
+permissions = [
+    "allow-process-get-all",
+    "allow-process-get-by-instance-id",
+    "allow-process-wait-for",
+    "allow-process-kill",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for process plugin"
+permissions = [
+    "allow-process-get-all",
+    "allow-process-get-by-instance-id",
+    "allow-process-wait-for",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for process plugin"
+permissions = [
+    "allow-process-kill",
+]

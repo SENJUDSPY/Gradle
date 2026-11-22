@@ -24,7 +24,7 @@ const props = withDefaults(
 
 const selected = defineModel<T>()
 
-const STAGGER_DELAY = '175ms'
+const STAGGER_DELAY = '40ms'
 
 const container = ref<HTMLElement | null>(null)
 const buttonElements: (HTMLElement | null)[] = []
@@ -39,7 +39,7 @@ const layoutClass = computed(() => {
 
 const selectedIndex = computed(() => props.items.indexOf(selected.value as T))
 const indicatorTone = computed(() =>
-	props.neutralItems.includes(selected.value as T) ? 'neutral' : 'green',
+	props.neutralItems.includes(selected.value as T) ? 'neutral' : 'brand',
 )
 const leftDelay = computed(() => delays.value.left)
 const rightDelay = computed(() => delays.value.right)
@@ -100,12 +100,12 @@ onUnmounted(() => resizeObserver?.disconnect())
 		ref="container"
 		role="radiogroup"
 		:aria-label="ariaLabel"
-		class="relative h-9 items-center gap-0.5 rounded-xl border border-solid border-surface-5 p-px shadow-[0_1px_3px_rgba(0,0,0,0.15)]"
+		class="relative h-9 items-center gap-0.5 rounded-xl border border-solid border-surface-5 bg-surface-2 p-0.5 shadow-sm"
 		:class="[layoutClass, { 'opacity-50': disabled }]"
 	>
 		<div
 			v-if="indicator"
-			class="indicator pointer-events-none absolute inset-y-px rounded-[10px]"
+			class="indicator pointer-events-none absolute inset-y-0.5 rounded-[10px]"
 			:class="{ 'indicator-transition': transitionsEnabled }"
 			:data-tone="indicatorTone"
 			:style="{ left: `${indicator.left}px`, right: `${indicator.right}px` }"
@@ -120,9 +120,11 @@ onUnmounted(() => resizeObserver?.disconnect())
 			role="radio"
 			:aria-checked="index === selectedIndex"
 			:interaction="index === selectedIndex ? 'none' : 'surface'"
-			class="relative z-[1] !rounded-[10px] !px-3 !font-medium disabled:!opacity-100"
+			class="relative z-[1] !rounded-[10px] !px-3 !font-medium disabled:!opacity-100 transition-[color,transform] duration-150 enabled:active:scale-[0.98]"
 			:class="[
-				index === selectedIndex && indicatorTone === 'green' ? '!text-green' : '!text-contrast',
+				index === selectedIndex
+					? '!text-contrast !font-semibold'
+					: '!text-secondary hover:!text-contrast',
 				{ 'flex-1': fullWidth },
 			]"
 			:disabled="disabled"
@@ -134,21 +136,41 @@ onUnmounted(() => resizeObserver?.disconnect())
 </template>
 
 <style scoped>
+.indicator {
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.indicator[data-tone='brand'],
 .indicator[data-tone='green'] {
-	background-color: color-mix(in srgb, var(--color-green) 30%, var(--surface-3));
-	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-green) 60%, transparent);
+	background: linear-gradient(135deg, rgba(91, 91, 240, 0.3) 0%, rgba(34, 211, 238, 0.18) 100%);
+	box-shadow:
+		inset 0 0 0 1px rgba(91, 91, 240, 0.5),
+		0 2px 8px -1px rgba(91, 91, 240, 0.35),
+		0 1px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
 .indicator[data-tone='neutral'] {
 	background-color: var(--surface-4);
-	box-shadow: inset 0 0 0 1px var(--surface-5);
+	box-shadow:
+		inset 0 0 0 1px var(--surface-5),
+		0 2px 6px -1px rgba(0, 0, 0, 0.15),
+		0 1px 2px 0 rgba(0, 0, 0, 0.08);
 }
 
 .indicator-transition {
 	transition:
-		left 80ms cubic-bezier(0.4, 0, 0.2, 1) v-bind(leftDelay),
-		right 80ms cubic-bezier(0.4, 0, 0.2, 1) v-bind(rightDelay),
-		background-color 100ms ease,
-		box-shadow 100ms ease;
+		left var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1))
+			v-bind(leftDelay),
+		right var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1))
+			v-bind(rightDelay),
+		background var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.indicator-transition {
+		transition: none !important;
+	}
 }
 </style>

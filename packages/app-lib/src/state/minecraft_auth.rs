@@ -82,6 +82,8 @@ pub enum MinecraftAuthenticationError {
     NoSessionId,
     #[error("Error reading user hash")]
     NoUserHash,
+    #[error("Microsoft sign-in is not configured")]
+    NotConfigured,
 }
 
 #[derive(Deserialize)]
@@ -98,6 +100,7 @@ struct XboxErrorResponse {
 impl MinecraftAuthenticationError {
     pub(crate) fn code(&self) -> &'static str {
         match self {
+            Self::NotConfigured => "minecraft_auth_not_configured",
             Self::DeserializeResponse {
                 step: MinecraftAuthStep::RefreshOAuthToken,
                 ..
@@ -185,6 +188,8 @@ pub struct MinecraftLoginFlow {
 pub async fn login_begin(
     exec: impl sqlx::Executor<'_, Database = sqlx::Sqlite> + Copy,
 ) -> crate::Result<MinecraftLoginFlow> {
+    let _ = get_microsoft_client_id()?;
+
     let (pair, current_date) =
         DeviceTokenPair::refresh_and_get_device_token(Utc::now(), exec).await?;
 
@@ -963,11 +968,24 @@ impl DeviceTokenPair {
     }
 }
 
-const MICROSOFT_CLIENT_ID: &str = "00000000402b5328";
-const AUTH_REPLY_URL: &str = "https://login.live.com/oauth20_desktop.srf";
-const REQUESTED_SCOPE: &str = "service::user.auth.xboxlive.com::MBI_SSL";
+pub const DEFAULT_AZURE_CLIENT_ID: &str = "0359f427-046e-49b8-a68a-ef8a09f8754b";
+pub const AUTH_REPLY_URL: &str = "https://login.live.com/oauth20_desktop.srf";
+pub const REQUESTED_SCOPE: &str = "service::user.auth.xboxlive.com::MBI_SSL";
 pub const MINECRAFT_SERVICES_USER_AGENT: &str =
-    "Modrinth App (support@modrinth.com; https://modrinth.com/app)";
+    "Gradle Launcher (support@xorison.dev; https://xorison.dev)";
+
+pub fn get_microsoft_client_id() -> Result<&'static str, MinecraftAuthenticationError> {
+    if let Ok(id) = std::env::var("GRADLE_MICROSOFT_CLIENT_ID").or_else(|_| std::env::var("MICROSOFT_CLIENT_ID")) {
+        let trimmed = id.trim();
+        if !trimmed.is_empty() {
+            return Ok(Box::leak(trimmed.to_string().into_boxed_str()));
+        }
+    }
+    if DEFAULT_AZURE_CLIENT_ID.trim().is_empty() {
+        return Err(MinecraftAuthenticationError::NotConfigured);
+    }
+    Ok(DEFAULT_AZURE_CLIENT_ID)
+}
 
 pub struct RequestWithDate<T> {
     pub date: DateTime<Utc>,
@@ -1038,12 +1056,13 @@ async fn sisu_authenticate(
     current_date: DateTime<Utc>,
 ) -> Result<(String, RequestWithDate<RedirectUri>), MinecraftAuthenticationError>
 {
+    let client_id = get_microsoft_client_id()?;
     let res = send_signed_request::<RedirectUri>(
         None,
         "https://sisu.xboxlive.com/authenticate",
         "/authenticate",
         json!({
-          "AppId": MICROSOFT_CLIENT_ID,
+          "AppId": client_id,
           "DeviceToken": token,
           "Offers": [
             REQUESTED_SCOPE
@@ -1097,8 +1116,9 @@ async fn oauth_token(
     code: &str,
     verifier: &str,
 ) -> Result<RequestWithDate<OAuthToken>, MinecraftAuthenticationError> {
+    let client_id = get_microsoft_client_id()?;
     let mut query = HashMap::new();
-    query.insert("client_id", MICROSOFT_CLIENT_ID);
+    query.insert("client_id", client_id);
     query.insert("code", code);
     query.insert("code_verifier", verifier);
     query.insert("grant_type", "authorization_code");
@@ -1127,6 +1147,10 @@ async fn oauth_token(
         }
     })?;
 
+    if text.contains("Client authentication failed") || text.contains("invalid_client") {
+        return Err(MinecraftAuthenticationError::NotConfigured);
+    }
+
     let body = serde_json::from_str(&text).map_err(|source| {
         MinecraftAuthenticationError::DeserializeResponse {
             source,
@@ -1146,8 +1170,9 @@ async fn oauth_token(
 async fn oauth_refresh(
     refresh_token: &str,
 ) -> Result<RequestWithDate<OAuthToken>, MinecraftAuthenticationError> {
+    let client_id = get_microsoft_client_id()?;
     let mut query = HashMap::new();
-    query.insert("client_id", MICROSOFT_CLIENT_ID);
+    query.insert("client_id", client_id);
     query.insert("refresh_token", refresh_token);
     query.insert("grant_type", "refresh_token");
     query.insert("redirect_uri", AUTH_REPLY_URL);
@@ -1174,6 +1199,10 @@ async fn oauth_refresh(
             step: MinecraftAuthStep::RefreshOAuthToken,
         }
     })?;
+
+    if text.contains("Client authentication failed") || text.contains("invalid_client") {
+        return Err(MinecraftAuthenticationError::NotConfigured);
+    }
 
     let body = serde_json::from_str(&text).map_err(|source| {
         MinecraftAuthenticationError::DeserializeResponse {
@@ -1209,13 +1238,14 @@ async fn sisu_authorize(
     key: &DeviceTokenKey,
     current_date: DateTime<Utc>,
 ) -> Result<RequestWithDate<SisuAuthorize>, MinecraftAuthenticationError> {
+    let client_id = get_microsoft_client_id()?;
     let res = send_signed_request(
         None,
         "https://sisu.xboxlive.com/authorize",
         "/authorize",
         json!({
             "AccessToken": format!("t={access_token}"),
-            "AppId": MICROSOFT_CLIENT_ID,
+            "AppId": client_id,
             "DeviceToken": device_token,
             "ProofKey": {
                 "kty": "EC",

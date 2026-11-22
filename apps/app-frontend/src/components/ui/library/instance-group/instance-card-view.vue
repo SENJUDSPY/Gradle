@@ -34,11 +34,37 @@ const iconSrc = computed(() =>
 
 const nameRef = ref<HTMLElement | null>(null)
 const versionRef = ref<HTMLElement | null>(null)
+
+const isRustEdition = computed(() => {
+	if (props.instance.runtime === 'java') return false
+	if (props.instance.runtime === 'horizon') return true
+	return props.instance.loader === 'horizon'
+})
+
+const badgeInfo = computed(() => {
+	if (!isRustEdition.value) {
+		return {
+			label: 'Needs Java',
+			class: 'bg-amber-500/15 text-amber-400 border border-amber-500/30',
+		}
+	}
+	const loader = props.instance.loader?.toLowerCase()
+	if (loader === 'vanilla' || loader === 'horizon' || !loader) {
+		return {
+			label: 'Native',
+			class: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
+		}
+	}
+	return {
+		label: 'Partially compatible',
+		class: 'bg-sky-500/15 text-sky-400 border border-sky-500/30',
+	}
+})
 </script>
 
 <template>
 	<div
-		class="relative flex w-full min-w-0 select-none overflow-clip border border-solid bg-surface-3 text-left transition-[background-color,border-color,filter]"
+		class="library-instance-card relative flex w-full min-w-0 select-none overflow-clip border border-solid bg-surface-3 text-left"
 		:class="{
 			'flex-row items-center justify-start gap-2.5 rounded-xl p-2.5': compactMode,
 			'flex-col items-start justify-end gap-3 rounded-[20px] p-3': !compactMode,
@@ -64,7 +90,7 @@ const versionRef = ref<HTMLElement | null>(null)
 			/>
 			<slot name="loading" :compact="compactMode" />
 			<div
-				class="absolute z-[1] flex items-center justify-center"
+				class="library-leading-slot absolute z-[1] flex items-center justify-center"
 				:class="compactMode ? 'inset-0' : 'bottom-1.5 right-1.5 size-12'"
 			>
 				<slot name="leading" :compact="compactMode" />
@@ -90,17 +116,105 @@ const versionRef = ref<HTMLElement | null>(null)
 					{{ instance.loader }} {{ instance.game_version }}
 				</p>
 				<span
-					class="inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase"
-					:class="
-						(instance.runtime ?? 'horizon') === 'horizon'
-							? 'bg-purple-500/15 text-purple-400 border border-purple-500/30'
-							: 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-					"
+					class="status-badge inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase border border-solid"
+					:class="badgeInfo.class"
 				>
-					{{ (instance.runtime ?? 'horizon') === 'horizon' ? 'Horizon' : 'Java' }}
+					{{ badgeInfo.label }}
 				</span>
 			</div>
 		</div>
 		<slot name="overlay" :compact="compactMode" />
 	</div>
 </template>
+
+<style lang="scss" scoped>
+.library-instance-card {
+	position: relative;
+	box-shadow:
+		0 1px 3px rgba(0, 0, 0, 0.12),
+		0 1px 2px rgba(0, 0, 0, 0.08);
+	transition:
+		transform 220ms cubic-bezier(0.2, 0, 0, 1),
+		box-shadow 220ms cubic-bezier(0.2, 0, 0, 1),
+		border-color 220ms cubic-bezier(0.2, 0, 0, 1),
+		background-color 220ms cubic-bezier(0.2, 0, 0, 1),
+		filter 220ms cubic-bezier(0.2, 0, 0, 1);
+	will-change: transform, box-shadow;
+
+	&:hover {
+		transform: translateY(-3px);
+		border-color: rgba(91, 91, 240, 0.45);
+		box-shadow:
+			0 12px 28px -4px rgba(0, 0, 0, 0.4),
+			0 6px 14px -2px rgba(91, 91, 240, 0.16);
+	}
+
+	&:active {
+		transform: translateY(-1px);
+		box-shadow:
+			0 4px 12px -2px rgba(0, 0, 0, 0.3),
+			0 2px 6px -1px rgba(91, 91, 240, 0.1);
+		transition-duration: 120ms;
+	}
+}
+
+.library-leading-slot {
+	:deep(.button-frame),
+	:deep(button) {
+		transition:
+			transform 140ms cubic-bezier(0.2, 0, 0, 1),
+			box-shadow 180ms cubic-bezier(0.2, 0, 0, 1),
+			filter 180ms cubic-bezier(0.2, 0, 0, 1),
+			opacity 200ms cubic-bezier(0.2, 0, 0, 1) !important;
+		will-change: transform, box-shadow;
+
+		&:hover {
+			transform: scale(1.08) !important;
+			box-shadow: 0 0 14px rgba(91, 91, 240, 0.45);
+		}
+
+		&:active {
+			transform: scale(0.92) !important;
+			box-shadow:
+				0 0 20px rgba(91, 91, 240, 0.75),
+				0 0 8px rgba(34, 211, 238, 0.5) !important;
+			filter: brightness(1.12);
+			transition-duration: 90ms !important;
+		}
+	}
+}
+
+.status-badge {
+	transition:
+		background-color 220ms cubic-bezier(0.2, 0, 0, 1),
+		border-color 220ms cubic-bezier(0.2, 0, 0, 1),
+		color 220ms cubic-bezier(0.2, 0, 0, 1),
+		box-shadow 220ms cubic-bezier(0.2, 0, 0, 1),
+		transform 220ms cubic-bezier(0.2, 0, 0, 1);
+	will-change: background-color, border-color, color;
+}
+
+.library-instance-card:hover .status-badge {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.library-instance-card {
+		transform: none !important;
+		transition: none !important;
+	}
+
+	.library-leading-slot {
+		:deep(.button-frame),
+		:deep(button) {
+			transform: none !important;
+			box-shadow: none !important;
+			transition: none !important;
+		}
+	}
+
+	.status-badge {
+		transition: none !important;
+	}
+}
+</style>

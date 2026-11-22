@@ -1,0 +1,13 @@
+[package]
+name = "gradle-mod-sdk"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Official Rust SDK for authoring native Gradle/Horizon WebAssembly Minecraft mods"
+
+[dependencies]
+serde = { version = "1.0", default-features = false, features = ["alloc", "derive"] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
+
+[lib]
+crate-type = ["rlib"]

@@ -31,12 +31,12 @@ const availableSurvey = ref<Survey | null>(null)
 const messages = defineMessages({
 	surveyTitle: {
 		id: 'app.survey.title',
-		defaultMessage: 'Hey there Modrinth user!',
+		defaultMessage: 'Hey there Gradle user!',
 	},
 	surveyBody: {
 		id: 'app.survey.body',
 		defaultMessage:
-			'Would you mind answering a few questions about your experience with Modrinth App?',
+			'Would you mind answering a few questions about your experience with Gradle?',
 	},
 	surveyFooter: {
 		id: 'app.survey.footer',

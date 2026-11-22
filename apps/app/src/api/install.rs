@@ -16,29 +16,7 @@ use uuid::Uuid;
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("install")
-        .invoke_handler(tauri::generate_handler![
-            install_get_modpack_preview,
-            install_create_instance,
-            install_create_modpack_instance,
-            install_get_shared_instance_preview,
-            install_accept_shared_instance_invite,
-            install_get_shared_instance_update_preview,
-            install_shared_instance,
-            install_update_shared_instance,
-            install_bulk_update_content,
-            install_import_instance,
-            install_duplicate_instance,
-            install_existing_instance,
-            install_pack_to_existing_instance,
-            install_job_list,
-            install_job_get,
-            install_job_retry,
-            install_job_pause,
-            install_job_resume,
-            install_job_cancel,
-            install_job_dismiss,
-            install_job_support_details,
-        ])
+        .invoke_handler(crate::commands::install_handler!())
         .build()
 }
 

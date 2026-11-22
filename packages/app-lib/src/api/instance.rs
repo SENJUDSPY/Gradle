@@ -59,7 +59,7 @@ pub use self::projects::{
     toggle_disable_project, update_managed_modrinth_version, update_project,
 };
 pub use self::run::{
-    LaunchRuntime, QuickPlayType, kill, run, run_with_runtime,
+    LaunchRuntime, QuickPlayType, kill, restart, run, run_with_runtime,
     try_update_playtime_by_instance_id,
 };
 pub use self::screenshot_groups::{

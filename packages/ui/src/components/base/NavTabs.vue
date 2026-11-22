@@ -6,9 +6,9 @@
 	>
 		<nav
 			ref="scrollContainer"
-			class="relative flex w-fit rounded-full bg-bg-raised p-1 text-xs sm:text-sm font-bold"
+			class="relative flex w-fit rounded-full bg-surface-2 p-1 text-xs sm:text-sm font-semibold border border-solid border-surface-5 shadow-sm"
 			:class="{
-				'card-shadow border border-solid border-surface-4': mode === 'navigation',
+				'card-shadow': mode === 'navigation',
 				'tab-color-delayed': colorChangeDelayed,
 			}"
 			v-bind="pageNav ? {} : $attrs"
@@ -64,7 +64,7 @@
 				v-if="sliderReady && currentActiveIndex !== -1"
 				class="pointer-events-none absolute rounded-full"
 				:class="[
-					subpageSelected ? 'bg-button-bg' : 'bg-button-bgSelected',
+					subpageSelected ? 'bg-surface-4' : 'active-tab-indicator',
 					{ 'navtabs-transition': transitionsEnabled },
 				]"
 				:style="sliderStyle"
@@ -364,19 +364,31 @@ watch(
 </script>
 
 <style scoped>
+.active-tab-indicator {
+	background: var(--brand-gradient, linear-gradient(135deg, #5b5bf0 0%, #3b82f6 50%, #22d3ee 100%));
+	box-shadow: 0 0 16px -2px rgba(91, 91, 240, 0.45);
+}
+
 .navtabs-transition {
 	transition:
-		left 80ms cubic-bezier(0.4, 0, 0.2, 1) v-bind(leftDelay),
-		right 80ms cubic-bezier(0.4, 0, 0.2, 1) v-bind(rightDelay),
-		top 80ms cubic-bezier(0.4, 0, 0.2, 1) v-bind(topDelay),
-		bottom 80ms cubic-bezier(0.4, 0, 0.2, 1) v-bind(bottomDelay);
+		left 120ms cubic-bezier(0.16, 1, 0.3, 1) v-bind(leftDelay),
+		right 120ms cubic-bezier(0.16, 1, 0.3, 1) v-bind(rightDelay),
+		top 120ms cubic-bezier(0.16, 1, 0.3, 1) v-bind(topDelay),
+		bottom 120ms cubic-bezier(0.16, 1, 0.3, 1) v-bind(bottomDelay);
 }
 
 .tab-color {
-	transition: color 100ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: color 120ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tab-color-delayed .tab-color {
 	transition-delay: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.navtabs-transition,
+	.tab-color {
+		transition: none !important;
+	}
 }
 </style>

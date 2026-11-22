@@ -99,12 +99,12 @@ const messages = defineMessages({
 	},
 	bannerTitle: {
 		id: 'app.horizon.world-backup.banner-title',
-		defaultMessage: 'Horizon upgrades saves permanently (one-way)',
+		defaultMessage: 'Gradle upgrades saves permanently (one-way)',
 	},
 	bannerDescription: {
 		id: 'app.horizon.world-backup.banner-desc',
 		defaultMessage:
-			'Horizon upgrades world saves to the Minecraft 26.3 format, which cannot be loaded in older Minecraft versions without backup. Gradle will create an automatic backup now before launch.',
+			'Gradle upgrades world saves to the Minecraft 26.3 format, which cannot be loaded in older Minecraft versions without backup. Gradle will create an automatic backup now before launch.',
 	},
 	worldsListTitle: {
 		id: 'app.horizon.world-backup.worlds-title',
@@ -124,7 +124,7 @@ const messages = defineMessages({
 	},
 	backupAndLaunch: {
 		id: 'app.horizon.world-backup.confirm',
-		defaultMessage: 'Backup & Launch Horizon',
+		defaultMessage: 'Backup & Launch Gradle',
 	},
 })
 

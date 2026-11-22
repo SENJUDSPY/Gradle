@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-toggle-decorations"
+description = "Enables the toggle_decorations command without any pre-configured scope."
+commands.allow = ["toggle_decorations"]
+
+[[permission]]
+identifier = "deny-toggle-decorations"
+description = "Denies the toggle_decorations command without any pre-configured scope."
+commands.deny = ["toggle_decorations"]

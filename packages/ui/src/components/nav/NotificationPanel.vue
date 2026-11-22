@@ -220,7 +220,7 @@ withDefaults(
 .vue-notification-group {
 	position: fixed;
 	bottom: 1.5rem;
-	z-index: 200;
+	z-index: 40;
 	width: 460px;
 	transition: bottom 0.25s ease-in-out;
 

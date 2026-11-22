@@ -7,15 +7,7 @@ use theseus::prelude::*;
 
 pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {
     tauri::plugin::Builder::new("jre")
-        .invoke_handler(tauri::generate_handler![
-            get_java_versions,
-            set_java_version,
-            jre_find_filtered_jres,
-            jre_get_jre,
-            jre_test_jre,
-            jre_auto_install_java,
-            jre_get_max_memory,
-        ])
+        .invoke_handler(crate::commands::jre_handler!())
         .build()
 }
 

@@ -401,15 +401,23 @@ async function setAccount(account: MinecraftCredential) {
 
 async function login() {
 	loginDisabled.value = true
-	const loggedIn = await login_flow().catch(handleSevereError)
-
-	if (loggedIn) {
-		await setAccount(loggedIn)
-		accountsInputModals.value?.hideAuth()
+	try {
+		const loggedIn = await login_flow()
+		if (loggedIn) {
+			await setAccount(loggedIn)
+			accountsInputModals.value?.hideAuth()
+		}
+		trackEvent('AccountLogIn')
+	} catch (error) {
+		console.error('[Minecraft Account] Microsoft login error:', error)
+		if (error && typeof error === 'object' && 'code' in error && (error as { code: unknown }).code === 'login_canceled') {
+			// user closed the login window intentionally
+		} else {
+			handleSevereError(error)
+		}
+	} finally {
+		loginDisabled.value = false
 	}
-
-	trackEvent('AccountLogIn')
-	loginDisabled.value = false
 }
 
 async function logout(id: string) {

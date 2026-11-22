@@ -422,6 +422,13 @@ impl ProcessManager {
         Ok(())
     }
 
+    pub async fn kill_all(&self) -> crate::Result<()> {
+        for mut entry in self.processes.iter_mut() {
+            let _ = entry.child.kill().await;
+        }
+        Ok(())
+    }
+
     fn remove(&self, id: Uuid) {
         self.processes.remove(&id);
     }
@@ -984,11 +991,17 @@ impl Process {
                 );
             }
         });
+        let exit_msg = if mc_exit_status.success() {
+            "Exited process".to_string()
+        } else {
+            format!("Process crashed with status: {mc_exit_status}")
+        };
+
         emit_process(
             &instance_id,
             uuid,
             ProcessPayloadType::Finished,
-            "Exited process",
+            &exit_msg,
         )
         .await?;
 
@@ -1033,7 +1046,49 @@ impl Process {
         }
 
         let lock_path = state.directories.instances_dir().join(&instance_path).join(".runtime.lock");
+        let running_runtime = tokio::fs::read_to_string(&lock_path).await.unwrap_or_default();
         let _ = tokio::fs::remove_file(&lock_path).await;
+
+        if !mc_exit_status.success() {
+            let recent_lines = get_log_buffer(&instance_id);
+            let exit_code = mc_exit_status.code();
+            #[cfg(unix)]
+            let signal = {
+                use std::os::unix::process::ExitStatusExt;
+                mc_exit_status.signal()
+            };
+            #[cfg(not(unix))]
+            let signal = None;
+
+            let instance_full_path = state.directories.instances_dir().join(&instance_path);
+            let crash_report = horizon_runtime::crash::generate_and_save_crash_report(
+                &instance_id,
+                &instance_path,
+                exit_code,
+                signal,
+                &recent_lines,
+                &instance_full_path,
+            );
+            let _ = (&running_runtime, &crash_report);
+
+            #[cfg(feature = "tauri")]
+            {
+                let event_state = crate::EventState::get();
+                let runtime_label = if running_runtime.trim().is_empty() {
+                    "Rust Edition"
+                } else {
+                    running_runtime.trim()
+                };
+                let _ = event_state.send(crate::event::AppEvent::Warning(
+                    crate::event::WarningPayload {
+                        message: format!(
+                            "Minecraft ({runtime_label}) crashed: {}",
+                            crash_report.crash_reason
+                        ),
+                    },
+                ));
+            }
+        }
 
         let _ = state
             .presence

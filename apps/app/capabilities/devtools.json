@@ -1,0 +1,7 @@
+{
+	"identifier": "debug-devtools",
+	"description": "Developer tools toggle (debug builds only)",
+	"local": true,
+	"windows": ["main"],
+	"permissions": ["core:webview:allow-internal-toggle-devtools"]
+}

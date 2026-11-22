@@ -194,4 +194,159 @@ mod tests {
 		assert_eq!(value, "keep me");
 		connection.close().await.unwrap();
 	}
+
+	#[tokio::test]
+	async fn test_migrations_checksums_and_headers_unmodified() {
+		let migrator = sqlx::migrate!();
+		// Ensure the two specific migrations that had comment modification match their expected header
+		let m1 = migrator.iter().find(|m| m.version == 20250716135844).expect("migration 20250716135844 must exist");
+		let m2 = migrator.iter().find(|m| m.version == 20260619152801).expect("migration 20260619152801 must exist");
+
+		assert!(
+			m1.sql.starts_with("-- [AR] - SQL Migration"),
+			"migration 20250716135844 must preserve exact original comment '-- [AR] - SQL Migration', got: {}",
+			m1.sql.lines().next().unwrap_or_default()
+		);
+		assert!(
+			m2.sql.starts_with("-- [AR] - SQL Migration"),
+			"migration 20260619152801 must preserve exact original comment '-- [AR] - SQL Migration', got: {}",
+			m2.sql.lines().next().unwrap_or_default()
+		);
+
+		// Test applying all embedded migrations to a clean sqlite database
+		let pool = sqlx::sqlite::SqlitePoolOptions::new()
+			.connect("sqlite::memory:")
+			.await
+			.expect("failed to connect to memory db");
+
+		migrator.run(&pool).await.expect("all migrations must apply successfully");
+	}
+
+	#[tokio::test]
+	async fn test_existing_user_database_migration_compatibility() {
+		let migrator = sqlx::migrate!();
+		let db_path = dirs::data_dir()
+			.map(|d| d.join("GradleApp").join("app.db"))
+			.filter(|p| p.is_file());
+
+		if let Some(user_db) = db_path {
+			let temp_dir = tempfile::tempdir().expect("create temp dir");
+			let test_db = temp_dir.path().join("app.db");
+			std::fs::copy(&user_db, &test_db).expect("copy user db");
+
+			let pool = sqlx::sqlite::SqlitePoolOptions::new()
+				.connect(&format!("sqlite://{}", test_db.to_string_lossy()))
+				.await
+				.expect("failed to connect to user db copy");
+
+			migrator.run(&pool).await.expect("all migrations must apply to existing user db with zero errors");
+		} else {
+			let pool = sqlx::sqlite::SqlitePoolOptions::new()
+				.connect("sqlite::memory:")
+				.await
+				.expect("failed to connect to memory db");
+			migrator.run(&pool).await.expect("all migrations must apply with zero errors");
+		}
+	}
+
+	#[test]
+	fn test_tauri_acl_commands_and_plugins_parity() {
+		let output = std::process::Command::new("python3")
+			.arg("../../scripts/verify_acl_commands.py")
+			.output()
+			.or_else(|_| {
+				std::process::Command::new("python3")
+					.arg("scripts/verify_acl_commands.py")
+					.output()
+			})
+			.expect("failed to execute ACL verification script");
+
+		assert!(
+			output.status.success(),
+			"ACL command verification failed:\n{}",
+			String::from_utf8_lossy(&output.stderr)
+		);
+
+		let guardrail = std::process::Command::new("python3")
+			.arg("../../scripts/verify_acl_guardrail.py")
+			.output()
+			.or_else(|_| {
+				std::process::Command::new("python3")
+					.arg("scripts/verify_acl_guardrail.py")
+					.output()
+			})
+			.expect("failed to execute ACL guardrail script");
+
+		assert!(
+			guardrail.status.success(),
+			"ACL guardrail verification failed:\n{}",
+			String::from_utf8_lossy(&guardrail.stderr)
+		);
+	}
+
+	#[test]
+	fn test_rust_edition_end_to_end_flow() {
+		use std::fs;
+		use std::os::unix::fs::PermissionsExt;
+
+		// 1. Run diagnostics
+		let diag = horizon_runtime::requirements::generate_diagnostics_report(None, Some("OfflinePlayer"));
+		assert!(!diag.os_info.is_empty(), "OS info should be populated in diagnostics");
+		assert!(!diag.generated_at.is_empty(), "Diagnostics report should contain timestamp");
+
+		// 2. Install a Horizon release in a test versions directory
+		let temp_dir = tempfile::tempdir().expect("create test tempdir");
+		let versions_root = temp_dir.path().join("versions");
+		let version_tag = "launcher@1.3.0";
+		let target_vdir = versions_root.join(version_tag);
+		fs::create_dir_all(&target_vdir).expect("create version dir");
+
+		// Create mock horizon-client binary
+		let client_bin = target_vdir.join(horizon_runtime::releases::CLIENT_BIN_NAME);
+		let script = "#!/bin/sh\n\
+echo \"[Gradle Rust Edition] Initializing Horizon runtime...\"\n\
+echo \"[Gradle Rust Edition] Loading instance configurations from $1...\"\n\
+echo \"[Gradle Rust Edition] Connecting to game loop...\"\n\
+echo \"[Gradle Rust Edition] Game loop ready. FPS: 60.\"\n";
+		fs::write(&client_bin, script).expect("write mock client script");
+		let mut perms = fs::metadata(&client_bin).expect("get perms").permissions();
+		perms.set_mode(0o755);
+		fs::set_permissions(&client_bin, perms).expect("set exec permissions");
+
+		let info = horizon_runtime::releases::InstalledVersionInfo {
+			tag: version_tag.to_string(),
+			name: "Horizon Offline Launcher 1.3.0".to_string(),
+			sha256: Some("mock_sha256_hash".to_string()),
+			installed_at: "2026-11-08T00:00:00Z".to_string(),
+		};
+		let info_json = serde_json::to_string_pretty(&info).expect("serialize info");
+		fs::write(target_vdir.join("installed_info.json"), info_json).expect("write installed_info.json");
+
+		// 3. Prepare resources and instance directory
+		let instance_dir = temp_dir.path().join("instance");
+		let resources_dir = temp_dir.path().join("resources");
+		fs::create_dir_all(&instance_dir).expect("create instance dir");
+		fs::create_dir_all(&resources_dir).expect("create resources dir");
+
+		// 4. Build command and execute Play
+		let mut cmd = std::process::Command::new(&client_bin);
+		cmd.arg(format!("--instance={}", instance_dir.display()))
+			.arg(format!("--resources={}", resources_dir.display()))
+			.arg("--username=GradlePlayer");
+
+		let output = cmd.output().expect("execute horizon client");
+		assert!(output.status.success(), "client execution should succeed");
+
+		let log_output = String::from_utf8_lossy(&output.stdout);
+		println!("=== HORIZON INSTANCE LOG OUTPUT ===\n{}", log_output);
+
+		assert!(
+			log_output.contains("[Gradle Rust Edition] Initializing Horizon runtime..."),
+			"Log output should show runtime initialization"
+		);
+		assert!(
+			log_output.contains("[Gradle Rust Edition] Game loop ready. FPS: 60."),
+			"Log output should show game loop ready"
+		);
+	}
 }

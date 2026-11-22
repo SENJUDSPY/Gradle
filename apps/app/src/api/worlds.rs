@@ -13,25 +13,7 @@ use theseus::worlds::{
 
 pub fn init<R: Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("worlds")
-        .invoke_handler(tauri::generate_handler![
-            get_recent_worlds,
-            get_instance_worlds,
-            get_singleplayer_world,
-            set_world_display_status,
-            rename_world,
-            reset_world_icon,
-            backup_world,
-            delete_world,
-            add_server_to_instance,
-            ensure_managed_server_in_instance,
-            edit_server_in_instance,
-            remove_server_from_instance,
-            desync_server,
-            get_instance_protocol_version,
-            get_server_status,
-            start_join_singleplayer_world,
-            start_join_server,
-        ])
+        .invoke_handler(crate::commands::worlds_handler!())
         .build()
 }
 

@@ -1,0 +1,18 @@
+[mod]
+id = "ruby_craft"
+name = "Ruby Craft"
+version = "1.0.0"
+authors = ["Gradle Team"]
+description = "Adds Ruby Ore, Ruby Gem, and Ruby Pickaxe natively in WebAssembly"
+license = "MIT"
+entrypoint = "gradle_init"
+
+[capabilities]
+permissions = ["world_edit"]
+
+[capabilities.limits]
+max_memory_mb = 16
+max_fuel = 5000000
+
+[dependencies]
+horizon = ">=26.3"

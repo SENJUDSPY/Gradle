@@ -13,7 +13,7 @@ export const loaderDisplayNames: Record<string, string> = {
 	purpur: 'Purpur',
 	bukkit: 'Bukkit',
 	vanilla: 'Vanilla',
-	horizon: 'Horizon',
+	horizon: 'Rust Edition',
 }
 
 export const formatLoaderLabel = (item: string) =>

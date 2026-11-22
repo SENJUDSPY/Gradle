@@ -23,16 +23,28 @@
 			>
 				<CheckCircleIcon v-if="isPrepared" class="size-6 shrink-0 text-green-500" />
 				<PackageIcon v-else class="size-6 shrink-0 text-secondary" />
-				<div class="flex flex-col gap-0.5">
-					<span class="text-sm font-semibold">
-						{{
-							isPrepared
-								? formatMessage(messages.statusPrepared)
-								: formatMessage(messages.statusNotPrepared)
-						}}
-					</span>
-					<span v-if="isPrepared && hasSounds" class="text-xs text-secondary">
-						{{ formatMessage(messages.soundNotice) }}
+				<div class="flex flex-1 flex-col gap-1">
+					<div class="flex items-center justify-between">
+						<span class="text-sm font-semibold">
+							{{
+								isPrepared
+									? formatMessage(messages.statusPrepared)
+									: formatMessage(messages.statusNotPrepared)
+							}}
+						</span>
+						<Button
+							v-if="isPrepared && !isPreparing"
+							size="sm"
+							type="outlined"
+							@click="startPreparation(true)"
+						>
+							<RefreshCwIcon />
+							{{ formatMessage(messages.reExtract) }}
+						</Button>
+					</div>
+					<span v-if="isPrepared && manifest" class="text-xs text-secondary">
+						Minecraft {{ manifest.minecraft }} • {{ manifest.resource_files }} assets verified
+						<template v-if="manifest.has_sounds"> • Sound events included</template>
 					</span>
 					<span v-else-if="isPrepared && !hasSounds" class="text-xs text-orange">
 						{{ formatMessage(messages.soundWarning) }}
@@ -119,8 +131,35 @@
 					{{ progress?.details || '' }}
 				</p>
 
-				<div v-if="error" class="mt-1 rounded-lg bg-red-500/10 p-2.5 text-xs text-red-400">
-					{{ error }}
+				<div class="min-h-[50px] flex flex-col justify-center">
+					<div
+						v-if="formattedError"
+						class="flex flex-col gap-1.5 rounded-xl border border-solid border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400"
+					>
+						<div class="flex items-start justify-between gap-2">
+							<div class="flex flex-col gap-0.5">
+								<div class="flex items-center gap-1.5 font-semibold">
+									<span
+										v-if="formattedError.code"
+										class="rounded bg-red-500/20 px-1.5 py-0.5 font-mono text-[10px] text-red-300"
+									>
+										{{ formattedError.code }}
+									</span>
+									<span>{{ formattedError.message }}</span>
+								</div>
+								<span v-if="formattedError.hint" class="text-[11px] text-secondary">
+									{{ formattedError.hint }}
+								</span>
+							</div>
+							<button
+								type="button"
+								class="shrink-0 rounded border border-solid border-red-500/30 bg-red-500/20 px-2 py-1 text-[11px] font-medium text-red-300 hover:bg-red-500/30 transition-colors cursor-pointer outline-none ring-0 focus:outline-none"
+								@click="copyErrorDetails"
+							>
+								{{ copiedError ? 'Copied!' : 'Copy details' }}
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -134,26 +173,47 @@
 
 			<!-- Footer Actions -->
 			<div class="flex items-center justify-between border-t border-solid border-surface-5 pt-3">
-				<Button v-if="!isPreparing" type="outlined" @click="checkStatus">
+				<Button
+					v-if="!isPreparing"
+					type="outlined"
+					class="!outline-none !ring-0 focus:!outline-none focus:!ring-0 shadow-none"
+					@click="checkStatus"
+				>
 					<RefreshCwIcon />
 					{{ formatMessage(messages.refresh) }}
 				</Button>
 				<div v-else />
 
 				<div class="flex items-center gap-2">
-					<Button v-if="!isPreparing" type="quiet" @click="hide">
+					<Button
+						v-if="isPreparing"
+						type="outlined"
+						class="!outline-none !ring-0 focus:!outline-none focus:!ring-0 shadow-none"
+						@click="handleCancel"
+					>
+						{{ formatMessage(messages.cancelPreparation) }}
+					</Button>
+					<Button
+						v-if="!isPreparing"
+						type="quiet"
+						class="!outline-none !ring-0 focus:!outline-none focus:!ring-0 shadow-none"
+						@click="hide"
+					>
 						{{ formatMessage(commonMessages.cancelButton) }}
 					</Button>
-					<Button type="colored" color="brand" :disabled="isPreparing" @click="handleMainAction">
-						<SpinnerIcon v-if="isPreparing" class="size-4 animate-spin" />
-						<WrenchIcon v-else-if="!isPrepared" />
+					<Button
+						v-if="!isPreparing"
+						type="colored"
+						color="brand"
+						class="!outline-none !ring-0 focus:!outline-none focus:!ring-0 shadow-none"
+						@click="handleMainAction"
+					>
+						<WrenchIcon v-if="!isPrepared" />
 						<CheckIcon v-else />
 						{{
-							isPreparing
-								? formatMessage(messages.buttonPreparing)
-								: isPrepared
-									? formatMessage(messages.buttonDone)
-									: formatMessage(messages.buttonPrepare)
+							isPrepared
+								? formatMessage(messages.buttonDone)
+								: formatMessage(messages.buttonPrepare)
 						}}
 					</Button>
 				</div>
@@ -171,7 +231,6 @@ import {
 	FolderOpenIcon,
 	PackageIcon,
 	RefreshCwIcon,
-	SpinnerIcon,
 	WrenchIcon,
 } from '@modrinth/assets'
 import {
@@ -187,12 +246,15 @@ import { open } from '@tauri-apps/plugin-dialog'
 import { onUnmounted, ref } from 'vue'
 
 import {
+	cancelHorizonPreparation,
 	checkHorizonRequirements,
+	getHorizonResourcesManifest,
 	hasHorizonSounds,
 	isHorizonResourcesPrepared,
 	onHorizonPrepareProgress,
 	type PreparationProgress,
 	prepareHorizonResources,
+	type ResourcesManifest,
 } from '@/helpers/horizon'
 
 const emit = defineEmits<{
@@ -202,21 +264,25 @@ const emit = defineEmits<{
 const messages = defineMessages({
 	title: {
 		id: 'app.horizon.preparation.title',
-		defaultMessage: 'Prepare Horizon Game Files',
+		defaultMessage: 'Prepare Gradle Game Files',
 	},
 	subtitle: {
 		id: 'app.horizon.preparation.subtitle',
 		defaultMessage:
-			'Rebuild native Horizon game resources locally from your genuine Minecraft 26.3 copy. The launcher never downloads or redistributes Mojang game files.',
+			'Rebuild native Gradle game resources locally from your genuine Minecraft 26.3 copy. The launcher never downloads or redistributes Mojang game files.',
 	},
 	statusPrepared: {
 		id: 'app.horizon.preparation.status.prepared',
-		defaultMessage: 'Horizon resources are prepared and up to date.',
+		defaultMessage: 'Gradle resources are prepared and up to date.',
 	},
 	statusNotPrepared: {
 		id: 'app.horizon.preparation.status.not-prepared',
 		defaultMessage:
-			'Horizon game files are not yet prepared. Preparation is required to launch the game.',
+			'Gradle game files are not yet prepared. Preparation is required to launch the game.',
+	},
+	reExtract: {
+		id: 'app.horizon.preparation.re-extract',
+		defaultMessage: 'Force Re-extract',
 	},
 	soundNotice: {
 		id: 'app.horizon.preparation.sound-notice',
@@ -253,7 +319,7 @@ const messages = defineMessages({
 	},
 	preparingStatus: {
 		id: 'app.horizon.preparation.status.preparing',
-		defaultMessage: 'Preparing Horizon game resources...',
+		defaultMessage: 'Preparing Gradle game resources...',
 	},
 	buttonPrepare: {
 		id: 'app.horizon.preparation.button.prepare',
@@ -267,9 +333,13 @@ const messages = defineMessages({
 		id: 'app.horizon.preparation.button.done',
 		defaultMessage: 'Ready to Play',
 	},
+	cancelPreparation: {
+		id: 'app.horizon.preparation.cancel',
+		defaultMessage: 'Cancel Preparation',
+	},
 	success: {
 		id: 'app.horizon.preparation.success',
-		defaultMessage: 'Horizon resources prepared successfully!',
+		defaultMessage: 'Gradle resources prepared successfully!',
 	},
 	refresh: {
 		id: 'app.horizon.requirements.check',
@@ -281,11 +351,79 @@ const { formatMessage } = useVIntl()
 const modalRef = ref<InstanceType<typeof NewModal>>()
 const isPrepared = ref(false)
 const hasSounds = ref(false)
+const manifest = ref<ResourcesManifest | null>(null)
 const selectedJar = ref<string | null>(null)
 const selectedMcDir = ref<string | null>(null)
 const isPreparing = ref(false)
 const progress = ref<PreparationProgress | null>(null)
-const error = ref<string | null>(null)
+
+interface FormattedError {
+	message: string
+	code?: string
+	hint?: string
+	raw?: any
+}
+
+const formattedError = ref<FormattedError | null>(null)
+const copiedError = ref(false)
+
+function setAppError(e: any, contextHint?: string) {
+	console.error('[HorizonPreparation] Operation error:', e)
+	if (!e) {
+		formattedError.value = null
+		return
+	}
+	let message = 'An unexpected error occurred'
+	let code: string | undefined
+	let hint: string | undefined = contextHint
+
+	if (typeof e === 'string') {
+		message = e
+		if (e.includes('not allowed by ACL')) {
+			code = 'ACL_PERMISSION_DENIED'
+			hint = 'Command execution was blocked by application security rules.'
+		}
+	} else if (typeof e === 'object') {
+		message = e.message || e.error || (typeof e.toString === 'function' && e.toString() !== '[object Object]' ? e.toString() : 'An error occurred during preparation')
+		code = e.code
+		hint = e.hint || hint
+		if (typeof message === 'string' && message.includes('not allowed by ACL')) {
+			code = code || 'ACL_PERMISSION_DENIED'
+			hint = hint || 'Command execution was blocked by application security rules.'
+		}
+	}
+	formattedError.value = {
+		message,
+		code,
+		hint,
+		raw: e,
+	}
+}
+
+function clearAppError() {
+	formattedError.value = null
+	copiedError.value = false
+}
+
+async function copyErrorDetails() {
+	if (!formattedError.value) return
+	try {
+		const payload = {
+			code: formattedError.value.code,
+			message: formattedError.value.message,
+			hint: formattedError.value.hint,
+			details: formattedError.value.raw,
+			timestamp: new Date().toISOString(),
+		}
+		await navigator.clipboard.writeText(JSON.stringify(payload, null, 2))
+		copiedError.value = true
+		setTimeout(() => {
+			copiedError.value = false
+		}, 2000)
+	} catch (err) {
+		console.error('Failed to copy error details:', err)
+	}
+}
 const success = ref(false)
 let onCompleteCallback: (() => void) | null = null
 let unlistenProgress: UnlistenFn | null = null
@@ -295,6 +433,9 @@ async function checkStatus() {
 		isPrepared.value = await isHorizonResourcesPrepared()
 		if (isPrepared.value) {
 			hasSounds.value = await hasHorizonSounds()
+			manifest.value = await getHorizonResourcesManifest()
+		} else {
+			manifest.value = null
 		}
 		if (!selectedJar.value) {
 			const report = await checkHorizonRequirements(null)
@@ -328,10 +469,10 @@ async function pickCustomMinecraftDir() {
 	}
 }
 
-async function startPreparation() {
+async function startPreparation(force = false) {
 	if (isPreparing.value) return
 	isPreparing.value = true
-	error.value = null
+	clearAppError()
 	success.value = false
 	progress.value = {
 		stage: 'Starting',
@@ -346,7 +487,7 @@ async function startPreparation() {
 			unlistenProgress = await onHorizonPrepareProgress((p) => {
 				progress.value = p
 				if (p.error) {
-					error.value = p.error
+					setAppError(p.error)
 				}
 			})
 		} catch (e) {
@@ -355,9 +496,10 @@ async function startPreparation() {
 	}
 
 	try {
-		await prepareHorizonResources(selectedJar.value, selectedMcDir.value)
+		await prepareHorizonResources(selectedJar.value, selectedMcDir.value, force)
 		isPrepared.value = true
 		hasSounds.value = await hasHorizonSounds()
+		manifest.value = await getHorizonResourcesManifest()
 		success.value = true
 		emit('prepared')
 		if (onCompleteCallback) {
@@ -367,15 +509,25 @@ async function startPreparation() {
 			cb()
 		}
 	} catch (e) {
-		const msg = e instanceof Error ? e.message : String(e)
-		error.value = msg
+		setAppError(e, 'Failed to extract assets from genuine Minecraft jar.')
 	} finally {
 		isPreparing.value = false
 	}
 }
 
+async function handleCancel() {
+	try {
+		await cancelHorizonPreparation()
+	} catch (e) {
+		console.error('Failed to cancel preparation:', e)
+	} finally {
+		isPreparing.value = false
+		setAppError('Preparation cancelled by user', 'You can retry asset preparation anytime.')
+	}
+}
+
 function handleMainAction() {
-	if (isPrepared.value && !error.value) {
+	if (isPrepared.value && !formattedError.value) {
 		if (onCompleteCallback) {
 			const cb = onCompleteCallback
 			onCompleteCallback = null
@@ -385,13 +537,13 @@ function handleMainAction() {
 			hide()
 		}
 	} else {
-		void startPreparation()
+		void startPreparation(false)
 	}
 }
 
 function show(onComplete?: () => void) {
 	onCompleteCallback = onComplete ?? null
-	error.value = null
+	clearAppError()
 	success.value = false
 	modalRef.value?.show()
 	void checkStatus()

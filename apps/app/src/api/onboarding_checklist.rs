@@ -4,7 +4,7 @@ use theseus::prelude::*;
 
 pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {
     tauri::plugin::Builder::new("onboarding-checklist")
-        .invoke_handler(tauri::generate_handler![get_onboarding_checklist])
+        .invoke_handler(crate::commands::onboarding_checklist_handler!())
         .build()
 }
 

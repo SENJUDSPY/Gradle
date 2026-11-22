@@ -1,9 +1,9 @@
 <template>
 	<div
 		v-bind="$attrs"
-		class="group/input min-w-0 touch-manipulation border border-solid font-medium text-primary shadow-none transition-[background-color,border-color,box-shadow,color] focus-within:text-contrast focus-within:ring-4 focus-within:ring-brand-shadow"
+		class="group/input min-w-0 touch-manipulation border border-solid font-medium text-primary shadow-sm transition-[background-color,border-color,box-shadow,color] duration-150 focus-within:text-contrast focus-within:border-brand-accent focus-within:ring-2 focus-within:ring-[--color-focus-ring]/40"
 		:class="[
-			multiline ? 'flex w-full items-start gap-2 rounded-xl px-3 py-2' : sizeClass,
+			multiline ? 'flex w-full items-start gap-2 rounded-lg px-3 py-2' : sizeClass,
 			appearanceClass,
 			disabled ? 'cursor-not-allowed opacity-50' : '',
 		]"
@@ -43,18 +43,18 @@ const props = withDefaults(
 const sizeClass = computed(
 	() =>
 		({
-			small: 'inline-flex h-8 items-center gap-1.5 rounded-xl px-3',
-			standard: 'inline-flex h-9 items-center gap-2 rounded-xl px-3',
-			medium: 'inline-flex h-10 items-center gap-2 rounded-[14px] px-4',
-			large: 'inline-flex h-12 items-center gap-2 rounded-[14px] px-4',
+			small: 'inline-flex h-9 min-h-[36px] items-center gap-1.5 rounded-lg px-3',
+			standard: 'inline-flex h-10 min-h-[40px] items-center gap-2 rounded-lg px-3.5',
+			medium: 'inline-flex h-11 min-h-[44px] items-center gap-2 rounded-lg px-4',
+			large: 'inline-flex h-12 min-h-[48px] items-center gap-2 rounded-lg px-4',
 		})[props.size],
 )
 
 const appearanceClass = computed(() => {
-	if (props.invalid) return 'border-red bg-highlight-red'
+	if (props.invalid) return 'border-red bg-red/10 text-red focus-within:border-red focus-within:ring-red/30'
 	if (props.appearance === 'transparent') return 'border-transparent bg-transparent'
-	if (props.appearance === 'button') return 'border-transparent bg-button-bg'
-	return 'border-surface-5 bg-surface-4'
+	if (props.appearance === 'button') return 'border-surface-5 bg-surface-3'
+	return 'border-surface-5 bg-surface-2 text-contrast hover:border-surface-5/80'
 })
 </script>
 <style scoped>

@@ -1,0 +1,46 @@
+[default]
+description = "Default permissions for minecraft-skins plugin"
+permissions = [
+    "allow-get-available-skins",
+    "allow-get-available-capes",
+    "allow-get-dragged-skin-data",
+    "allow-normalize-skin-texture",
+    "allow-save-custom-skin",
+    "allow-set-custom-skin-order",
+    "allow-equip-skin",
+    "allow-unequip-skin",
+    "allow-add-and-equip-custom-skin",
+    "allow-flush-pending-skin-change",
+    "allow-flush-pending-skin-change-for-profile",
+    "allow-remove-custom-skin",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for minecraft-skins plugin"
+permissions = [
+    "allow-get-available-skins",
+    "allow-get-available-capes",
+    "allow-get-dragged-skin-data",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for minecraft-skins plugin"
+permissions = [
+    "allow-normalize-skin-texture",
+    "allow-save-custom-skin",
+    "allow-set-custom-skin-order",
+    "allow-equip-skin",
+    "allow-unequip-skin",
+    "allow-add-and-equip-custom-skin",
+    "allow-flush-pending-skin-change",
+    "allow-flush-pending-skin-change-for-profile",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for minecraft-skins plugin"
+permissions = [
+    "allow-remove-custom-skin",
+]

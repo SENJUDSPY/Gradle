@@ -1,9 +1,9 @@
 {
   "app.horizon.runtime": {
-    "message": "Среда Horizon"
+    "message": "Среда Gradle"
   },
   "app.horizon.badge": {
-    "message": "Horizon (Rust)"
+    "message": "Gradle (Rust)"
   },
   "app.horizon.native-rust": {
     "message": "Minecraft Java 26.3, переписанный на чистом Rust (без JVM)"
@@ -15,7 +15,7 @@
     "message": "Выделенный сервер"
   },
   "app.horizon.requirements.title": {
-    "message": "Системные требования Horizon"
+    "message": "Системные требования Gradle"
   },
   "app.horizon.requirements.check": {
     "message": "Проверить требования"
@@ -24,28 +24,28 @@
     "message": "Выбрать 26.3.jar..."
   },
   "app.horizon.requirements.all-passed": {
-    "message": "Все требования соблюдены. Horizon готов к запуску."
+    "message": "Все требования соблюдены. Gradle готов к запуску."
   },
   "app.horizon.requirements.missing": {
     "message": "Одно или несколько требований не выполнены."
   },
   "app.horizon.preparation.title": {
-    "message": "Подготовка игровых файлов Horizon"
+    "message": "Подготовка игровых файлов Gradle"
   },
   "app.horizon.preparation.subtitle": {
-    "message": "Локальное извлечение игровых ресурсов и звуков из вашей подлинной копии Minecraft 26.3 для нативного клиента Horizon. Файлы игры не скачиваются и не распространяются."
+    "message": "Локальное извлечение игровых ресурсов и звуков из вашей подлинной копии Minecraft 26.3 для нативного клиента Gradle. Файлы игры не скачиваются и не распространяются."
   },
   "app.horizon.preparation.status.ready": {
     "message": "Клиентский jar Minecraft 26.3 найден и проверен. Готово к подготовке ресурсов."
   },
   "app.horizon.preparation.status.not-prepared": {
-    "message": "Файлы ресурсов Horizon еще не подготовлены. Запустите подготовку для запуска игры."
+    "message": "Файлы ресурсов Gradle еще не подготовлены. Запустите подготовку для запуска игры."
   },
   "app.horizon.preparation.status.prepared": {
-    "message": "Ресурсы Horizon подготовлены и актуальны."
+    "message": "Ресурсы Gradle подготовлены и актуальны."
   },
   "app.horizon.preparation.status.preparing": {
-    "message": "Подготовка ресурсов Horizon..."
+    "message": "Подготовка ресурсов Gradle..."
   },
   "app.horizon.preparation.button.prepare": {
     "message": "Подготовить ресурсы"
@@ -66,7 +66,7 @@
     "message": "Папка Minecraft (Звуки)"
   },
   "app.horizon.preparation.success": {
-    "message": "Ресурсы Horizon успешно подготовлены!"
+    "message": "Ресурсы Gradle успешно подготовлены!"
   },
   "app.horizon.preparation.sound-notice": {
     "message": "Звуки игры извлечены из локального хранилища ассетов."
@@ -84,10 +84,10 @@
     "message": "Стандартная системная папка Minecraft будет просканирована на наличие звуков"
   },
   "app.horizon.version.title": {
-    "message": "Версии Horizon"
+    "message": "Версии Gradle"
   },
   "app.horizon.version.subtitle": {
-    "message": "Выбор, установка и обновление нативных сборок клиента и сервера Horizon."
+    "message": "Выбор, установка и обновление нативных сборок клиента и сервера Gradle."
   },
   "app.horizon.version.installed": {
     "message": "Установлено"
@@ -108,7 +108,7 @@
     "message": "Удалить"
   },
   "app.horizon.version.no-versions": {
-    "message": "Релизы Horizon не найдены"
+    "message": "Релизы Gradle не найдены"
   },
   "app.horizon.version.latest": {
     "message": "Последняя"
@@ -120,7 +120,7 @@
     "message": "Авто (Последняя установленная)"
   },
   "app.horizon.version.required-prompt": {
-    "message": "Пожалуйста, установите сборку Horizon для запуска игры."
+    "message": "Пожалуйста, установите сборку Gradle для запуска игры."
   },
   "app.horizon.version.view-patch-notes": {
     "message": "Патч-ноты"
@@ -129,13 +129,13 @@
     "message": "Примечания к патчам"
   },
   "patch-notes.page.title": {
-    "message": "Примечания к патчам Horizon"
+    "message": "Примечания к патчам Gradle"
   },
   "patch-notes.page.subtitle": {
-    "message": "Списки изменений, новые функции и исправления релизов нативного движка Horizon."
+    "message": "Списки изменений, новые функции и исправления релизов нативного движка Gradle."
   },
   "patch-notes.page.channel-engine": {
-    "message": "Движок Horizon"
+    "message": "Движок Gradle"
   },
   "patch-notes.page.channel-offline": {
     "message": "Офлайн-сборки"
@@ -192,7 +192,7 @@
     "message": "Поделиться сервером через P2P"
   },
   "p2p.host.subtitle": {
-    "message": "Туннелирование вашего сервера Minecraft/Horizon через прямое P2P соединение QUIC с автоматическим обходом NAT и relay-серверами."
+    "message": "Туннелирование вашего сервера Minecraft/Gradle через прямое P2P соединение QUIC с автоматическим обходом NAT и relay-серверами."
   },
   "p2p.host.port": {
     "message": "Порт локального сервера"
@@ -324,7 +324,7 @@
     "message": "Любой друг из вашей сети Tailscale может ввести этот IP в мультиплеере Minecraft."
   },
   "tailscale.modal.setup-guide-title": {
-    "message": "Как использовать Tailscale с Horizon"
+    "message": "Как использовать Tailscale с Gradle"
   },
   "tailscale.modal.step-1": {
     "message": "Установите Tailscale на свой ПК и пригласите друзей в свой tailnet (tailscale.com)."
@@ -342,7 +342,7 @@
     "message": "Скопировано!"
   },
   "servers.page.tab.horizon": {
-    "message": "Horizon серверы"
+    "message": "Серверы Gradle"
   },
   "servers.page.tab.cloud": {
     "message": "Облачный хостинг Modrinth"
@@ -357,10 +357,10 @@
     "message": "Подключиться по коду"
   },
   "servers.page.create-server": {
-    "message": "Создать сервер Horizon"
+    "message": "Создать сервер Gradle"
   },
   "servers.page.create-modal-title": {
-    "message": "Создать сервер Horizon"
+    "message": "Создать сервер Gradle"
   },
   "servers.page.server-name-label": {
     "message": "Имя сервера"
@@ -369,7 +369,7 @@
     "message": "Порт сервера"
   },
   "servers.page.no-servers-title": {
-    "message": "Серверов Horizon пока нет"
+    "message": "Серверов Gradle пока нет"
   },
   "servers.page.no-servers-desc": {
     "message": "Создайте нативный сервер Minecraft 26.3, который стартует мгновенно, потребляет менее 150 МБ ОЗУ и доступен для друзей через P2P."
@@ -405,10 +405,10 @@
     "message": "Бэкап мира успешно создан!"
   },
   "modpacks.page.title": {
-    "message": "Перенос модпаков для Horizon"
+    "message": "Перенос модпаков для Gradle"
   },
   "modpacks.page.subtitle": {
-    "message": "Импорт сборок Modrinth (.mrpack) и CurseForge (.zip). Horizon переносит совместимые датапаки, ресурспаки, шейдеры, конфиги и ресурсы в нативный профиль."
+    "message": "Импорт сборок Modrinth (.mrpack) и CurseForge (.zip). Gradle переносит совместимые датапаки, ресурспаки, шейдеры, конфиги и ресурсы в нативный профиль."
   },
   "modpacks.page.dropzone-title": {
     "message": "Выберите или перетащите файл модпака"
@@ -432,13 +432,13 @@
     "message": "Всего компонентов"
   },
   "modpacks.page.compatible-items": {
-    "message": "Совместимо с Horizon"
+    "message": "Совместимо с Gradle"
   },
   "modpacks.page.incompatible-items": {
     "message": "Байткод Java (пропущено)"
   },
   "modpacks.page.compatibility-explainer": {
-    "message": "Horizon запускает Minecraft 26.3 нативно на Rust с шейдерами wgpu/Vulkan. Датапаки, ресурспаки, шейдеры и конфиги работают из коробки. Моды Java (.jar) требуют JVM и не запускаются."
+    "message": "Gradle запускает Minecraft 26.3 нативно на Rust с шейдерами wgpu/Vulkan. Датапаки, ресурспаки, шейдеры и конфиги работают из коробки. Моды Java (.jar) требуют JVM и не запускаются."
   },
   "modpacks.page.filter-all": {
     "message": "Все компоненты"
@@ -459,16 +459,16 @@
     "message": "Пропущено (Java)"
   },
   "modpacks.page.profile-name-label": {
-    "message": "Название профиля Horizon"
+    "message": "Название профиля Gradle"
   },
   "modpacks.page.create-profile-button": {
-    "message": "Создать и запустить профиль Horizon"
+    "message": "Создать и запустить профиль Gradle"
   },
   "modpacks.page.creating-profile-button": {
     "message": "Создание профиля..."
   },
   "modpacks.page.your-profiles": {
-    "message": "Ваши профили Horizon"
+    "message": "Ваши профили Gradle"
   },
   "app.action-bar.downloading-java": {
     "message": "Скачивание Java {version}"
@@ -656,108 +656,108 @@
   "app.auth-servers.unreachable.header": {
     "message": "Нет связи с серверами аутентификации"
   },
-	"app.file-download.canceling": {
-		"message": "Отмена скачивания…"
-	},
-	"app.file-download.preparing": {
-		"message": "Подготовка к скачиванию…"
-	},
-	"app.file-download.waiting": {
-		"message": "Ожидание ответа сервера…"
-	},
-	"app.icon-editor.apply-icons-modal.apply-error": {
-		"message": "Не удалось назначить случайные значки сборкам."
-	},
-	"app.icon-editor.apply-icons-modal.apply-success": {
-		"message": "{num, plural, one {Случайный значок назначен для # сборки.} few {Случайные значки назначены для # сборок.} many {Случайные значки назначены для # сборок.} other {Случайные значки назначены для # сборки.}}"
-	},
-	"app.icon-editor.apply-icons-modal.badge": {
-		"message": "Новое в этом обновлении"
-	},
-	"app.icon-editor.apply-icons-modal.close": {
-		"message": "Закрыть"
-	},
-	"app.icon-editor.apply-icons-modal.description": {
-		"message": "Создавайте собственные значки для сборок прямо в Gradle. Сочетайте фоны с символами из Minecraft и популярных модов!"
-	},
-	"app.icon-editor.apply-icons-modal.instances-without-icons": {
-		"message": "{count, plural, one {У # сборки ещё нет значка. Назначить ей случайный значок для начала?} few {У # сборок ещё нет значков. Назначить им случайные значки для начала?} many {У # сборок ещё нет значков. Назначить им случайные значки для начала?} other {У # сборки ещё нет значков. Назначить им случайные значки для начала?}}"
-	},
-	"app.icon-editor.apply-icons-modal.random-icons": {
-		"message": "Случайные значки"
-	},
-	"app.icon-editor.apply-icons-modal.skip": {
-		"message": "Пропустить"
-	},
-	"app.icon-editor.apply-icons-modal.title": {
-		"message": "Редактор значков"
-	},
-	"app.icon-editor.notification.close": {
-		"message": "Закрыть"
-	},
-	"app.icon-editor.notification.description": {
-		"message": "Придайте сборкам индивидуальность!"
-	},
-	"app.icon-editor.notification.dismiss": {
-		"message": "Скрыть"
-	},
-	"app.icon-editor.notification.title": {
-		"message": "Новый редактор значков"
-	},
-	"app.icon-editor.notification.view-update": {
-		"message": "Что нового"
-	},
-	"app.instance.mods.projects-were-added": {
-		"message": "Добавлено проектов: {count}"
-	},
-	"app.instance.share.invite-modal.user-limit-reached": {
-		"message": "Достигнут лимит участников этой сборки: {limit}."
-	},
-	"app.modal.install-to-play.unavailable-description": {
-		"message": "Версию сборки, которую использует этот сервер, сейчас нельзя скачать. Возможно, она снята с публикации или находится на проверке. Попробуйте позже или свяжитесь с владельцем сервера."
-	},
-	"app.modal.install-to-play.unavailable-header": {
-		"message": "Сборка этого сервера недоступна"
-	},
-	"app.settings.sidebar.label.instance-defaults": {
-		"message": "Настройки сборок по умолчанию"
-	},
-	"app.settings.sidebar.label.system": {
-		"message": "Система"
-	},
-	"app.settings.tabs.java-and-memory": {
-		"message": "Java и память"
-	},
-	"app.settings.tabs.launch-hooks": {
-		"message": "Команды запуска"
-	},
-	"app.settings.tabs.resources": {
-		"message": "Ресурсы"
-	},
-	"app.settings.tabs.syncing": {
-		"message": "Синхронизация"
-	},
-	"app.settings.tabs.troubleshooting": {
-		"message": "Устранение неполадок"
-	},
-	"app.settings.tabs.window": {
-		"message": "Окно"
-	},
-	"app.settings.troubleshooting.clear-cache": {
-		"message": "Очистить кеш"
-	},
-	"app.settings.troubleshooting.clear-cache.confirm.title": {
-		"message": "Очистить кеш приложения?"
-	},
-	"app.shared-instance-publish.preparing": {
-		"message": "Подготовка обновления…"
-	},
-	"app.shared-instance-publish.pushed": {
-		"message": "Обновление отправлено"
-	},
-	"app.shared-instance-publish.uploading": {
-		"message": "Отправка обновления…"
-	},
+  "app.file-download.canceling": {
+    "message": "Отмена скачивания…"
+  },
+  "app.file-download.preparing": {
+    "message": "Подготовка к скачиванию…"
+  },
+  "app.file-download.waiting": {
+    "message": "Ожидание ответа сервера…"
+  },
+  "app.icon-editor.apply-icons-modal.apply-error": {
+    "message": "Не удалось назначить случайные значки сборкам."
+  },
+  "app.icon-editor.apply-icons-modal.apply-success": {
+    "message": "{num, plural, one {Случайный значок назначен для # сборки.} few {Случайные значки назначены для # сборок.} many {Случайные значки назначены для # сборок.} other {Случайные значки назначены для # сборки.}}"
+  },
+  "app.icon-editor.apply-icons-modal.badge": {
+    "message": "Новое в этом обновлении"
+  },
+  "app.icon-editor.apply-icons-modal.close": {
+    "message": "Закрыть"
+  },
+  "app.icon-editor.apply-icons-modal.description": {
+    "message": "Создавайте собственные значки для сборок прямо в Gradle. Сочетайте фоны с символами из Minecraft и популярных модов!"
+  },
+  "app.icon-editor.apply-icons-modal.instances-without-icons": {
+    "message": "{count, plural, one {У # сборки ещё нет значка. Назначить ей случайный значок для начала?} few {У # сборок ещё нет значков. Назначить им случайные значки для начала?} many {У # сборок ещё нет значков. Назначить им случайные значки для начала?} other {У # сборки ещё нет значков. Назначить им случайные значки для начала?}}"
+  },
+  "app.icon-editor.apply-icons-modal.random-icons": {
+    "message": "Случайные значки"
+  },
+  "app.icon-editor.apply-icons-modal.skip": {
+    "message": "Пропустить"
+  },
+  "app.icon-editor.apply-icons-modal.title": {
+    "message": "Редактор значков"
+  },
+  "app.icon-editor.notification.close": {
+    "message": "Закрыть"
+  },
+  "app.icon-editor.notification.description": {
+    "message": "Придайте сборкам индивидуальность!"
+  },
+  "app.icon-editor.notification.dismiss": {
+    "message": "Скрыть"
+  },
+  "app.icon-editor.notification.title": {
+    "message": "Новый редактор значков"
+  },
+  "app.icon-editor.notification.view-update": {
+    "message": "Что нового"
+  },
+  "app.instance.mods.projects-were-added": {
+    "message": "Добавлено проектов: {count}"
+  },
+  "app.instance.share.invite-modal.user-limit-reached": {
+    "message": "Достигнут лимит участников этой сборки: {limit}."
+  },
+  "app.modal.install-to-play.unavailable-description": {
+    "message": "Версию сборки, которую использует этот сервер, сейчас нельзя скачать. Возможно, она снята с публикации или находится на проверке. Попробуйте позже или свяжитесь с владельцем сервера."
+  },
+  "app.modal.install-to-play.unavailable-header": {
+    "message": "Сборка этого сервера недоступна"
+  },
+  "app.settings.sidebar.label.instance-defaults": {
+    "message": "Настройки сборок по умолчанию"
+  },
+  "app.settings.sidebar.label.system": {
+    "message": "Система"
+  },
+  "app.settings.tabs.java-and-memory": {
+    "message": "Java и память"
+  },
+  "app.settings.tabs.launch-hooks": {
+    "message": "Команды запуска"
+  },
+  "app.settings.tabs.resources": {
+    "message": "Ресурсы"
+  },
+  "app.settings.tabs.syncing": {
+    "message": "Синхронизация"
+  },
+  "app.settings.tabs.troubleshooting": {
+    "message": "Устранение неполадок"
+  },
+  "app.settings.tabs.window": {
+    "message": "Окно"
+  },
+  "app.settings.troubleshooting.clear-cache": {
+    "message": "Очистить кеш"
+  },
+  "app.settings.troubleshooting.clear-cache.confirm.title": {
+    "message": "Очистить кеш приложения?"
+  },
+  "app.shared-instance-publish.preparing": {
+    "message": "Подготовка обновления…"
+  },
+  "app.shared-instance-publish.pushed": {
+    "message": "Обновление отправлено"
+  },
+  "app.shared-instance-publish.uploading": {
+    "message": "Отправка обновления…"
+  },
   "gradle.app.launcher-update.available.action": {
     "message": "Посмотреть обновление"
   },
@@ -831,19 +831,19 @@
     "message": "Визуальные настройки"
   },
   "gradle.app.settings.tabs.horizon": {
-    "message": "Движок Horizon"
+    "message": "Движок Gradle"
   },
   "gradle.app.settings.horizon.title": {
-    "message": "Движок Horizon"
+    "message": "Движок Gradle"
   },
   "gradle.app.settings.horizon.description": {
-    "message": "Настройка нативного клиента Horizon (Rust): пресеты графики, дальность прорисовки рельефа (LOD) до 1024 чанков, тактильная отдача геймпада и дополнительные возможности."
+    "message": "Настройка нативного клиента Gradle (Rust): пресеты графики, дальность прорисовки рельефа (LOD) до 1024 чанков, тактильная отдача геймпада и дополнительные возможности."
   },
   "gradle.app.settings.horizon.graphics.title": {
     "message": "Графика и дальний рельеф"
   },
   "gradle.app.settings.horizon.graphics.desc": {
-    "message": "Horizon запускает Minecraft 26.3 нативно через wgpu/Vulkan. Дальний рельеф расширяет видимость миров далеко за пределы ванильных ограничений."
+    "message": "Gradle запускает Minecraft 26.3 нативно через wgpu/Vulkan. Дальний рельеф расширяет видимость миров далеко за пределы ванильных ограничений."
   },
   "gradle.app.settings.horizon.preset.title": {
     "message": "Пресет графики"
@@ -918,7 +918,7 @@
     "message": "Режим навигации в меню"
   },
   "gradle.app.settings.horizon.extras.title": {
-    "message": "Дополнения Horizon"
+    "message": "Дополнения Gradle"
   },
   "gradle.app.settings.horizon.extras.desc": {
     "message": "Дополнительные функции, встроенные в нативный Rust-клиент без затрат производительности на моды."
@@ -948,13 +948,13 @@
     "message": "Управление ИИ-агентами и MCP-сервер"
   },
   "gradle.app.settings.horizon.agent.desc": {
-    "message": "Предоставление доступа к Horizon по протоколу Model Context Protocol (MCP) для ассистентов (Claude Code, Cursor, Codex) для наблюдения и управления игрой."
+    "message": "Предоставление доступа к Gradle по протоколу Model Context Protocol (MCP) для ассистентов (Claude Code, Cursor, Codex) для наблюдения и управления игрой."
   },
   "gradle.app.settings.horizon.agent.allow-ai-agents.title": {
     "message": "Разрешить ИИ-агентов"
   },
   "gradle.app.settings.horizon.agent.allow-ai-agents.desc": {
-    "message": "По умолчанию отключено. При включении Horizon запускается с локальным сокетом управления, а horizon-ctl предоставляет более 80 инструментов через stdio JSON-RPC."
+    "message": "По умолчанию отключено. При включении Gradle запускается с локальным сокетом управления, а horizon-ctl предоставляет более 80 инструментов через stdio JSON-RPC."
   },
   "gradle.app.settings.horizon.agent.ctl-installed": {
     "message": "Установлен и готов"
@@ -969,7 +969,7 @@
     "message": "Подключение ИИ-агента"
   },
   "gradle.app.settings.horizon.agent.connect.desc": {
-    "message": "Добавьте MCP-сервер Horizon в настройки вашего ИИ-ассистента."
+    "message": "Добавьте MCP-сервер Gradle в настройки вашего ИИ-ассистента."
   },
   "gradle.app.settings.horizon.agent.one-click-cli": {
     "message": "Команда для терминала (в один шаг)"
@@ -986,18 +986,18 @@
   "gradle.app.settings.visual.description": {
     "message": "Настройте визуальные эффекты Gradle, не изменяя выбранную тему."
   },
-	"gradle.app.settings.visual.glass-level.matte": {
-		"message": "Матовый"
-	},
-	"gradle.app.settings.visual.glass-level.standard": {
-		"message": "Стандартный"
-	},
-	"gradle.app.settings.visual.glass-level.title": {
-		"message": "Уровень стекла"
-	},
-	"gradle.app.settings.visual.glass-level.transparent": {
-		"message": "Прозрачный"
-	},
+  "gradle.app.settings.visual.glass-level.matte": {
+    "message": "Матовый"
+  },
+  "gradle.app.settings.visual.glass-level.standard": {
+    "message": "Стандартный"
+  },
+  "gradle.app.settings.visual.glass-level.title": {
+    "message": "Уровень стекла"
+  },
+  "gradle.app.settings.visual.glass-level.transparent": {
+    "message": "Прозрачный"
+  },
   "gradle.app.settings.visual.liquid-glass.description": {
     "message": "Используйте полупрозрачные поверхности, размытие и многослойную глубину интерфейса. Отключите эту настройку, если эффекты влияют на производительность или читаемость."
   },
@@ -1025,24 +1025,24 @@
   "gradle.app.settings.updates.description": {
     "message": "Просматривайте канал релизов Gradle, состояние распространения и диагностику провайдера обновлений."
   },
-	"gradle.app.settings.updates.os": {
-		"message": "Операционная система"
-	},
-	"gradle.app.settings.updates.arch": {
-		"message": "Архитектура"
-	},
-	"gradle.app.settings.updates.app-commit": {
-		"message": "Коммит"
-	},
-	"gradle.app.settings.updates.system-information-unavailable": {
-		"message": "Системная информация недоступна."
-	},
+  "gradle.app.settings.updates.os": {
+    "message": "Операционная система"
+  },
+  "gradle.app.settings.updates.arch": {
+    "message": "Архитектура"
+  },
+  "gradle.app.settings.updates.app-commit": {
+    "message": "Коммит"
+  },
+  "gradle.app.settings.updates.system-information-unavailable": {
+    "message": "Системная информация недоступна."
+  },
   "gradle.app.settings.updates.api-url": {
     "message": "URL API поставщика обновлений"
   },
-	"gradle.app.settings.updates.libraries-api-url": {
-		"message": "URL API поставщика библиотек"
-	},
+  "gradle.app.settings.updates.libraries-api-url": {
+    "message": "URL API поставщика библиотек"
+  },
   "gradle.app.settings.updates.downloadable-files": {
     "message": "Файлы для загрузки"
   },
@@ -1088,12 +1088,12 @@
   "gradle.app.skins.unsupported-account.title": {
     "message": "Требуется учётная запись Microsoft"
   },
-	"gradle.app.skins.sign-in.description": {
-		"message": "Выберите способ входа, чтобы добавить свой аккаунт Minecraft."
-	},
-	"gradle.app.skins.sign-in.title": {
-		"message": "Войдите в аккаунт, чтобы управлять скинами"
-	},
+  "gradle.app.skins.sign-in.description": {
+    "message": "Выберите способ входа, чтобы добавить свой аккаунт Minecraft."
+  },
+  "gradle.app.skins.sign-in.title": {
+    "message": "Войдите в аккаунт, чтобы управлять скинами"
+  },
   "gradle.app.skins.sign-in-methods.button": {
     "message": "Способы входа"
   },
@@ -1172,30 +1172,30 @@
   "gradle.app.launcher-update-modal.update.title": {
     "message": "Доступна новая версия лаунчера Gradle."
   },
-	"gradle.app.news.empty": {
-		"message": "Новостей Gradle пока нет."
-	},
-	"gradle.app.news.error": {
-		"message": "Не удалось загрузить новости Gradle."
-	},
-	"gradle.app.news.loading": {
-		"message": "Загрузка новостей Gradle…"
-	},
-	"gradle.app.news.rate-limited": {
-		"message": "Слишком много запросов."
-	},
-	"gradle.app.news.recent-available": {
-		"message": "Есть свежие новости"
-	},
-	"gradle.app.news.new": {
-		"message": "Новое"
-	},
-	"gradle.app.news.open-article": {
-		"message": "Перейти"
-	},
-	"gradle.app.news.title": {
-		"message": "Новости Gradle"
-	},
+  "gradle.app.news.empty": {
+    "message": "Новостей Gradle пока нет."
+  },
+  "gradle.app.news.error": {
+    "message": "Не удалось загрузить новости Gradle."
+  },
+  "gradle.app.news.loading": {
+    "message": "Загрузка новостей Gradle…"
+  },
+  "gradle.app.news.rate-limited": {
+    "message": "Слишком много запросов."
+  },
+  "gradle.app.news.recent-available": {
+    "message": "Есть свежие новости"
+  },
+  "gradle.app.news.new": {
+    "message": "Новое"
+  },
+  "gradle.app.news.open-article": {
+    "message": "Перейти"
+  },
+  "gradle.app.news.title": {
+    "message": "Новости Gradle"
+  },
   "gradle.app.minecraft-account.error.input-offline.description": {
     "message": "Произошла ошибка при добавлении офлайн-аккаунта. Пожалуйста, выполните рекомендации ниже."
   },
@@ -1302,13 +1302,13 @@
     "message": "Поиск серверов"
   },
   "app.browse.horizon.notice-title": {
-    "message": "Активен профиль Horizon"
+    "message": "Активен профиль Gradle"
   },
   "app.browse.horizon.java-mods-notice": {
-    "message": "Horizon поддерживает нативные WebAssembly-моды (.wasm, .hmod) и датапаки/ресурспаки. Стандартные Java-моды (.jar) требуют JVM (Fabric/NeoForge) и не запускаются."
+    "message": "Gradle поддерживает нативные WebAssembly-моды (.wasm, .hmod) и датапаки/ресурспаки. Стандартные Java-моды (.jar) требуют JVM (Fabric/NeoForge) и не запускаются."
   },
   "app.browse.horizon.assets-compatible-notice": {
-    "message": "Horizon нативно поддерживает ресурспаки, шейдеры (wgpu/Vulkan) и датапаки из Gradle."
+    "message": "Gradle нативно поддерживает ресурспаки, шейдеры (wgpu/Vulkan) и датапаки."
   },
   "app.browse.hide-added-servers": {
     "message": "Скрывать добавленные"
@@ -1746,10 +1746,10 @@
     "message": "{count, plural, one {Сборка} other {Сборки ({count})}}"
   },
   "app.instance.content.horizon.notice-title": {
-    "message": "Нативный профиль Horizon (Minecraft 26.3)"
+    "message": "Нативный профиль Gradle (Minecraft 26.3)"
   },
   "app.instance.content.horizon.notice-desc": {
-    "message": "Horizon работает нативно на Rust (wgpu/Vulkan). Поддерживаются WebAssembly-моды (.wasm, .hmod), датапаки, ресурспаки и шейдеры. Стандартные Java-моды (.jar) не поддерживаются."
+    "message": "Gradle работает нативно на Rust (wgpu/Vulkan). Поддерживаются WebAssembly-моды (.wasm, .hmod), датапаки, ресурспаки и шейдеры. Стандартные Java-моды (.jar) не поддерживаются."
   },
   "app.instance.content.managed-content.modpack-header": {
     "message": "Контент сборки"
@@ -4701,13 +4701,13 @@
     "message": "Экспортировать сборку"
   },
   "instance.action.play-horizon": {
-    "message": "Играть через Horizon"
+    "message": "Играть через Gradle"
   },
   "instance.action.play-java": {
     "message": "Играть через Java"
   },
   "instance.runtime.horizon": {
-    "message": "Horizon (Rust, оптим.)"
+    "message": "Gradle (Rust, оптим.)"
   },
   "instance.runtime.java": {
     "message": "Java (классика)"
@@ -4719,22 +4719,22 @@
     "message": "Запустить сборку"
   },
   "instance.action.launch-client": {
-    "message": "Запустить клиент Horizon"
+    "message": "Запустить клиент Gradle"
   },
   "instance.action.launch-server": {
-    "message": "Запустить сервер Horizon"
+    "message": "Запустить сервер Gradle"
   },
   "instance.action.check-requirements": {
-    "message": "Проверить требования Horizon"
+    "message": "Проверить требования Gradle"
   },
   "instance.action.prepare-resources": {
     "message": "Подготовить файлы игры"
   },
   "instance.action.select-version": {
-    "message": "Выбрать версию Horizon"
+    "message": "Выбрать версию Gradle"
   },
   "instance.action.check-updates": {
-    "message": "Проверить обновления Horizon"
+    "message": "Проверить обновления Gradle"
   },
   "instance.action.more-actions": {
     "message": "Дополнительно"
@@ -5033,9 +5033,9 @@
   "instance.server-modal.resource-pack": {
     "message": "Набор ресурсов"
   },
-	"instance.settings.defaults.open-app-settings": {
-		"message": "Настроить значения по умолчанию"
-	},
+  "instance.settings.defaults.open-app-settings": {
+    "message": "Настроить значения по умолчанию"
+  },
   "instance.settings.sharing.active-invites.actions": {
     "message": "Действия"
   },
@@ -5075,12 +5075,12 @@
   "instance.settings.sharing.revoke-invite.header": {
     "message": "Отзыв приглашения"
   },
-	"instance.settings.sidebar.label.game": {
-		"message": "Игра"
-	},
-	"instance.settings.sidebar.label.instance": {
-		"message": "Сборка"
-	},
+  "instance.settings.sidebar.label.game": {
+    "message": "Игра"
+  },
+  "instance.settings.sidebar.label.instance": {
+    "message": "Сборка"
+  },
   "instance.settings.synced-options.data-override": {
     "message": "Отключить это переопределение для редактирования синхронизированных данных."
   },
@@ -5198,12 +5198,12 @@
   "instance.settings.tabs.general.update-channel.select": {
     "message": "Выберите канал обновления"
   },
-	"instance.settings.tabs.hooks.default-settings-description": {
-		"message": "Сборка использует команды запуска по умолчанию, если вы не переопределите их здесь."
-	},
-	"instance.settings.tabs.hooks.label": {
-		"message": "Команды запуска"
-	},
+  "instance.settings.tabs.hooks.default-settings-description": {
+    "message": "Сборка использует команды запуска по умолчанию, если вы не переопределите их здесь."
+  },
+  "instance.settings.tabs.hooks.label": {
+    "message": "Команды запуска"
+  },
   "instance.settings.tabs.hooks.post-exit": {
     "message": "После выхода"
   },
@@ -5264,9 +5264,9 @@
   "instance.settings.tabs.installation.locked": {
     "message": "Параметры установки недоступны, пока сборка заблокирована."
   },
-	"instance.settings.tabs.java.default-settings-description": {
-		"message": "Сборка использует настройки Java и памяти по умолчанию, если вы не переопределите их здесь."
-	},
+  "instance.settings.tabs.java.default-settings-description": {
+    "message": "Сборка использует настройки Java и памяти по умолчанию, если вы не переопределите их здесь."
+  },
   "instance.settings.tabs.java.enter-environment-variables": {
     "message": "Введите переменные среды..."
   },
@@ -5291,9 +5291,9 @@
   "instance.settings.tabs.java.java-path-placeholder": {
     "message": "/путь/к/java"
   },
-	"instance.settings.tabs.java.label": {
-		"message": "Java и память"
-	},
+  "instance.settings.tabs.java.label": {
+    "message": "Java и память"
+  },
   "instance.settings.tabs.sharing": {
     "message": "Доступ"
   },
@@ -5354,15 +5354,15 @@
   "instance.settings.tabs.synced-options.shared-settings.description": {
     "message": "Включить принудительное разделение, чтобы хранить синхронизированные настройки отдельно для этой сборки."
   },
-	"instance.settings.tabs.syncing": {
-		"message": "Синхронизация"
-	},
+  "instance.settings.tabs.syncing": {
+    "message": "Синхронизация"
+  },
   "instance.settings.tabs.window": {
     "message": "Переопределение настроек окна"
   },
-	"instance.settings.tabs.window.default-settings-description": {
-		"message": "Сборка использует настройки окна по умолчанию, если вы не переопределите их здесь."
-	},
+  "instance.settings.tabs.window.default-settings-description": {
+    "message": "Сборка использует настройки окна по умолчанию, если вы не переопределите их здесь."
+  },
   "instance.settings.tabs.window.fullscreen": {
     "message": "Полноэкранный режим"
   },
@@ -5378,9 +5378,9 @@
   "instance.settings.tabs.window.height.enter": {
     "message": "Введите высоту..."
   },
-	"instance.settings.tabs.window.label": {
-		"message": "Окно"
-	},
+  "instance.settings.tabs.window.label": {
+    "message": "Окно"
+  },
   "instance.settings.tabs.window.width": {
     "message": "Ширина"
   },
@@ -5393,9 +5393,9 @@
   "instance.shared-instance.error.title": {
     "message": "Произошла ошибка"
   },
-	"instance.shared-instance.file-not-allowed.title": {
-		"message": "Недопустимый тип файла"
-	},
+  "instance.shared-instance.file-not-allowed.title": {
+    "message": "Недопустимый тип файла"
+  },
   "instance.shared-instance.network-error.text": {
     "message": "Не удалось подключиться к API сборок"
   },
@@ -5408,21 +5408,21 @@
   "instance.shared-instance.publish-review.added-label": {
     "message": "Добавлен"
   },
-	"instance.shared-instance.publish-review.changes-description": {
-		"message": "Проверьте изменения, обнаруженные с момента последнего обновления. Они будут автоматически включены при отправке."
-	},
-	"instance.shared-instance.publish-review.changes-tab": {
-		"message": "Изменения"
-	},
-	"instance.shared-instance.publish-review.file-type-not-allowed": {
-		"message": "У вас нет разрешения на отправку файлов этого типа."
-	},
-	"instance.shared-instance.publish-review.files-description": {
-		"message": "Помимо обнаруженных изменений можно включить отдельные файлы. Выберите дополнительные файлы для публикации."
-	},
-	"instance.shared-instance.publish-review.files-tab": {
-		"message": "Файлы"
-	},
+  "instance.shared-instance.publish-review.changes-description": {
+    "message": "Проверьте изменения, обнаруженные с момента последнего обновления. Они будут автоматически включены при отправке."
+  },
+  "instance.shared-instance.publish-review.changes-tab": {
+    "message": "Изменения"
+  },
+  "instance.shared-instance.publish-review.file-type-not-allowed": {
+    "message": "У вас нет разрешения на отправку файлов этого типа."
+  },
+  "instance.shared-instance.publish-review.files-description": {
+    "message": "Помимо обнаруженных изменений можно включить отдельные файлы. Выберите дополнительные файлы для публикации."
+  },
+  "instance.shared-instance.publish-review.files-tab": {
+    "message": "Файлы"
+  },
   "instance.shared-instance.publish-review.header": {
     "message": "Отправить обновление"
   },
@@ -5432,15 +5432,15 @@
   "instance.shared-instance.publish-review.removed-label": {
     "message": "Удалён"
   },
-	"instance.shared-instance.publish-review.storage-over-limit": {
-		"message": "Лимит превышен на {size}. Снимите выбор с некоторых файлов, чтобы отправить обновление."
-	},
-	"instance.shared-instance.publish-review.storage-title": {
-		"message": "Доступное хранилище"
-	},
-	"instance.shared-instance.publish-review.storage-usage": {
-		"message": "{used} из {limit}"
-	},
+  "instance.shared-instance.publish-review.storage-over-limit": {
+    "message": "Лимит превышен на {size}. Снимите выбор с некоторых файлов, чтобы отправить обновление."
+  },
+  "instance.shared-instance.publish-review.storage-title": {
+    "message": "Доступное хранилище"
+  },
+  "instance.shared-instance.publish-review.storage-usage": {
+    "message": "{used} из {limit}"
+  },
   "instance.shared-instance.tooltip": {
     "message": "Контент сборки управляется другим пользователем."
   },

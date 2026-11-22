@@ -4,10 +4,7 @@ use daedalus::modded::Manifest;
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("metadata")
-        .invoke_handler(tauri::generate_handler![
-            metadata_get_game_versions,
-            metadata_get_loader_versions,
-        ])
+        .invoke_handler(crate::commands::metadata_handler!())
         .build()
 }
 

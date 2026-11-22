@@ -41,26 +41,7 @@ impl_cache_methods!(
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("cache")
-        .invoke_handler(tauri::generate_handler![
-            get_project,
-            get_project_many,
-            get_project_v3,
-            get_project_v3_many,
-            get_version,
-            get_version_many,
-            get_user,
-            get_user_many,
-            get_team,
-            get_team_many,
-            get_organization,
-            get_organization_many,
-            get_search_results,
-            get_search_results_many,
-            get_search_results_v3,
-            get_search_results_v3_many,
-            purge_cache_types,
-            get_project_versions,
-        ])
+        .invoke_handler(crate::commands::cache_handler!())
         .build()
 }
 

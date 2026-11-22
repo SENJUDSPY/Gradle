@@ -12,6 +12,38 @@ import i18nPlugin from '@/plugins/i18n'
 import i18nDebugPlugin from '@/plugins/i18n-debug'
 import router from '@/routes'
 
+// Intercept Tauri invoke calls to capture exact command on ACL denials
+if (typeof window !== 'undefined') {
+	const installTauriInterceptor = () => {
+		const internals = window.__TAURI_INTERNALS__
+		if (internals && typeof internals.invoke === 'function' && !internals.__acl_intercepted) {
+			const originalInvoke = internals.invoke
+			internals.invoke = async function (cmd, args, options) {
+				try {
+					return await originalInvoke.call(this, cmd, args, options)
+				} catch (err) {
+					const rawMsg = err?.message || String(err)
+					if (
+						rawMsg.includes('restricted by application security rules') ||
+						rawMsg.includes('not allowed by ACL') ||
+						rawMsg.includes('denied by ACL')
+					) {
+						const aclError = new Error(`Command '${cmd}' not allowed by ACL: ${rawMsg}`)
+						aclError.deniedCommand = cmd
+						aclError.isAclDenial = true
+						aclError.rawAclMessage = rawMsg
+						throw aclError
+					}
+					throw err
+				}
+			}
+			internals.__acl_intercepted = true
+		}
+	}
+	installTauriInterceptor()
+	window.addEventListener('DOMContentLoaded', installTauriInterceptor)
+}
+
 debugStartup('Frontend entry module evaluated')
 const app = createApp(App)
 setupErrorReporting(app, router)

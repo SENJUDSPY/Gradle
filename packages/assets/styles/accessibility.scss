@@ -4,3 +4,25 @@ a:focus-visible:not(.custom-focus-indicator),
 [type='button']:focus-visible:not(.custom-focus-indicator) {
 	outline: 0.25rem solid var(--color-focus-ring);
 }
+
+// Prefers-reduced-motion foundational overrides
+@media (prefers-reduced-motion: reduce) {
+	:root,
+	html {
+		--duration-quick: 0.001ms !important;
+		--duration-standard: 0.001ms !important;
+		--duration-slow: 0.001ms !important;
+		--duration-fast: 0.001ms !important;
+		--duration-normal: 0.001ms !important;
+		--duration-deliberate: 0.001ms !important;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+}

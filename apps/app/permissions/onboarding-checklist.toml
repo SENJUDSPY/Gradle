@@ -1,0 +1,12 @@
+[default]
+description = "Default permissions for onboarding-checklist plugin"
+permissions = [
+    "allow-get-onboarding-checklist",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for onboarding-checklist plugin"
+permissions = [
+    "allow-get-onboarding-checklist",
+]

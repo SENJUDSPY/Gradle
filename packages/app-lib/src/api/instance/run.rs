@@ -151,6 +151,9 @@ async fn run_credentials(
             running_name.trim(),
             effective_runtime
         )));
+    } else if lock_file.exists() {
+        // Clean up stale lock from an earlier crash or unexpected termination
+        let _ = tokio::fs::remove_file(&lock_file).await;
     }
 
     let _ = tokio::fs::write(&lock_file, effective_runtime.to_string()).await;
@@ -391,6 +394,21 @@ pub async fn kill(instance_id: &str) -> crate::Result<()> {
     }
 
     Ok(())
+}
+
+pub async fn restart(instance_id: &str) -> crate::Result<ProcessMetadata> {
+    let state = State::get().await?;
+    kill(instance_id).await?;
+
+    // Wait up to 5 seconds for the process to exit and runtime lock to release
+    for _ in 0..50 {
+        if !crate::state::instance_has_running_process(instance_id, &state).await? {
+            break;
+        }
+        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+    }
+
+    run(instance_id, QuickPlayType::None).await
 }
 
 #[tracing::instrument]

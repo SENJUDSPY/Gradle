@@ -111,7 +111,7 @@ const messages = defineMessages({
 	},
 	setupGuideTitle: {
 		id: 'tailscale.modal.setup-guide-title',
-		defaultMessage: 'How to use Tailscale with Horizon',
+		defaultMessage: 'How to use Tailscale with Gradle',
 	},
 	step1: {
 		id: 'tailscale.modal.step-1',

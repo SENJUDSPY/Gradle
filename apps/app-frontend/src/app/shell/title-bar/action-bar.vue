@@ -18,10 +18,10 @@
 		</div>
 		<AppUpdateButton />
 		<div
-			class="flex border-solid border-surface-5 text-sm font-medium items-center gap-2 py-1.5 px-3 rounded-xl border"
+			class="action-bar-status-pill flex border-solid border-surface-5 text-sm font-medium items-center gap-2 py-1.5 px-3 rounded-xl border"
 		>
 			<template v-if="selectedProcess">
-				<OnlineIndicatorIcon />
+				<OnlineIndicatorIcon class="online-indicator-icon shrink-0" />
 				<div class="text-contrast flex items-center gap-2">
 					<router-link
 						v-tooltip="formatMessage(messages.viewInstance)"
@@ -81,14 +81,14 @@
 									</button>
 									<button
 										v-tooltip="formatMessage(messages.stopInstance)"
-										class="active:scale-95 flex"
+										class="instance-action-button flex"
 										@click.stop="stop(process)"
 									>
 										<StopCircleIcon class="text-red size-5" />
 									</button>
 									<button
 										v-tooltip="formatMessage(messages.viewLogs)"
-										class="active:scale-95 flex"
+										class="instance-action-button flex"
 										@click.stop="goToTerminal(process.instance.id)"
 									>
 										<TerminalSquareIcon class="text-secondary size-5" />
@@ -100,14 +100,14 @@
 				</div>
 				<button
 					v-tooltip="formatMessage(messages.stopInstance)"
-					class="active:scale-95 flex"
+					class="instance-action-button flex"
 					@click="stop(selectedProcess)"
 				>
 					<StopCircleIcon class="text-red size-5" />
 				</button>
 				<button
 					v-tooltip="formatMessage(messages.viewLogs)"
-					class="active:scale-95 flex"
+					class="instance-action-button flex"
 					@click="goToTerminal()"
 				>
 					<TerminalSquareIcon class="text-secondary size-5" />
@@ -519,3 +519,68 @@ onBeforeUnmount(() => {
 	window.removeEventListener('online', handleOnline)
 })
 </script>
+
+<style scoped lang="scss">
+.action-bar-status-pill {
+	transition:
+		border-color var(--duration-quick, 140ms) ease,
+		box-shadow var(--duration-quick, 140ms) ease,
+		background-color var(--duration-quick, 140ms) ease;
+
+	&:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+}
+
+.online-indicator-icon {
+	animation: online-beacon-pulse 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+	will-change: filter, opacity;
+}
+
+@keyframes online-beacon-pulse {
+	0%,
+	100% {
+		filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.5));
+		opacity: 1;
+	}
+	50% {
+		filter: drop-shadow(0 0 7px rgba(34, 197, 94, 0.85));
+		opacity: 0.82;
+	}
+}
+
+.instance-action-button {
+	outline: none;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	transition:
+		transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		filter var(--duration-quick, 120ms) ease;
+	will-change: transform;
+
+	&:hover {
+		transform: scale(1.15);
+		filter: brightness(1.2);
+	}
+
+	&:active {
+		transform: scale(0.9);
+		transition-duration: 80ms;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.online-indicator-icon {
+		animation: none !important;
+		filter: none !important;
+	}
+
+	.action-bar-status-pill,
+	.instance-action-button {
+		transition: none !important;
+		transform: none !important;
+	}
+}
+</style>

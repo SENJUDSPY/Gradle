@@ -1,0 +1,36 @@
+[default]
+description = "Default permissions for jre plugin"
+permissions = [
+    "allow-get-java-versions",
+    "allow-jre-find-filtered-jres",
+    "allow-jre-get-jre",
+    "allow-jre-get-max-memory",
+    "allow-jre-test-jre",
+    "allow-set-java-version",
+    "allow-jre-auto-install-java",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for jre plugin"
+permissions = [
+    "allow-get-java-versions",
+    "allow-jre-find-filtered-jres",
+    "allow-jre-get-jre",
+    "allow-jre-get-max-memory",
+    "allow-jre-test-jre",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for jre plugin"
+permissions = [
+    "allow-set-java-version",
+]
+
+[[set]]
+identifier = "network-install"
+description = "Network-install commands for jre plugin"
+permissions = [
+    "allow-jre-auto-install-java",
+]

@@ -1,0 +1,48 @@
+[default]
+description = "Default permissions for users plugin"
+permissions = [
+    "allow-get-user-profile",
+    "allow-get-user-projects",
+    "allow-get-user-collections",
+    "allow-get-user-organizations",
+    "allow-get-user-preferences",
+    "allow-get-blocked-users",
+    "allow-search-user",
+    "allow-patch-user",
+    "allow-patch-user-preferences",
+    "allow-change-user-avatar",
+    "allow-block-user",
+    "allow-delete-user-avatar",
+    "allow-unblock-user",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for users plugin"
+permissions = [
+    "allow-get-user-profile",
+    "allow-get-user-projects",
+    "allow-get-user-collections",
+    "allow-get-user-organizations",
+    "allow-get-user-preferences",
+    "allow-get-blocked-users",
+    "allow-search-user",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for users plugin"
+permissions = [
+    "allow-patch-user",
+    "allow-patch-user-preferences",
+    "allow-change-user-avatar",
+    "allow-block-user",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for users plugin"
+permissions = [
+    "allow-delete-user-avatar",
+    "allow-unblock-user",
+]

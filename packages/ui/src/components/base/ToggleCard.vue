@@ -23,7 +23,7 @@ function toggle() {
 
 <template>
 	<SmartClickable
-		class="flex w-full flex-col overflow-clip rounded-2xl border border-solid border-surface-4 bg-surface-3"
+		class="flex w-full flex-col overflow-clip rounded-xl border border-solid border-surface-5 bg-surface-3 shadow-sm hover:border-brand/30 transition-all duration-200"
 		:disabled="isToggleLocked"
 	>
 		<template #clickable>
@@ -54,7 +54,7 @@ function toggle() {
 		<Transition name="toggle-card-content">
 			<div v-if="value && $slots.expanded" class="smart-clickable:allow-pointer-events">
 				<div>
-					<div class="border-0 border-t border-solid border-surface-4 bg-surface-2 p-4">
+					<div class="border-0 border-t border-solid border-surface-5 bg-surface-2 p-4">
 						<slot name="expanded" />
 					</div>
 				</div>
@@ -62,7 +62,7 @@ function toggle() {
 		</Transition>
 		<div
 			v-if="$slots.footer"
-			class="smart-clickable:allow-pointer-events border-0 border-t bg-surface-3 border-solid border-surface-4 px-4 py-3"
+			class="smart-clickable:allow-pointer-events border-0 border-t bg-surface-3 border-solid border-surface-5 px-4 py-3"
 		>
 			<slot name="footer" />
 		</div>

@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
 	<div
-		class="grid w-full grid-cols-[1fr_auto] items-center gap-6 p-4 rounded-2xl border border-solid border-surface-4 bg-surface-3"
+		class="grid w-full grid-cols-[1fr_auto] items-center gap-6 p-4 rounded-xl border border-solid border-surface-5 bg-surface-3 shadow-sm"
 	>
 		<div>
 			<h3 class="mb-1 mt-0 flex items-center gap-2 text-lg font-semibold text-contrast">

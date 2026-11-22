@@ -137,7 +137,7 @@ const tabs = computed<TabbedModalTab[]>(() => [
 	{
 		name: defineMessage({
 			id: 'instance.settings.tabs.horizon.label',
-			defaultMessage: 'Horizon engine',
+			defaultMessage: 'Gradle engine',
 		}),
 		icon: SparklesIcon,
 		category: tabCategories.game,

@@ -1,0 +1,30 @@
+[default]
+description = "Default permissions for friends plugin"
+permissions = [
+    "allow-friends",
+    "allow-friend-statuses",
+    "allow-add-friend",
+    "allow-remove-friend",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for friends plugin"
+permissions = [
+    "allow-friends",
+    "allow-friend-statuses",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for friends plugin"
+permissions = [
+    "allow-add-friend",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for friends plugin"
+permissions = [
+    "allow-remove-friend",
+]

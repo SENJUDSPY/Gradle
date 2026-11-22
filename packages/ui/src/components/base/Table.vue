@@ -1,14 +1,14 @@
 <template>
-	<div class="overflow-hidden rounded-2xl border border-solid border-surface-4">
+	<div class="overflow-hidden rounded-xl border border-solid border-surface-5 shadow-sm">
 		<div
 			v-if="hasHeaderSlot"
-			class="border-solid border-0 border-b border-surface-4 bg-surface-3 p-4"
+			class="border-solid border-0 border-b border-surface-5 bg-surface-3/80 p-4"
 		>
 			<slot name="header" />
 		</div>
 		<div class="overflow-x-auto overflow-y-hidden">
 			<table
-				class="w-full border-separate border-spacing-0 border-surface-4"
+				class="w-full border-separate border-spacing-0 border-surface-5"
 				:class="tableLayout === 'auto' ? 'table-auto' : 'table-fixed'"
 				:style="tableMinWidth ? { minWidth: tableMinWidth } : undefined"
 			>
@@ -21,8 +21,8 @@
 					/>
 				</colgroup>
 				<thead class="">
-					<tr class="bg-surface-3">
-						<th v-if="showSelection" class="w-12">
+					<tr class="bg-surface-3/70 text-secondary text-xs uppercase tracking-wider">
+						<th v-if="showSelection" class="w-12 border-solid border-0 border-b border-surface-5">
 							<Checkbox
 								:model-value="allSelected"
 								:indeterminate="someSelected"
@@ -33,7 +33,7 @@
 						<th
 							v-for="column in columns"
 							:key="column.key"
-							class="h-12 pr-2 first:pl-4 last:pr-4"
+							class="h-11 pr-2 first:pl-4 last:pr-4 border-solid border-0 border-b border-surface-5"
 							:class="[
 								`text-${column.align ?? 'left'}`,
 								column.enableSorting ? 'cursor-pointer select-none' : '',
@@ -45,18 +45,18 @@
 							<slot :name="`header-${column.key}`" :column="column">
 								<span
 									v-if="column.label || column.enableSorting"
-									class="inline-flex min-w-0 max-w-full items-center gap-1 font-semibold"
+									class="inline-flex min-w-0 max-w-full items-center gap-1 font-semibold text-secondary hover:text-contrast"
 									:class="`${sortColumn === column.key ? 'text-contrast -mr-1' : ''}`"
 								>
 									<span class="min-w-0 truncate">{{ column.label ?? '' }}</span>
 									<template v-if="column.enableSorting">
 										<ChevronUpIcon
 											v-if="sortColumn === column.key && sortDirection === 'asc'"
-											class="size-4 shrink-0"
+											class="size-4 shrink-0 text-brand-accent"
 										/>
 										<ChevronDownIcon
 											v-else-if="sortColumn === column.key && sortDirection === 'desc'"
-											class="size-4 shrink-0"
+											class="size-4 shrink-0 text-brand-accent"
 										/>
 									</template>
 								</span>
@@ -70,7 +70,7 @@
 					tag="tbody"
 				>
 					<tr v-if="data.length === 0" key="empty" class="bg-surface-2">
-						<td :colspan="columnSpan" class="border-solid border-0 border-t border-surface-4 p-0">
+						<td :colspan="columnSpan" class="border-solid border-0 border-t border-surface-5 p-0">
 							<slot name="empty-state">
 								<div class="text-secondary flex h-64 items-center justify-center">
 									No data available.
@@ -89,7 +89,7 @@
 							>
 								<td
 									v-if="showSelection"
-									class="w-12 border-solid border-0 border-t border-surface-4 focus:outline-none"
+									class="w-12 border-solid border-0 border-t border-surface-5 focus:outline-none"
 								>
 									<Checkbox
 										:model-value="isSelected(row)"
@@ -381,7 +381,10 @@ function isRowBelowVisible(row: T, rowIndex: number): boolean {
 }
 
 function getRowClass(row: T, rowIndex: number): string[] {
-	const baseClass = rowIndex % 2 === 0 ? 'bg-surface-2' : 'bg-surface-1.5'
+	const baseClass =
+		rowIndex % 2 === 0
+			? 'bg-surface-2 hover:bg-surface-3/80 transition-colors duration-150'
+			: 'bg-surface-1-5 hover:bg-surface-3/80 transition-colors duration-150'
 	const customClass =
 		typeof props.rowClass === 'function' ? props.rowClass(row, rowIndex) : props.rowClass
 
@@ -390,9 +393,9 @@ function getRowClass(row: T, rowIndex: number): string[] {
 
 function getRowBelowClass(row: T, rowIndex: number): string[] {
 	const classes = [
-		rowIndex % 2 === 0 ? 'bg-surface-2' : 'bg-surface-1.5',
+		rowIndex % 2 === 0 ? 'bg-surface-2 hover:bg-surface-3/80' : 'bg-surface-1-5 hover:bg-surface-3/80',
 		'table-row-below',
-		'transition-[filter]',
+		'transition-colors duration-150',
 	]
 
 	if (isRowClickable(row, rowIndex)) {

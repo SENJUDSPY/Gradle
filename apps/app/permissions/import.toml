@@ -1,0 +1,16 @@
+[default]
+description = "Default permissions for import plugin"
+permissions = [
+    "allow-get-default-launcher-path",
+    "allow-get-importable-instances",
+    "allow-is-valid-importable-instance",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for import plugin"
+permissions = [
+    "allow-get-default-launcher-path",
+    "allow-get-importable-instances",
+    "allow-is-valid-importable-instance",
+]

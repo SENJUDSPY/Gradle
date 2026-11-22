@@ -4,12 +4,7 @@ use uuid::Uuid;
 
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("process")
-        .invoke_handler(tauri::generate_handler![
-            process_get_all,
-            process_get_by_instance_id,
-            process_kill,
-            process_wait_for,
-        ])
+        .invoke_handler(crate::commands::process_handler!())
         .build()
 }
 

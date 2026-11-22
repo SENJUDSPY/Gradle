@@ -1,0 +1,12 @@
+[default]
+description = "Default permissions for reports plugin"
+permissions = [
+    "allow-reports-create",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for reports plugin"
+permissions = [
+    "allow-reports-create",
+]

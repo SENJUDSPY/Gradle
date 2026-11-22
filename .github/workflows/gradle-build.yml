@@ -115,6 +115,16 @@ jobs:
 
           echo "✅ All migration files use LF line endings."
 
+      - name: 🔍 Verify migration files and headers are unchanged
+        shell: bash
+        run: |
+          echo "🔍 Verifying existing SQL migration files have not been edited..."
+          git diff --exit-code HEAD -- packages/app-lib/migrations/ || {
+            echo "❌ ERROR: Existing SQL migrations were modified! Only adding new migrations is allowed."
+            exit 1
+          }
+          echo "✅ Existing SQL migration headers are unchanged."
+
       - name: 🧰 Setup Rust toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:

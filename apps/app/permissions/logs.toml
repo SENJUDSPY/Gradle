@@ -1,0 +1,40 @@
+[default]
+description = "Default permissions for logs plugin"
+permissions = [
+    "allow-logs-get-logs",
+    "allow-logs-get-logs-by-filename",
+    "allow-logs-get-output-by-filename",
+    "allow-logs-get-live-log-buffer",
+    "allow-logs-get-latest-log-cursor",
+    "allow-logs-log-webview",
+    "allow-logs-clear-live-log-buffer",
+    "allow-logs-delete-logs",
+    "allow-logs-delete-logs-by-filename",
+]
+
+[[set]]
+identifier = "read"
+description = "Read commands for logs plugin"
+permissions = [
+    "allow-logs-get-logs",
+    "allow-logs-get-logs-by-filename",
+    "allow-logs-get-output-by-filename",
+    "allow-logs-get-live-log-buffer",
+    "allow-logs-get-latest-log-cursor",
+]
+
+[[set]]
+identifier = "write"
+description = "Write commands for logs plugin"
+permissions = [
+    "allow-logs-log-webview",
+]
+
+[[set]]
+identifier = "destructive"
+description = "Destructive commands for logs plugin"
+permissions = [
+    "allow-logs-clear-live-log-buffer",
+    "allow-logs-delete-logs",
+    "allow-logs-delete-logs-by-filename",
+]

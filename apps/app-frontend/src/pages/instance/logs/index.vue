@@ -16,6 +16,7 @@ import { computed, ref, shallowRef, triggerRef, watch, watchEffect } from 'vue'
 
 import { useAppEvent } from '@/composables/use-app-event'
 import { useInstanceConsole } from '@/composables/useInstanceConsole'
+import { getLatestCrash } from '@/helpers/instance'
 import { delete_logs_by_filename, get_output_by_filename } from '@/helpers/logs.js'
 
 import { injectInstancePage } from '../instance-context'
@@ -120,9 +121,31 @@ async function analyseForCrash() {
 		const data = await client.mclogs.insights_v1.analyse(content)
 		if (data.analysis?.problems?.length > 0) {
 			crashAnalysis.value = data
+			return
 		}
 	} catch {
 		// Crash analysis is best-effort
+	}
+
+	try {
+		const crash = await getLatestCrash(instanceId.value)
+		if (crash && crash.is_crash) {
+			crashAnalysis.value = {
+				id: crash.instance_id,
+				name: crash.instance_name,
+				analysis: {
+					problems: [
+						{
+							message: `${crash.error_category}: ${crash.crash_reason}`,
+							solutions: [{ message: crash.actionable_fix }],
+						},
+					],
+					information: [],
+				},
+			}
+		}
+	} catch {
+		// Best-effort
 	}
 }
 

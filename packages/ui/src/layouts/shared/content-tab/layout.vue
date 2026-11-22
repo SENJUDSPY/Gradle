@@ -1409,6 +1409,9 @@ const confirmUnlinkModal = ref<InstanceType<typeof ConfirmUnlinkModal>>()
 							<template #empty>
 								<span>{{ formatMessage(messages.noContentFound) }}</span>
 							</template>
+							<template #itemTitleBadges="slotProps">
+								<slot name="itemTitleBadges" v-bind="slotProps" />
+							</template>
 						</ContentCardTable>
 					</div>
 				</template>

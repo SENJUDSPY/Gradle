@@ -16,6 +16,14 @@ const networkError: MinecraftAuthError = {
 }
 
 export const minecraftAuthErrors: Record<string, MinecraftAuthError> = {
+	minecraft_auth_not_configured: {
+		whatHappened:
+			'Microsoft sign-in is not configured. An Azure application registration client ID is required to connect to Microsoft accounts.',
+		stepsToFix: [
+			'Configure GRADLE_MICROSOFT_CLIENT_ID in your environment or launcher configuration',
+			'Alternatively, you can sign in with an offline account to play locally',
+		],
+	},
 	minecraft_auth_token_expired: {
 		whatHappened:
 			'Your saved Microsoft sign-in token has expired or was revoked, so Gradle cannot refresh your Minecraft session.',

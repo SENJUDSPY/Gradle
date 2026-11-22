@@ -130,22 +130,34 @@ watch(
 }
 
 .skeleton {
-	background: linear-gradient(145deg, var(--surface-2), var(--surface-3));
-	animation: skeleton-pulse 2700ms ease-in-out infinite;
+	position: relative;
+	overflow: hidden;
+	background: var(--surface-2);
+
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		transform: translateX(-100%);
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(91, 91, 240, 0.08) 35%,
+			rgba(34, 211, 238, 0.12) 50%,
+			transparent 100%
+		);
+		animation: skeleton-shimmer-anim 1.8s infinite;
+	}
 }
 
-@keyframes skeleton-pulse {
-	0%,
+@keyframes skeleton-shimmer-anim {
 	100% {
-		filter: brightness(0.95);
-	}
-	50% {
-		filter: brightness(1.15);
+		transform: translateX(100%);
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.skeleton {
+	.skeleton::after {
 		animation: none;
 	}
 }

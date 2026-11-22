@@ -10,16 +10,20 @@ anyhow = { workspace = true }
 chrono = { workspace = true }
 dirs = { workspace = true }
 flate2 = { workspace = true }
+hex = { workspace = true }
 parking_lot = { workspace = true }
 reqwest = { workspace = true, features = ["json", "stream"] }
+ring = "0.17"
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 sha1 = { workspace = true }
 sha2 = { workspace = true }
 tar = { workspace = true }
 tokio = { workspace = true, features = ["fs", "io-util", "process", "sync"] }
+toml = { workspace = true }
 tracing = { workspace = true }
 zip = { workspace = true, features = ["deflate"] }
+zstd = "0.13"
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
