@@ -377,25 +377,25 @@ onMounted(() => {
 	will-change: transform, box-shadow;
 
 	&:hover {
-		transform: translateY(-3px);
-		border-color: rgba(91, 91, 240, 0.45);
+		transform: translateY(-2px);
+		border-color: rgba(255, 255, 255, 0.16);
 		box-shadow:
-			0 12px 28px -4px rgba(0, 0, 0, 0.4),
-			0 6px 14px -2px rgba(91, 91, 240, 0.16);
+			0 8px 24px -4px rgba(0, 0, 0, 0.35),
+			0 2px 6px rgba(0, 0, 0, 0.2);
 	}
 
 	&:active {
-		transform: translateY(-1px);
+		transform: translateY(0);
 		box-shadow:
-			0 4px 12px -2px rgba(0, 0, 0, 0.3),
-			0 2px 6px -1px rgba(91, 91, 240, 0.1);
+			0 2px 8px -2px rgba(0, 0, 0, 0.25),
+			0 1px 3px rgba(0, 0, 0, 0.15);
 		transition-duration: 120ms;
 	}
 }
 
 .instance-card-regular {
 	.instance-action-btn:not(.is-playing) {
-		transform: scale(0.75);
+		transform: scale(0.85);
 		opacity: 0;
 	}
 
@@ -422,36 +422,38 @@ onMounted(() => {
 	will-change: transform, box-shadow;
 
 	&:hover {
-		transform: scale(1.08) !important;
+		transform: scale(1.05) !important;
 	}
 
 	&:active {
-		transform: scale(0.92) !important;
+		transform: scale(0.95) translateY(0.5px) !important;
 		transition-duration: 90ms !important;
 	}
 }
 
 .instance-play-btn {
 	&:hover {
-		box-shadow: 0 0 14px rgba(91, 91, 240, 0.45);
+		filter: brightness(1.08);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 	}
 
 	&:active {
-		box-shadow:
-			0 0 20px rgba(91, 91, 240, 0.75),
-			0 0 8px rgba(34, 211, 238, 0.5) !important;
-		filter: brightness(1.12);
+		transform: scale(0.94) translateY(0.5px) !important;
+		filter: brightness(0.96);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) inset !important;
 	}
 }
 
 .instance-stop-btn {
 	&:hover {
-		box-shadow: 0 0 14px rgba(239, 68, 68, 0.45);
+		filter: brightness(1.08);
+		box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 	}
 
 	&:active {
-		box-shadow: 0 0 20px rgba(239, 68, 68, 0.75) !important;
-		filter: brightness(1.12);
+		transform: scale(0.94) translateY(0.5px) !important;
+		filter: brightness(0.96);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) inset !important;
 	}
 }
 

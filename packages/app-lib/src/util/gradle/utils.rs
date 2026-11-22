@@ -351,11 +351,14 @@ pub async fn init_update_launcher(
         update::get_resource(download_url, local_filename, os_type).await
     {
         tracing::error!(error = %error, "[Gradle] Launcher update failed");
-    } else {
-        tracing::info!("[Gradle] Launcher update ready");
-        process::exit(0)
+        return Err(crate::ErrorKind::IOErrorOccurred {
+            error: error.to_string(),
+        }
+        .into());
     }
-    Ok(())
+
+    tracing::info!("[Gradle] Launcher update ready");
+    process::exit(0)
 }
 
 /// Saves the downloaded bytes to the `libraries` directory using the given relative path.

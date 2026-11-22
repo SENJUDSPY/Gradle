@@ -118,7 +118,11 @@ export async function downloadLatestRelease(
 
 	try {
 		isUpdateInstalling.value = true
-		return await initUpdateLauncher(installer.browser_download_url, installer.name, currentOS.value)
+		await initUpdateLauncher(installer.browser_download_url, installer.name, currentOS.value)
+		return true
+	} catch (error) {
+		console.error('Failed to install the launcher update:', error)
+		return false
 	} finally {
 		isUpdateInstalling.value = false
 	}

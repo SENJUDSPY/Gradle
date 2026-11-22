@@ -107,29 +107,26 @@ defineOptions({
 			transform var(--duration-standard, 220ms)
 				var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
 			box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
-		box-shadow: 0 0 16px -2px var(--color-brand-shadow, rgba(91, 91, 240, 0.45));
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	}
 
 	&:hover:not(.router-link-active):not(.disabled)::before {
-		opacity: 0.12;
-		transform: scale(0.95);
-		box-shadow: 0 0 10px 0 var(--color-brand-shadow, rgba(91, 91, 240, 0.25));
+		opacity: 0.08;
+		transform: scale(0.98);
 	}
 
 	// Secondary Layer: Fluid Active Indicator Pill on the left edge
 	&::after {
 		content: '';
 		position: absolute;
-		left: -5px;
+		left: -4px;
 		top: 50%;
 		transform: translateY(-50%) scaleY(0) scaleX(0.7);
-		width: 3.5px;
-		height: 22px;
+		width: 3px;
+		height: 20px;
 		border-radius: 9999px;
-		background: var(--color-brand-accent, #22d3ee);
-		box-shadow:
-			0 0 8px 1px var(--color-brand-accent, #22d3ee),
-			0 0 16px 2px rgba(34, 211, 238, 0.4);
+		background: var(--color-brand, #5b5bf0);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 		opacity: 0;
 		transition:
 			transform var(--duration-standard, 240ms)
@@ -143,23 +140,21 @@ defineOptions({
 .nav-button {
 	svg,
 	:deep(svg) {
-		transition:
-			transform var(--duration-quick, 150ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-			filter var(--duration-standard, 220ms) ease;
+		transition: transform var(--duration-quick, 150ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 		will-change: transform;
 	}
 
 	&:hover:not(.disabled) {
 		svg,
 		:deep(svg) {
-			transform: scale(1.1) translateY(-0.5px);
+			transform: scale(1.06) translateY(-0.5px);
 		}
 	}
 
 	&:active:not(.disabled) {
 		svg,
 		:deep(svg) {
-			transform: scale(0.9) translateY(0.5px);
+			transform: scale(0.94) translateY(0.5px);
 		}
 	}
 }
@@ -168,7 +163,7 @@ defineOptions({
 .subpage-active {
 	svg,
 	:deep(svg) {
-		filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+		filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
 	}
 }
 
@@ -179,27 +174,28 @@ defineOptions({
 		transform: scale(1);
 		opacity: 1;
 		box-shadow:
-			0 0 20px -2px var(--color-brand-shadow, rgba(91, 91, 240, 0.55)),
-			0 4px 12px rgba(0, 0, 0, 0.25);
+			0 1px 3px rgba(0, 0, 0, 0.25),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.08);
 	}
 
 	&::after {
 		transform: translateY(-50%) scaleY(1) scaleX(1);
 		opacity: 1;
-		height: 22px;
+		height: 20px;
 	}
 
 	&:hover:not(.disabled) {
-		transform: translateY(-1px) scale(1.03);
+		transform: translateY(-0.5px);
 		&::before {
 			box-shadow:
-				0 0 24px 0px var(--color-brand-shadow, rgba(91, 91, 240, 0.65)),
-				0 6px 16px rgba(0, 0, 0, 0.3);
+				0 2px 6px rgba(0, 0, 0, 0.3),
+				inset 0 1px 0 rgba(255, 255, 255, 0.14);
 		}
 	}
 
 	&:active:not(.disabled) {
-		transform: translateY(1px) scale(0.96);
+		transform: translateY(0.5px) scale(0.98);
 	}
 }
 
@@ -210,9 +206,8 @@ defineOptions({
 
 	&::after {
 		transform: translateY(-50%) scaleY(0.7) scaleX(1);
-		opacity: 0.85;
+		opacity: 0.9;
 		height: 16px;
-		box-shadow: 0 0 6px 1px var(--color-brand-accent, #22d3ee);
 	}
 }
 

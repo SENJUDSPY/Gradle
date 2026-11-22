@@ -515,12 +515,12 @@ a:not(.no-click-animation),
 
 	&:hover {
 		box-shadow: var(--shadow-card-hover, var(--shadow-md));
-		border-color: rgba(91, 91, 240, 0.35);
+		border-color: rgba(255, 255, 255, 0.14);
 		transform: translateY(-2px);
 	}
 
 	&:active {
-		transform: translateY(0) scale(0.99);
+		transform: translateY(0) scale(0.995);
 		transition-duration: var(--duration-quick, 120ms);
 	}
 
@@ -551,12 +551,12 @@ a:not(.no-click-animation),
 .card-elevated {
 	@extend .base-card;
 	box-shadow: var(--shadow-card-elevated, var(--shadow-md));
-	border-color: rgba(91, 91, 240, 0.2);
+	border-color: var(--surface-5);
 
 	&:hover {
 		box-shadow: var(--shadow-card-hover, var(--shadow-lg));
-		border-color: rgba(91, 91, 240, 0.45);
-		transform: translateY(-3px);
+		border-color: rgba(255, 255, 255, 0.18);
+		transform: translateY(-2px);
 	}
 }
 
@@ -581,8 +581,8 @@ a:not(.no-click-animation),
 
 	&:hover {
 		box-shadow: var(--shadow-glow);
-		border-color: rgba(91, 91, 240, 0.4);
-		transform: translateY(-2px);
+		border-color: rgba(255, 255, 255, 0.16);
+		transform: translateY(-1px);
 	}
 }
 
@@ -613,10 +613,9 @@ a:not(.no-click-animation),
 		background: linear-gradient(
 			90deg,
 			transparent 0%,
-			rgba(255, 255, 255, 0.04) 20%,
-			rgba(91, 91, 240, 0.1) 40%,
-			rgba(34, 211, 238, 0.14) 50%,
-			rgba(255, 255, 255, 0.04) 60%,
+			rgba(255, 255, 255, 0.03) 25%,
+			rgba(255, 255, 255, 0.08) 50%,
+			rgba(255, 255, 255, 0.03) 75%,
 			transparent 100%
 		);
 		animation: skeleton-shimmer-anim 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);

@@ -772,7 +772,13 @@ struct LegacyCredentials {
     pub access_token: String,
     pub refresh_token: String,
     pub expires: DateTime<Utc>,
+    #[serde(default = "default_legacy_account_type")]
     pub account_type: String,
+}
+
+/// The legacy launcher only stored Microsoft accounts, so imports from it predate `account_type`.
+fn default_legacy_account_type() -> String {
+    "microsoft".to_string()
 }
 
 #[derive(Deserialize, Debug)]

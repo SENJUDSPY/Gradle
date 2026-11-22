@@ -193,57 +193,30 @@ defineExpose({ element })
 }
 
 .button-frame--brand {
-	background: var(
-		--brand-gradient,
-		linear-gradient(135deg, #5b5bf0 0%, #3b82f6 50%, #22d3ee 100%)
-	) !important;
+	background: var(--color-brand, #5b5bf0) !important;
 	color: #ffffff !important;
-	border: none !important;
+	border: 1px solid rgba(255, 255, 255, 0.12) !important;
 	box-shadow:
-		0 1px 3px 0 rgba(0, 0, 0, 0.35),
-		0 0 16px -2px rgba(91, 91, 240, 0.35);
+		0 1px 2px 0 rgba(0, 0, 0, 0.2),
+		inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
 	position: relative;
-	overflow: hidden;
-}
-
-.button-frame--brand::after {
-	content: '';
-	position: absolute;
-	top: -50%;
-	left: -50%;
-	width: 200%;
-	height: 200%;
-	background: linear-gradient(
-		60deg,
-		transparent 40%,
-		rgba(255, 255, 255, 0.15) 50%,
-		transparent 60%
-	);
-	opacity: 0;
-	transform: translateX(-100%);
-	transition:
-		opacity 200ms var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-		transform 450ms var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
-	pointer-events: none;
 }
 
 .button-frame--brand:not(:disabled):not([aria-disabled='true']):hover,
 .button-frame--brand:not(:disabled):not([aria-disabled='true']):focus-visible {
-	filter: brightness(1.08);
+	filter: brightness(1.06);
 	box-shadow:
-		0 4px 14px 0 rgba(0, 0, 0, 0.4),
-		0 0 26px -1px rgba(91, 91, 240, 0.55);
+		0 3px 8px -1px rgba(0, 0, 0, 0.25),
+		inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+	transform: translateY(-1px);
 }
 
 .button-frame--brand:not(:disabled):not([aria-disabled='true']):active {
+	filter: brightness(0.96);
 	box-shadow:
-		0 1px 2px 0 rgba(0, 0, 0, 0.35),
-		0 0 10px -2px rgba(91, 91, 240, 0.25);
-}
-
-.button-frame--brand:not(:disabled):not([aria-disabled='true']):hover::after {
-	opacity: 1;
-	transform: translateX(100%);
+		0 1px 2px 0 rgba(0, 0, 0, 0.2),
+		inset 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+	transform: translateY(0.5px) scale(0.98);
 }
 
 .button-frame--danger {

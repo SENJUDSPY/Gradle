@@ -56,12 +56,7 @@ pub async fn init_update_launcher(
     filename: &str,
     os_type: &str,
 ) -> Result<()> {
-    let _ = utils::init_update_launcher(
-        download_url,
-        filename,
-        os_type,
-    )
-    .await;
+    utils::init_update_launcher(download_url, filename, os_type).await?;
     Ok(())
 }
 
