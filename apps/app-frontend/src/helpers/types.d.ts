@@ -1,4 +1,7 @@
 import type { ModrinthId } from '@modrinth/utils'
+import type { ContentItem as UIContentItem } from '@modrinth/ui'
+
+export type ContentItem = UIContentItem
 
 export type GameInstance = {
 	id: string

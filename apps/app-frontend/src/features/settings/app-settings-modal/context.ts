@@ -2,8 +2,8 @@ import { createContext } from '@modrinth/ui'
 
 export type UnsavedChangesController = {
 	hasChanges: () => boolean
-	getOriginal: () => Record<string, unknown>
-	getModified: () => Record<string, unknown>
+	getOriginal: () => object
+	getModified: () => object
 	isSaving: () => boolean
 	reset: () => void
 	save: () => void | Promise<void>

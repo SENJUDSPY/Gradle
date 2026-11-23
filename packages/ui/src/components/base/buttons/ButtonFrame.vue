@@ -49,6 +49,8 @@ const typeClasses: Record<ButtonType, string> = {
 		'button-frame--outlined bg-transparent border border-solid border-surface-5 text-contrast hover:bg-surface-4/60 [&>svg]:text-inherit',
 	quiet:
 		'button-frame--quiet bg-transparent text-primary hover:text-contrast hover:bg-surface-4/60 [&>svg]:text-inherit',
+	transparent:
+		'button-frame--quiet bg-transparent text-primary hover:text-contrast hover:bg-surface-4/60 [&>svg]:text-inherit',
 }
 
 const interactionClasses: Record<ButtonInteraction, string> = {

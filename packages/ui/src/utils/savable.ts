@@ -2,7 +2,7 @@ import { cloneDeep, isEqual } from 'es-toolkit'
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 
-export function useSavable<T extends Record<string, unknown>>(
+export function useSavable<T extends object>(
 	data: () => T,
 	save: (changes: Partial<T>) => void | Promise<void>,
 ): {

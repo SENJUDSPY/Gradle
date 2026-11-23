@@ -40,7 +40,12 @@ import {
 	useScrollViewport,
 	useVIntl,
 } from '@modrinth/ui'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import {
+	type UseQueryOptions,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from '@tanstack/vue-query'
 import { save } from '@tauri-apps/plugin-dialog'
 import { readFile } from '@tauri-apps/plugin-fs'
 import { useElementSize, useStorage, useWindowSize } from '@vueuse/core'
@@ -319,13 +324,13 @@ const messages = defineMessages({
 	},
 })
 
-const screenshotsQuery = useQuery(
-	computed(() =>
-		props.instanceId
+const screenshotsOptions = computed(
+	(): UseQueryOptions<InstanceScreenshot[]> =>
+		(props.instanceId
 			? instanceScreenshotsQueryOptions(props.instanceId)
-			: syncedScreenshotsQueryOptions(),
-	),
+			: syncedScreenshotsQueryOptions()) as UseQueryOptions<InstanceScreenshot[]>,
 )
+const screenshotsQuery = useQuery(screenshotsOptions)
 const instancesQuery = useQuery(instanceListQueryOptions())
 const screenshotGroupsQuery = useQuery(screenshotGroupsQueryOptions())
 const screenshotsQueryPending = useReadyState(screenshotsQuery)

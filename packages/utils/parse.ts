@@ -79,7 +79,7 @@ export const configuredXss = new FilterXSS({
 			float: /^left|right$/,
 		},
 	},
-	onIgnoreTagAttr: (tag, name, value) => {
+	onIgnoreTagAttr: (tag: string, name: string, value: string) => {
 		// Allow iframes from acceptable sources
 		if (tag === 'iframe' && name === 'src') {
 			const allowedSources = [
@@ -119,7 +119,7 @@ export const configuredXss = new FilterXSS({
 		if (name === 'class' && allowedClassesByTag[tag]) {
 			const classes = value
 				.split(/\s+/)
-				.filter((className) => allowedClassesByTag[tag].includes(className))
+				.filter((className: string) => allowedClassesByTag[tag].includes(className))
 			if (classes.length) return `class="${escapeAttrValue(classes.join(' '))}"`
 		}
 
@@ -134,7 +134,12 @@ export const configuredXss = new FilterXSS({
 			return `${name}="${escapeAttrValue(allowedClasses.join(' '))}"`
 		}
 	},
-	safeAttrValue(tag, name, value, cssFilter) {
+	safeAttrValue(
+		tag: string,
+		name: string,
+		value: string,
+		cssFilter: (name: string, value: string) => string,
+	) {
 		if (
 			shouldProxyImgur() &&
 			((tag === 'a' && name === 'href') ||

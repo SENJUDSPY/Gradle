@@ -26,14 +26,17 @@ defineProps({
 	},
 })
 
-const modal = ref(null)
+const modal = ref<{
+	show: (passedContent: string) => void
+	hide: () => void
+} | null>(null)
 
 defineExpose({
-	show: (passedContent) => {
-		modal.value.show(passedContent)
+	show: (passedContent: string) => {
+		modal.value?.show(passedContent)
 	},
 	hide: () => {
-		modal.value.hide()
+		modal.value?.hide()
 	},
 })
 </script>
