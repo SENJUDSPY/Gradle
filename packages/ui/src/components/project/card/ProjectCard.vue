@@ -434,6 +434,11 @@ const cssColor = computed(() => {
 	border-color: rgba(255, 255, 255, 0.16);
 }
 
+.project-card-frame:active {
+	transform: translateY(0) scale(0.99);
+	transition: transform 80ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.project-card-frame,
 	.project-card-frame:hover {

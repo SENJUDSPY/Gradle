@@ -143,11 +143,12 @@ onUnmounted(() => resizeObserver?.disconnect())
 
 .indicator[data-tone='brand'],
 .indicator[data-tone='green'] {
-	background: linear-gradient(135deg, rgba(91, 91, 240, 0.3) 0%, rgba(34, 211, 238, 0.18) 100%);
+	background: linear-gradient(180deg, rgba(99, 102, 241, 0.28) 0%, rgba(79, 70, 229, 0.35) 100%);
 	box-shadow:
-		inset 0 0 0 1px rgba(91, 91, 240, 0.5),
-		0 2px 8px -1px rgba(91, 91, 240, 0.35),
-		0 1px 2px 0 rgba(0, 0, 0, 0.1);
+		inset 0 1px 0 rgba(255, 255, 255, 0.15),
+		inset 0 0 0 1px rgba(99, 102, 241, 0.4),
+		0 2px 6px -1px rgba(0, 0, 0, 0.25),
+		0 1px 2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .indicator[data-tone='neutral'] {

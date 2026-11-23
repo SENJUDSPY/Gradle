@@ -277,21 +277,21 @@ function onInput(event: Event) {
 	}
 
 	&:hover ~ .slider-track .slider-thumb {
-		transform: scale(1.12);
+		transform: scale(1.08);
 		box-shadow:
-			0 2px 8px 0 rgba(0, 0, 0, 0.3),
-			0 0 10px -2px rgba(91, 91, 240, 0.45);
+			0 2px 8px 0 rgba(0, 0, 0, 0.35),
+			0 1px 2px 0 rgba(0, 0, 0, 0.2);
 	}
 
 	&:active ~ .slider-track .slider-thumb {
-		transform: scale(1.25);
+		transform: scale(1.15);
 		box-shadow:
-			0 4px 14px 0 rgba(91, 91, 240, 0.5),
-			0 0 0 4px rgba(91, 91, 240, 0.2);
-		border-color: rgba(91, 91, 240, 0.6);
+			0 4px 12px 0 rgba(0, 0, 0, 0.4),
+			0 1px 3px 0 rgba(0, 0, 0, 0.25);
+		border-color: rgba(99, 102, 241, 0.8);
 		transition:
-			transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-			box-shadow var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+			transform 80ms ease-out,
+			box-shadow 80ms ease-out;
 	}
 
 	&:active ~ .slider-track .filled-slider-track {

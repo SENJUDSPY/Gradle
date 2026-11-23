@@ -142,8 +142,8 @@ watch(
 		background: linear-gradient(
 			90deg,
 			transparent 0%,
-			rgba(91, 91, 240, 0.08) 35%,
-			rgba(34, 211, 238, 0.12) 50%,
+			rgba(255, 255, 255, 0.04) 35%,
+			rgba(255, 255, 255, 0.08) 50%,
 			transparent 100%
 		);
 		animation: skeleton-shimmer-anim 1.8s infinite;

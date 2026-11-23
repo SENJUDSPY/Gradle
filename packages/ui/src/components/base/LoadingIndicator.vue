@@ -55,8 +55,8 @@
 		background-image: linear-gradient(
 			45deg,
 			transparent 25%,
-			rgba(91, 91, 240, 0.08) 40%,
-			rgba(34, 211, 238, 0.12) 50%,
+			rgba(255, 255, 255, 0.04) 40%,
+			rgba(255, 255, 255, 0.08) 50%,
 			transparent 75%
 		);
 		background-size: 200% 100%;
