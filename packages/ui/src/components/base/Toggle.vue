@@ -18,9 +18,9 @@
 
 		<!-- Active gradient overlay for smooth cubic-bezier color interpolation -->
 		<span
-			class="toggle-gradient-overlay absolute inset-0 bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] pointer-events-none rounded-full"
+			class="toggle-gradient-overlay absolute inset-0 bg-gradient-to-r from-[#6366F1] to-[#4F46E5] pointer-events-none rounded-full"
 			:class="{
-				'opacity-100 shadow-[0_0_12px_-2px_rgba(91,91,240,0.5)]': modelValue,
+				'opacity-100': modelValue,
 				'opacity-0': !modelValue,
 			}"
 		/>
@@ -101,7 +101,7 @@ function toggle() {
 		border-color var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 		filter var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 		transform var(--duration-standard, 220ms)
-			var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275));
+			var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .toggle-button:not(:disabled):hover {
@@ -110,8 +110,7 @@ function toggle() {
 
 .toggle-button:not(:disabled):active {
 	transform: scale(0.97);
-	transition: transform var(--duration-quick, 120ms)
-		var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+	transition: transform 80ms ease-out;
 }
 
 .toggle-button:focus-visible {

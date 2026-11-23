@@ -145,29 +145,25 @@ pub fn load_horizon_settings(instance_dir: Option<&Path>) -> HorizonSettings {
 	// 1. Try instance-specific settings first
 	if let Some(dir) = instance_dir {
 		let instance_settings = dir.join("horizon-settings.json");
-		if instance_settings.is_file() {
-			if let Ok(content) = fs::read_to_string(&instance_settings) {
-				if let Ok(mut settings) =
+		if instance_settings.is_file()
+			&& let Ok(content) = fs::read_to_string(&instance_settings)
+				&& let Ok(mut settings) =
 					serde_json::from_str::<HorizonSettings>(&content)
 				{
 					let _ = sync_from_options_txt(dir, &mut settings);
 					return settings;
 				}
-			}
-		}
 	}
 
 	// 2. Try global settings
 	let global_path = global_settings_path();
-	if global_path.is_file() {
-		if let Ok(content) = fs::read_to_string(&global_path) {
-			if let Ok(settings) =
+	if global_path.is_file()
+		&& let Ok(content) = fs::read_to_string(&global_path)
+			&& let Ok(settings) =
 				serde_json::from_str::<HorizonSettings>(&content)
 			{
 				return settings;
 			}
-		}
-	}
 
 	// 3. Fallback to default
 	HorizonSettings::default()
@@ -187,12 +183,11 @@ pub fn save_horizon_settings(
 	fs::write(&global_path, &serialized)?;
 
 	// 2. Save instance-specific settings if provided
-	if let Some(dir) = instance_dir {
-		if dir.exists() {
+	if let Some(dir) = instance_dir
+		&& dir.exists() {
 			fs::write(dir.join("horizon-settings.json"), &serialized)?;
 			sync_to_options_txt(dir, settings)?;
 		}
-	}
 
 	Ok(())
 }
@@ -292,26 +287,23 @@ pub fn sync_from_options_txt(dir: &Path, settings: &mut HorizonSettings) -> Resu
 						settings.fullscreen = v;
 					}
 				}
-				"graphicsApi" => {
-					if !val.is_empty() {
+				"graphicsApi"
+					if !val.is_empty() => {
 						settings.graphics_api = val.to_string();
 					}
-				}
 				"msaa" => {
 					if let Ok(v) = val.parse::<u32>() {
 						settings.msaa_samples = v;
 					}
 				}
-				"shadows" => {
-					if !val.is_empty() {
+				"shadows"
+					if !val.is_empty() => {
 						settings.shadow_quality = val.to_string();
 					}
-				}
-				"textureFiltering" => {
-					if !val.is_empty() {
+				"textureFiltering"
+					if !val.is_empty() => {
 						settings.texture_filtering = val.to_string();
 					}
-				}
 				"resourcePacks" => {
 					if let Ok(packs) = serde_json::from_str::<Vec<String>>(val) {
 						settings.resource_packs = packs;

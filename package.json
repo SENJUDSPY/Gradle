@@ -9,6 +9,7 @@
 		"lint": "turbo run lint lint:ancillary --continue",
 		"lint:ancillary": "prettier --check .github *.*",
 		"test": "turbo run test --continue",
+		"test:e2e": "node tests/e2e/runner.mjs",
 		"fix": "turbo run fix format fix:ancillary --continue",
 		"fix:ancillary": "prettier --write .github *.*",
 		"ci": "turbo run lint test --filter=!modrinth-rust --continue",

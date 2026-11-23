@@ -111,9 +111,10 @@ pub async fn export_debug_info(
         let horizon_dir = dirs::data_dir()
             .map(|d| d.join("gradle/horizon"))
             .or_else(|| dirs::home_dir().map(|h| h.join(".local/share/gradle/horizon")));
-        if let Some(ref hdir) = horizon_dir {
-            if hdir.is_dir() {
-                for sub in ["logs", "crash-reports", "servers"] {
+        if let Some(ref hdir) = horizon_dir
+            && hdir.is_dir()
+        {
+            for sub in ["logs", "crash-reports", "servers"] {
                     collect_files(
                         &mut files,
                         &hdir.join(sub),
@@ -129,7 +130,6 @@ pub async fn export_debug_info(
                     &excluded_paths,
                     &cancel,
                 )?;
-            }
         }
         let instances_dir = directories.instances_dir();
         match std::fs::read_dir(&instances_dir) {

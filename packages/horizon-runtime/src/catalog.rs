@@ -205,8 +205,8 @@ impl CatalogRoot {
 
     /// Validates licensing compliance for any recommended WASM port
     pub fn validate_port_license(entry: &CatalogEntry) -> Result<()> {
-        if let Some(port) = &entry.wasm_port {
-            if port.author_permission_needed && !port.author_permission_granted {
+        if let Some(port) = &entry.wasm_port
+            && port.author_permission_needed && !port.author_permission_granted {
                 bail!(
                     "WASM port for '{}' ({}) requires explicit redistribution consent from the mod author (License: {}).",
                     entry.name,
@@ -214,7 +214,6 @@ impl CatalogRoot {
                     port.license
                 );
             }
-        }
         Ok(())
     }
 }

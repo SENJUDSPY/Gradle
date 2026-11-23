@@ -56,7 +56,7 @@ defineExpose({ element })
 
 <style scoped>
 .check-circle-badge {
-	animation: check-circle-pop 180ms var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275))
+	animation: check-circle-pop 180ms var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1))
 		forwards;
 }
 
@@ -66,7 +66,7 @@ defineExpose({ element })
 		opacity: 0;
 	}
 	70% {
-		transform: scale(1.15);
+		transform: scale(1.04);
 		opacity: 1;
 	}
 	100% {

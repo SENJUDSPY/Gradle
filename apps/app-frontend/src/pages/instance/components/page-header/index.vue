@@ -129,7 +129,7 @@
 						:class="[
 							'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all duration-150',
 							horizonMode === 'client'
-								? 'bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] text-white shadow-sm'
+								? 'bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white shadow-sm'
 								: 'text-secondary hover:text-contrast',
 						]"
 						@click="horizonMode = 'client'"
@@ -142,7 +142,7 @@
 						:class="[
 							'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all duration-150',
 							horizonMode === 'server'
-								? 'bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] text-white shadow-sm'
+								? 'bg-gradient-to-r from-[#6366F1] to-[#4F46E5] text-white shadow-sm'
 								: 'text-secondary hover:text-contrast',
 						]"
 						@click="horizonMode = 'server'"

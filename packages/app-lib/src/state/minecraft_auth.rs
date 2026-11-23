@@ -289,8 +289,8 @@ pub async fn offline_auth(
 
     let mut credentials = Credentials {
         offline_profile: MinecraftProfile::default(),
-        access_token: access_token,
-        refresh_token: refresh_token,
+        access_token,
+        refresh_token,
         expires: Utc::now() + Duration::days(365 * 99),
         active: true,
         account_type: AccountType::Offline.as_lowercase_str(),

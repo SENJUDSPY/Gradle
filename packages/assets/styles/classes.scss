@@ -586,6 +586,10 @@ a:not(.no-click-animation),
 	}
 }
 
+.tabular-nums {
+	font-variant-numeric: tabular-nums;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.base-card,
 	.base-card:hover,

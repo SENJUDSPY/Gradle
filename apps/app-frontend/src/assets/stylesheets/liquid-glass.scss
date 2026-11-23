@@ -72,7 +72,8 @@ html.liquid-glass {
 	--ease-standard: cubic-bezier(0.2, 0, 0, 1);
 	--ease-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
 	--ease-exit: cubic-bezier(0.3, 0, 1, 1);
-	--ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	--ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-bounce: var(--ease-spring);
 	--duration-quick: 120ms;
 	--duration-standard: 220ms;
 	--duration-slow: 350ms;
@@ -174,14 +175,14 @@ html.retro-mode.liquid-glass {
 		inset 0 1px 0 rgba(230, 226, 209, 0.16);
 	--glass-shadow-elevated:
 		0 14px 34px rgba(0, 0, 0, 0.45),
-		0 0 20px -2px rgba(77, 146, 39, 0.25),
+		0 2px 8px rgba(0, 0, 0, 0.25),
 		inset 0 1px 0 rgba(230, 226, 209, 0.22);
 	--glass-blur: 16px;
 	--glass-backdrop: blur(var(--glass-blur)) saturate(120%);
-	--glass-accent-a: rgba(77, 146, 39, 0.16);
-	--glass-accent-b: rgba(9, 159, 239, 0.08);
-	--glass-glow: 0 0 20px -2px rgba(77, 146, 39, 0.22);
-	--glass-glow-cyan: 0 0 20px -2px rgba(9, 159, 239, 0.18);
+	--glass-accent-a: transparent;
+	--glass-accent-b: transparent;
+	--glass-glow: 0 4px 16px -2px rgba(0, 0, 0, 0.35);
+	--glass-glow-cyan: 0 4px 16px -2px rgba(0, 0, 0, 0.35);
 }
 
 html.liquid-glass[data-glass-level='matte'] {
@@ -574,17 +575,17 @@ html.liquid-glass .glass-card--elevated {
 	}
 
 	&:hover {
-		transform: translateY(-3px);
-		box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), var(--glass-glow);
+		transform: translateY(-2px);
+		box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.25);
 	}
 }
 
 html.liquid-glass .ambient-glow {
-	box-shadow: var(--glass-glow);
+	box-shadow: var(--shadow-md);
 }
 
 html.liquid-glass .ambient-glow-cyan {
-	box-shadow: var(--glass-glow-cyan);
+	box-shadow: var(--shadow-md);
 }
 
 html.liquid-glass .skeleton-shimmer {
@@ -597,10 +598,10 @@ html.liquid-glass .skeleton-shimmer {
 		background: linear-gradient(
 			90deg,
 			transparent 0%,
-			rgba(255, 255, 255, 0.05) 20%,
-			rgba(91, 91, 240, 0.12) 40%,
-			rgba(34, 211, 238, 0.15) 50%,
-			rgba(255, 255, 255, 0.05) 60%,
+			rgba(255, 255, 255, 0.04) 20%,
+			rgba(99, 102, 241, 0.08) 40%,
+			rgba(255, 255, 255, 0.1) 50%,
+			rgba(99, 102, 241, 0.08) 60%,
 			transparent 100%
 		);
 	}

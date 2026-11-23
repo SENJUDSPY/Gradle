@@ -1459,24 +1459,21 @@ async fn launch_horizon(
             client_builder = client_builder.with_graphics_backend(&horizon_settings.graphics_api);
         }
 
-        match quick_play_type {
-            QuickPlayType::Server(server) => {
-                let (host, port) = match server {
-                    ServerAddress::Unresolved(addr) => {
-                        match parse_server_address(addr) {
-                            Ok((h, p)) => (h.to_string(), p),
-                            Err(_) => (addr.clone(), 25565),
-                        }
+        if let QuickPlayType::Server(server) = quick_play_type {
+            let (host, port) = match server {
+                ServerAddress::Unresolved(addr) => {
+                    match parse_server_address(addr) {
+                        Ok((h, p)) => (h.to_string(), p),
+                        Err(_) => (addr.clone(), 25565),
                     }
-                    ServerAddress::Resolved {
-                        resolved_host,
-                        resolved_port,
-                        ..
-                    } => (resolved_host.clone(), *resolved_port),
-                };
-                client_builder = client_builder.with_server(host, Some(port));
-            }
-            _ => {}
+                }
+                ServerAddress::Resolved {
+                    resolved_host,
+                    resolved_port,
+                    ..
+                } => (resolved_host.clone(), *resolved_port),
+            };
+            client_builder = client_builder.with_server(host, Some(port));
         }
 
         for (key, value) in env_args {

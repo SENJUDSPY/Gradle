@@ -571,8 +571,8 @@ const stackTauriZ = computed(() => stackZBase.value + MODAL_TAURI_Z_OFFSET)
 const stackContainerZ = computed(() => stackZBase.value + MODAL_CONTAINER_Z_OFFSET)
 const resolvedMaxWidth = computed(() => props.maxWidth ?? '60rem')
 const resolvedWidth = computed(() => props.width ?? 'fit-content')
-const mouseXOffset = computed(() => `calc((-50vw + ${mouseX.value}px) / 16)`)
-const mouseYOffset = computed(() => `calc((-50vh + ${mouseY.value}px) / 16)`)
+const mouseXOffset = computed(() => '0px')
+const mouseYOffset = computed(() => '0px')
 
 function updateMousePosition(event: { clientX: number; clientY: number }) {
 	mouseX.value = event.clientX
@@ -665,7 +665,7 @@ defineOptions({
 
 .modal-overlay {
 	position: fixed;
-	inset: -5rem;
+	inset: 0;
 	opacity: 0;
 	visibility: hidden;
 	pointer-events: none;
@@ -674,31 +674,24 @@ defineOptions({
 		opacity 180ms cubic-bezier(0.3, 0, 1, 1),
 		backdrop-filter 180ms cubic-bezier(0.3, 0, 1, 1),
 		visibility 180ms cubic-bezier(0.3, 0, 1, 1);
-	border-radius: 180px;
 
-	// Fade variants
-	&.standard {
-		background: linear-gradient(to bottom, rgba(26, 33, 66, 0.65) 0%, rgba(11, 16, 32, 0.95) 100%);
-	}
-
-	&.warning {
-		background: linear-gradient(to bottom, rgba(48, 38, 29, 0.52) 0%, rgba(26, 20, 14, 0.95) 100%);
-	}
-
+	// Neutral fade variants without colored halos
+	&.standard,
+	&.warning,
 	&.danger {
-		background: linear-gradient(to bottom, rgba(43, 18, 26, 0.52) 0%, rgba(49, 10, 15, 0.95) 100%);
+		background: rgba(11, 16, 32, 0.75);
 	}
 
 	&.shown {
 		opacity: 1;
 		visibility: visible;
 		pointer-events: auto;
-		backdrop-filter: blur(8px);
-		background-color: rgba(11, 16, 32, 0.72);
+		backdrop-filter: blur(12px);
+		background-color: rgba(11, 16, 32, 0.75);
 		transition:
-			opacity 200ms cubic-bezier(0.05, 0.7, 0.1, 1),
-			backdrop-filter 200ms cubic-bezier(0.05, 0.7, 0.1, 1),
-			visibility 200ms cubic-bezier(0.05, 0.7, 0.1, 1);
+			opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+			backdrop-filter 200ms cubic-bezier(0.16, 1, 0.3, 1),
+			visibility 200ms cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	&.noblur {
@@ -724,26 +717,21 @@ defineOptions({
 	align-items: center;
 	visibility: hidden;
 	pointer-events: none;
-	transform: translate(var(--modal-mouse-x-offset), var(--modal-mouse-y-offset));
-	transition:
-		transform 180ms cubic-bezier(0.3, 0, 1, 1),
-		visibility 180ms cubic-bezier(0.3, 0, 1, 1);
+	transition: visibility 180ms cubic-bezier(0.3, 0, 1, 1);
 
 	&.shown {
 		visibility: visible;
-		transform: translate(0, 0);
-		transition:
-			transform 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-			visibility 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
+		pointer-events: auto;
+		transition: visibility 220ms cubic-bezier(0.16, 1, 0.3, 1);
 
 		> .modal-body {
 			opacity: 1;
 			visibility: visible;
 			transform: scale(1);
 			transition:
-				transform 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-				opacity 280ms cubic-bezier(0.05, 0.7, 0.1, 1),
-				visibility 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
+				transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+				opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+				visibility 220ms cubic-bezier(0.16, 1, 0.3, 1);
 		}
 	}
 

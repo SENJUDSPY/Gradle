@@ -3,17 +3,12 @@ use crate::state::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Default, Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum LaunchRuntime {
+    #[default]
     Horizon,
     Java,
-}
-
-impl Default for LaunchRuntime {
-    fn default() -> Self {
-        Self::Horizon
-    }
 }
 
 impl std::fmt::Display for LaunchRuntime {

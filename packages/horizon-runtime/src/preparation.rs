@@ -145,8 +145,8 @@ where
     let start_time = Instant::now();
 
     // 0. Cache check: if valid resources exist and not forced, return cached directory
-    if !force && is_prepared_for_version(MINECRAFT_26_3_VERSION) {
-        if let Some(manifest) = get_resources_manifest() {
+    if !force && is_prepared_for_version(MINECRAFT_26_3_VERSION)
+        && let Some(manifest) = get_resources_manifest() {
             notify(
                 "Cached",
                 &format!(
@@ -159,7 +159,6 @@ where
             );
             return Ok(prepared_resources_dir());
         }
-    }
 
     // Set up cancellation token
     let cancel_flag = Arc::new(AtomicBool::new(false));
@@ -282,18 +281,17 @@ where
         }
 
         let target_path = staging_dir.join(&name);
-        if let Some(parent) = target_path.parent() {
-            if !parent.exists() {
+        if let Some(parent) = target_path.parent()
+            && !parent.exists() {
                 fs::create_dir_all(parent)?;
             }
-        }
 
         let mut out_file = File::create(&target_path)
             .with_context(|| format!("creating {}", target_path.display()))?;
         std::io::copy(&mut file, &mut out_file)?;
         extracted_count += 1;
 
-        if extracted_count % 300 == 0 {
+        if extracted_count.is_multiple_of(300) {
             let pct = 0.20 + (i as f32 / total_entries as f32) * 0.45;
             notify(
                 "Extracting",
@@ -347,8 +345,8 @@ where
             }
         }
 
-        if chosen_index.is_none() {
-            if let Ok(entries) = fs::read_dir(&indexes_dir) {
+        if chosen_index.is_none()
+            && let Ok(entries) = fs::read_dir(&indexes_dir) {
                 for entry in entries.flatten() {
                     let p = entry.path();
                     if p.extension().map(|e| e == "json").unwrap_or(false) {
@@ -357,7 +355,6 @@ where
                     }
                 }
             }
-        }
 
         if let Some(index_path) = chosen_index {
             notify(
@@ -374,11 +371,10 @@ where
                 None,
             );
 
-            if let Ok(content) = fs::read_to_string(&index_path) {
-                if let Ok(index_json) =
+            if let Ok(content) = fs::read_to_string(&index_path)
+                && let Ok(index_json) =
                     serde_json::from_str::<serde_json::Value>(&content)
-                {
-                    if let Some(objects) =
+                    && let Some(objects) =
                         index_json.get("objects").and_then(|o| o.as_object())
                     {
                         let mut sounds_copied = 0usize;
@@ -434,8 +430,6 @@ where
                             found_sounds = true;
                         }
                     }
-                }
-            }
 
             if found_sounds {
                 break;

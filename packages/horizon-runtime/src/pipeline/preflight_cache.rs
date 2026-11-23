@@ -74,11 +74,10 @@ impl PreflightCache {
         // 1. Check in-memory cache
         if !force_refresh {
             let guard = self.current.read();
-            if let Some(entry) = guard.as_ref() {
-                if entry.fingerprint == fingerprint && (now_sec - entry.timestamp_sec) < PREFLIGHT_CACHE_TTL.as_secs() {
+            if let Some(entry) = guard.as_ref()
+                && entry.fingerprint == fingerprint && (now_sec - entry.timestamp_sec) < PREFLIGHT_CACHE_TTL.as_secs() {
                     return entry.report.clone();
                 }
-            }
         }
 
         // 2. Cache miss or forced refresh: execute real system checks

@@ -90,11 +90,10 @@ impl FileStatCache {
         // 1. Check cache for matching size and mtime
         {
             let map = self.entries.read();
-            if let Some(entry) = map.get(path) {
-                if entry.size == size && entry.mtime_sec == mtime_sec && entry.mtime_nsec == mtime_nsec {
+            if let Some(entry) = map.get(path)
+                && entry.size == size && entry.mtime_sec == mtime_sec && entry.mtime_nsec == mtime_nsec {
                     return Ok(entry.sha1.clone());
                 }
-            }
         }
 
         // 2. Cache miss or file modified: compute full SHA-1 hash

@@ -151,21 +151,18 @@ impl HorizonClientArgsBuilder {
 		if self.tag.trim().is_empty() {
 			bail!("Horizon version tag cannot be empty");
 		}
-		if let Some(port) = self.server_port {
-			if port == 0 {
+		if let Some(port) = self.server_port
+			&& port == 0 {
 				bail!("Server port cannot be 0");
 			}
-		}
-		if let Some(w) = self.window_width {
-			if w < 100 {
+		if let Some(w) = self.window_width
+			&& w < 100 {
 				bail!("Window width ({w}) is invalid; must be >= 100 pixels");
 			}
-		}
-		if let Some(h) = self.window_height {
-			if h < 100 {
+		if let Some(h) = self.window_height
+			&& h < 100 {
 				bail!("Window height ({h}) is invalid; must be >= 100 pixels");
 			}
-		}
 		Ok(())
 	}
 

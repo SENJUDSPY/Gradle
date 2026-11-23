@@ -183,8 +183,8 @@ pub fn validate_asset_content(
                     let Some(e_obj) = elem.as_object() else {
                         return Err(format!("Model element #{idx} must be a JSON object"));
                     };
-                    let from_valid = e_obj.get("from").and_then(|v| v.as_array()).map_or(false, |a| a.len() == 3);
-                    let to_valid = e_obj.get("to").and_then(|v| v.as_array()).map_or(false, |a| a.len() == 3);
+                    let from_valid = e_obj.get("from").and_then(|v| v.as_array()).is_some_and(|a| a.len() == 3);
+                    let to_valid = e_obj.get("to").and_then(|v| v.as_array()).is_some_and(|a| a.len() == 3);
                     if !from_valid || !to_valid {
                         return Err(format!("Model element #{idx} must contain 3-coordinate 'from' and 'to' arrays"));
                     }
@@ -339,8 +339,8 @@ pub fn extract_jar_content<R: Read + Seek>(
             match name.as_str() {
                 "fabric.mod.json" => {
                     let mut s = String::new();
-                    if entry.read_to_string(&mut s).is_ok() {
-                        if let Ok(v) = serde_json::from_str::<serde_json::Value>(&s) {
+                    if entry.read_to_string(&mut s).is_ok()
+                        && let Ok(v) = serde_json::from_str::<serde_json::Value>(&s) {
                             if detected_mod_id.is_none() {
                                 detected_mod_id = v.get("id").and_then(|x| x.as_str()).map(ToString::to_string);
                             }
@@ -348,13 +348,12 @@ pub fn extract_jar_content<R: Read + Seek>(
                                 detected_mod_name = v.get("name").and_then(|x| x.as_str()).map(ToString::to_string);
                             }
                         }
-                    }
                 }
                 "quilt.mod.json" => {
                     let mut s = String::new();
-                    if entry.read_to_string(&mut s).is_ok() {
-                        if let Ok(v) = serde_json::from_str::<serde_json::Value>(&s) {
-                            if let Some(loader) = v.get("quilt_loader") {
+                    if entry.read_to_string(&mut s).is_ok()
+                        && let Ok(v) = serde_json::from_str::<serde_json::Value>(&s)
+                            && let Some(loader) = v.get("quilt_loader") {
                                 if detected_mod_id.is_none() {
                                     detected_mod_id = loader.get("id").and_then(|x| x.as_str()).map(ToString::to_string);
                                 }
@@ -362,14 +361,12 @@ pub fn extract_jar_content<R: Read + Seek>(
                                     detected_mod_name = loader.get("metadata").and_then(|m| m.get("name")).and_then(|x| x.as_str()).map(ToString::to_string);
                                 }
                             }
-                        }
-                    }
                 }
                 "META-INF/mods.toml" | "META-INF/neoforge.mods.toml" => {
                     let mut s = String::new();
-                    if entry.read_to_string(&mut s).is_ok() {
-                        if let Ok(v) = toml::from_str::<toml::Value>(&s) {
-                            if let Some(mods) = v.get("mods").and_then(|m| m.as_array()).and_then(|a| a.first()) {
+                    if entry.read_to_string(&mut s).is_ok()
+                        && let Ok(v) = toml::from_str::<toml::Value>(&s)
+                            && let Some(mods) = v.get("mods").and_then(|m| m.as_array()).and_then(|a| a.first()) {
                                 if detected_mod_id.is_none() {
                                     detected_mod_id = mods.get("modId").and_then(|x| x.as_str()).map(ToString::to_string);
                                 }
@@ -377,8 +374,6 @@ pub fn extract_jar_content<R: Read + Seek>(
                                     detected_mod_name = mods.get("displayName").and_then(|x| x.as_str()).map(ToString::to_string);
                                 }
                             }
-                        }
-                    }
                 }
                 _ => {}
             }
@@ -479,14 +474,32 @@ pub fn extract_jar_content<R: Read + Seek>(
             continue;
         }
 
-        // 4. Write valid asset into extracted directory
-        let out_path = extracted_base.join(&entry_name);
+        // 4. Write valid asset into extracted directory (with Zip-Slip path traversal protection)
+        let rel_entry = Path::new(&entry_name);
+        let has_traversal = rel_entry.components().any(|c| {
+            matches!(
+                c,
+                std::path::Component::ParentDir
+                    | std::path::Component::RootDir
+                    | std::path::Component::Prefix(_)
+            )
+        });
+        let out_path = extracted_base.join(rel_entry);
+        if has_traversal || !out_path.starts_with(&extracted_base) {
+            validation_warnings.push(AssetValidationIssue {
+                path: entry_name.clone(),
+                category,
+                reason: "Path traversal / Zip-Slip detected in archive entry".to_string(),
+            });
+            continue;
+        }
+
         if let Some(parent) = out_path.parent() {
             let _ = fs::create_dir_all(parent);
         }
 
-        if let Ok(mut out_file) = File::create(&out_path) {
-            if out_file.write_all(&content).is_ok() {
+        if let Ok(mut out_file) = File::create(&out_path)
+            && out_file.write_all(&content).is_ok() {
                 match category {
                     AssetCategory::Texture => textures_recovered += 1,
                     AssetCategory::Model => models_recovered += 1,
@@ -504,7 +517,6 @@ pub fn extract_jar_content<R: Read + Seek>(
                     }
                 }
             }
-        }
     }
 
     let total_recovered = textures_recovered
@@ -844,13 +856,11 @@ pub fn get_instance_extracted_summaries(instance_dir: &Path) -> Result<Vec<Extra
         let path = entry.path();
         if path.is_dir() && path.file_name().and_then(|n| n.to_str()) != Some("merged") {
             let manifest_path = path.join("extraction_manifest.json");
-            if manifest_path.is_file() {
-                if let Ok(data) = fs::read_to_string(&manifest_path) {
-                    if let Ok(manifest) = serde_json::from_str::<ExtractedModManifest>(&data) {
+            if manifest_path.is_file()
+                && let Ok(data) = fs::read_to_string(&manifest_path)
+                    && let Ok(manifest) = serde_json::from_str::<ExtractedModManifest>(&data) {
                         summaries.push(manifest.summary);
                     }
-                }
-            }
         }
     }
 
@@ -863,6 +873,7 @@ pub fn get_instance_extracted_summaries(instance_dir: &Path) -> Result<Vec<Extra
 mod tests {
     use super::*;
     use std::io::Cursor;
+    use tempfile::tempdir;
     use zip::write::{SimpleFileOptions, ZipWriter};
 
     fn create_test_mod_jar(
@@ -1117,5 +1128,39 @@ version = "1.4.0"
             let p = temp.path().join(format!("horizon_extracted/merged/assets/chisel_and_bits/textures/block/chiseled_{i}.png"));
             assert!(p.is_file(), "Merged texture #{i} missing");
         }
+    }
+
+    #[test]
+    fn test_reject_zip_slip_traversal_entry() {
+        let temp = tempdir().unwrap();
+        let mut jar_data = Vec::new();
+        {
+            let mut zip = ZipWriter::new(Cursor::new(&mut jar_data));
+            let opt = SimpleFileOptions::default();
+
+            // Mod manifest
+            zip.start_file("fabric.mod.json", opt).unwrap();
+            zip.write_all(br#"{"id": "evil_mod", "name": "Evil Mod", "version": "1.0.0"}"#).unwrap();
+
+            // Malicious Zip-Slip path entry
+            zip.start_file("assets/evil_mod/textures/../../../../evil.txt", opt).unwrap();
+            let png = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x01, 0x00];
+            zip.write_all(&png).unwrap();
+
+            zip.finish().unwrap();
+        }
+
+        let archive = ZipArchive::new(Cursor::new(jar_data)).unwrap();
+        let summary = extract_jar_content(archive, "evil_mod-1.0.jar", temp.path()).unwrap();
+
+        // Ensure evil file was NOT written outside
+        let evil_target = temp.path().join("evil.txt");
+        assert!(!evil_target.exists(), "Zip-Slip path traversal vulnerability: file written outside target!");
+
+        // Ensure warning was recorded
+        assert!(
+            summary.validation_warnings.iter().any(|w| w.reason.contains("Path traversal / Zip-Slip detected")),
+            "Expected Zip-Slip validation warning"
+        );
     }
 }

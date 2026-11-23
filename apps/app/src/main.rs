@@ -332,10 +332,10 @@ fn main() {
                 #[cfg(not(any(feature = "updater", target_os = "macos")))]
                 let _ = app;
 
-                if matches!(&event, tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit) {
-                    if let Ok(state) = tauri::async_runtime::block_on(theseus::State::get()) {
-                        let _ = tauri::async_runtime::block_on(state.process_manager.kill_all());
-                    }
+                if matches!(&event, tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit)
+                    && let Ok(state) = tauri::async_runtime::block_on(theseus::State::get())
+                {
+                    let _ = tauri::async_runtime::block_on(state.process_manager.kill_all());
                 }
 
                 if matches!(&event, tauri::RunEvent::ExitRequested { .. })

@@ -27,7 +27,7 @@ defineProps<{
 		class="flex items-center gap-2 trim-text-box smart-clickable:allow-pointer-events"
 	>
 		<DownloadIcon class="size-5 shrink-0" />
-		<span class="font-medium">
+		<span class="font-medium tabular-nums">
 			{{ formatCompactNumber(downloads) }}
 		</span>
 	</div>
@@ -43,7 +43,7 @@ defineProps<{
 		class="flex items-center gap-2 trim-text-box smart-clickable:allow-pointer-events"
 	>
 		<HeartIcon class="size-5 shrink-0" />
-		<span class="font-medium">
+		<span class="font-medium tabular-nums">
 			{{ formatCompactNumber(followers) }}
 		</span>
 	</div>

@@ -8,7 +8,6 @@ use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs::{self, File};
-use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::Child;
 use std::sync::OnceLock;
@@ -221,11 +220,10 @@ pub fn create_server(
 pub fn start_server(name: &str) -> Result<u32> {
     let mut map = get_running_map().lock();
 
-    if let Some(child) = map.get_mut(name) {
-        if let Ok(None) = child.try_wait() {
+    if let Some(child) = map.get_mut(name)
+        && let Ok(None) = child.try_wait() {
             bail!("Server '{name}' is already running with PID {}", child.id());
         }
-    }
 
     let dir = server_dir(name);
     if !dir.is_dir() {
@@ -306,9 +304,7 @@ pub fn backup_server(name: &str) -> Result<PathBuf> {
         if path.is_file() {
             zip.start_file(&file_name, options)?;
             let mut f = File::open(&path)?;
-            let mut buf = Vec::new();
-            f.read_to_end(&mut buf)?;
-            zip.write_all(&buf)?;
+            std::io::copy(&mut f, &mut zip)?;
         } else if path.is_dir() {
             // World directory or similar
             for sub in walkdir_simple(&path)? {
@@ -317,9 +313,7 @@ pub fn backup_server(name: &str) -> Result<PathBuf> {
                 if sub.is_file() {
                     zip.start_file(&rel_str, options)?;
                     let mut f = File::open(&sub)?;
-                    let mut buf = Vec::new();
-                    f.read_to_end(&mut buf)?;
-                    zip.write_all(&buf)?;
+                    std::io::copy(&mut f, &mut zip)?;
                 }
             }
         }
@@ -368,4 +362,61 @@ pub fn delete_server(name: &str) -> Result<()> {
         fs::remove_dir_all(&dir)?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Read;
+    use zip::ZipArchive;
+
+    #[test]
+    fn test_streaming_server_backup() {
+        let test_name = format!("test_backup_srv_{}", Utc::now().timestamp_nanos_opt().unwrap_or(0));
+        let srv_info = create_server(&test_name, Some("latest"), Some(25565)).unwrap();
+        let srv_path = PathBuf::from(&srv_info.path);
+
+        // Populate with files to back up: a top-level file and a nested world file
+        let server_prop = srv_path.join("server.properties");
+        fs::write(&server_prop, b"motd=Test Server\npvp=true\n").unwrap();
+
+        let world_dir = srv_path.join("world/region");
+        fs::create_dir_all(&world_dir).unwrap();
+        let chunk_file = world_dir.join("r.0.0.mca");
+        fs::write(&chunk_file, vec![0x42; 65536]).unwrap(); // 64 KB test chunk
+
+        // Perform streaming backup
+        let backup_zip_path = backup_server(&test_name).unwrap();
+        assert!(backup_zip_path.is_file(), "Backup zip file was not created");
+
+        // Verify zip integrity and streaming content copy
+        let file = File::open(&backup_zip_path).unwrap();
+        let mut archive = ZipArchive::new(file).unwrap();
+
+        let mut found_prop = false;
+        let mut found_chunk = false;
+
+        for i in 0..archive.len() {
+            let mut entry = archive.by_index(i).unwrap();
+            let name = entry.name().to_string();
+            if name == "server.properties" {
+                found_prop = true;
+                let mut content = String::new();
+                entry.read_to_string(&mut content).unwrap();
+                assert!(content.contains("motd=Test Server"));
+            } else if name == "world/region/r.0.0.mca" {
+                found_chunk = true;
+                let mut data = Vec::new();
+                entry.read_to_end(&mut data).unwrap();
+                assert_eq!(data.len(), 65536);
+                assert_eq!(data[0], 0x42);
+            }
+        }
+
+        assert!(found_prop, "server.properties not found in backup zip");
+        assert!(found_chunk, "world chunk not found in backup zip");
+
+        // Clean up
+        let _ = delete_server(&test_name);
+    }
 }

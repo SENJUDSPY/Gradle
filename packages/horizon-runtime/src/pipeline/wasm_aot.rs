@@ -94,7 +94,9 @@ impl WasmAotCompiler {
         }
 
         let meta_len = u32::from_le_bytes(data[8..12].try_into().unwrap()) as usize;
-        let bytecode_start = 12 + meta_len;
+        let bytecode_start = 12usize
+            .checked_add(meta_len)
+            .context("Arithmetic overflow in AOT metadata length")?;
         if data.len() < bytecode_start {
             bail!("Truncated AOT cache artifact");
         }
@@ -137,5 +139,23 @@ version = "1.0.0"
 
         let loaded = compiler.load_aot_bytecode("fast_mod").unwrap();
         assert_eq!(loaded, wasm_bytes);
+    }
+
+    #[test]
+    fn test_reject_aot_metadata_arithmetic_overflow() {
+        let dir = tempdir().unwrap();
+        let compiler = WasmAotCompiler::new(dir.path().to_path_buf());
+        let aot_file = dir.path().join("overflow_mod.aot.bin");
+
+        // Header: "WASM_AOT" + u32::MAX
+        let mut artifact = Vec::new();
+        artifact.extend_from_slice(b"WASM_AOT");
+        artifact.extend_from_slice(&u32::MAX.to_le_bytes());
+        artifact.extend_from_slice(b"some_bytes");
+
+        std::fs::write(&aot_file, &artifact).unwrap();
+
+        let result = compiler.load_aot_bytecode("overflow_mod");
+        assert!(result.is_err(), "Expected error for truncated/overflow AOT artifact");
     }
 }

@@ -76,11 +76,10 @@ const messages = defineMessages({
 
 <template>
 	<div
-		class="app-sidebar mt-px relative flex h-[calc(100vh-var(--top-bar-height))] w-[300px] shrink-0 flex-col overflow-visible border-0 border-l-[1px] border-solid border-[--brand-gradient-border] before:pointer-events-none before:absolute before:inset-y-0 before:-left-8 before:w-8 before:content-['']"
+		class="app-sidebar mt-px relative flex h-[calc(100vh-var(--top-bar-height))] w-[300px] shrink-0 flex-col overflow-visible border-0 border-l-[1px] border-solid border-surface-5"
 		:class="{
 			'sidebar-visible': visible,
 			'sidebar-hidden': !visible,
-			'before:shadow-[-15px_0_15px_-15px_rgba(0,0,0,0.1)_inset]': appTheme.advancedRendering,
 		}"
 	>
 		<div class="relative flex min-h-0 grow shrink flex-col">
@@ -92,7 +91,7 @@ const messages = defineMessages({
 			>
 				<div id="sidebar-teleport-target" class="sidebar-teleport-content contents"></div>
 				<div class="sidebar-default-content hidden" :class="{ 'sidebar-enabled': visible }">
-					<div class="p-4 border-0 border-b-[1px] border-[--brand-gradient-border] border-solid">
+					<div class="p-4 border-0 border-b-[1px] border-surface-5 border-solid">
 						<h3 class="text-base text-primary font-medium m-0">
 							{{ formatMessage(messages.playingAs) }}
 						</h3>
@@ -100,7 +99,7 @@ const messages = defineMessages({
 							<AccountsCard ref="accounts" />
 						</Suspense>
 					</div>
-					<div class="p-4 border-0 border-b-[1px] border-[--brand-gradient-border] border-solid">
+					<div class="p-4 border-0 border-b-[1px] border-surface-5 border-solid">
 						<Suspense>
 							<FriendsList
 								ref="friends"
@@ -131,17 +130,12 @@ const messages = defineMessages({
 
 <style scoped lang="scss">
 .app-sidebar {
-	background: var(--brand-gradient-bg);
-	--color-button-bg: var(--brand-gradient-button);
-	--surface-4: var(--brand-gradient-button);
-	--color-button-bg-hover: var(--brand-gradient-border);
-	--surface-5: var(--brand-gradient-border);
-	--color-divider: var(--brand-gradient-border);
-	--color-divider-dark: var(--brand-gradient-border);
+	background: var(--surface-2);
+	border-color: var(--surface-5);
 	transition:
-		transform var(--duration-slow, 280ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-		opacity var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-		border-color var(--duration-standard, 220ms) ease;
+		transform var(--duration-standard, 240ms) var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
+		opacity var(--duration-quick, 160ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+		border-color var(--duration-quick, 160ms) ease;
 	will-change: transform, opacity;
 
 	&.sidebar-hidden {

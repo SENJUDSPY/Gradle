@@ -87,11 +87,10 @@ pub fn get_installed_versions() -> Vec<String> {
         for entry in entries.flatten() {
             if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
                 let tag_dir = entry.path();
-                if tag_dir.join(CLIENT_BIN_NAME).is_file() {
-                    if let Some(name) = entry.file_name().to_str() {
+                if tag_dir.join(CLIENT_BIN_NAME).is_file()
+                    && let Some(name) = entry.file_name().to_str() {
                         out.push(name.to_string());
                     }
-                }
             }
         }
     }
@@ -406,11 +405,10 @@ where
 
     let part_path = temp_dir.join("download.archive.part");
     let mut existing_bytes = 0u64;
-    if part_path.is_file() {
-        if let Ok(meta) = tokio::fs::metadata(&part_path).await {
+    if part_path.is_file()
+        && let Ok(meta) = tokio::fs::metadata(&part_path).await {
             existing_bytes = meta.len();
         }
-    }
 
     let client = reqwest::Client::builder()
         .user_agent("Gradle")
@@ -538,19 +536,16 @@ where
     }
 
     // Optional upstream cryptographic signature verification/download
-    if let Some(sig_url) = &release.signature_url {
-        if sig_url.starts_with("https://") {
-            if let Ok(sig_bytes) = client.get(sig_url).send().await {
-                if let Ok(bytes) = sig_bytes.bytes().await {
+    if let Some(sig_url) = &release.signature_url
+        && sig_url.starts_with("https://")
+            && let Ok(sig_bytes) = client.get(sig_url).send().await
+                && let Ok(bytes) = sig_bytes.bytes().await {
                     let _ = tokio::fs::write(
                         temp_dir.join("download.archive.sig"),
                         &bytes,
                     )
                     .await;
                 }
-            }
-        }
-    }
 
     // Extraction stage
     progress(DownloadProgress {
@@ -600,11 +595,10 @@ pub fn get_installed_version_info(tag: &str) -> Option<InstalledVersionInfo> {
         return None;
     }
     let info_path = target.join("version_info.json");
-    if let Ok(content) = fs::read_to_string(&info_path) {
-        if let Ok(info) = serde_json::from_str::<InstalledVersionInfo>(&content) {
+    if let Ok(content) = fs::read_to_string(&info_path)
+        && let Ok(info) = serde_json::from_str::<InstalledVersionInfo>(&content) {
             return Some(info);
         }
-    }
     Some(InstalledVersionInfo {
         tag: tag.to_string(),
         name: tag.to_string(),

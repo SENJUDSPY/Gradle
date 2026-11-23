@@ -27,7 +27,7 @@
 
 			<!-- Active gradient overlay for cubic-bezier color interpolation -->
 			<span
-				class="checkbox-gradient-overlay absolute inset-0 bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] pointer-events-none rounded-[5px]"
+				class="checkbox-gradient-overlay absolute inset-0 bg-gradient-to-r from-[#6366F1] to-[#4F46E5] pointer-events-none rounded-[5px]"
 				:class="{
 					'opacity-100': modelValue || indeterminate,
 					'opacity-0': !modelValue && !indeterminate,
@@ -98,15 +98,15 @@ function toggle(event: MouseEvent) {
 	transform: scale(1);
 	transition:
 		transform var(--duration-standard, 220ms)
-			var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+			var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
 		border-color var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 		box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 }
 
 .checkbox-box--checked {
 	box-shadow:
-		0 2px 8px -2px rgba(91, 91, 240, 0.5),
-		0 1px 2px 0 rgba(0, 0, 0, 0.1);
+		0 2px 6px 0 rgba(0, 0, 0, 0.3),
+		0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .checkbox-button:not(:disabled):hover .checkbox-box:not(.checkbox-box--checked) {
@@ -115,17 +115,17 @@ function toggle(event: MouseEvent) {
 
 .checkbox-button:not(:disabled):hover .checkbox-box--checked {
 	box-shadow:
-		0 3px 10px -2px rgba(91, 91, 240, 0.6),
-		0 1px 3px 0 rgba(0, 0, 0, 0.15);
+		0 4px 10px 0 rgba(0, 0, 0, 0.35),
+		0 1px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
-/* Tactile down-scale on press (120ms anticipation) */
+/* Tactile down-scale on press (80ms anticipation) */
 .checkbox-button:not(:disabled):active .checkbox-box {
 	transform: scale(0.92);
 	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
 	transition:
-		transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-		box-shadow var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+		transform 80ms ease-out,
+		box-shadow 80ms ease-out;
 }
 
 /* Color interpolation via opacity layer */
@@ -136,7 +136,7 @@ function toggle(event: MouseEvent) {
 
 /* Check icon pop entrance */
 .checkbox-icon {
-	animation: check-pop 180ms var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)) forwards;
+	animation: check-pop 180ms var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)) forwards;
 }
 
 @keyframes check-pop {
@@ -145,7 +145,7 @@ function toggle(event: MouseEvent) {
 		opacity: 0;
 	}
 	70% {
-		transform: scale(1.15);
+		transform: scale(1.04);
 		opacity: 1;
 	}
 	100% {

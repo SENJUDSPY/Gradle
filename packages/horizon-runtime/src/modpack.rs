@@ -203,7 +203,7 @@ fn analyze_modrinth_pack(
     if let Some(files) = index.files {
         for f in files {
             let p = f.path.replace('\\', "/");
-            let name = p.split('/').last().unwrap_or(&p).to_string();
+            let name = p.split('/').next_back().unwrap_or(&p).to_string();
 
             let (category, is_compatible, details) =
                 classify_path(&p, f.file_size);
@@ -230,7 +230,7 @@ fn analyze_modrinth_pack(
                 if !items.iter().any(|item| item.path == rel_clean) {
                     let file_name = rel_clean
                         .split('/')
-                        .last()
+                        .next_back()
                         .unwrap_or(&rel_clean)
                         .to_string();
                     let (category, is_compatible, details) =
@@ -323,7 +323,7 @@ fn analyze_curseforge_pack(
                 let rel_clean = rel.replace('\\', "/");
                 let file_name = rel_clean
                     .split('/')
-                    .last()
+                    .next_back()
                     .unwrap_or(&rel_clean)
                     .to_string();
                 let (category, is_compatible, details) =
@@ -498,7 +498,21 @@ pub fn extract_compatible_assets_to_dir(
             continue;
         }
 
-        let out_path = target_dir.join(rel_path);
+        let path_obj = Path::new(rel_path);
+        let has_traversal = path_obj.components().any(|c| {
+            matches!(
+                c,
+                std::path::Component::ParentDir
+                    | std::path::Component::RootDir
+                    | std::path::Component::Prefix(_)
+            )
+        });
+        let out_path = target_dir.join(path_obj);
+        if has_traversal || !out_path.starts_with(target_dir) {
+            // Reject path traversal / Zip-Slip attempt
+            continue;
+        }
+
         if let Some(parent) = out_path.parent() {
             fs::create_dir_all(parent)?;
         }
@@ -603,5 +617,33 @@ mod tests {
             extract_compatible_assets_to_dir(&pack_path, &target).unwrap();
         assert_eq!(extracted, 1); // config/options.txt extracted from overrides
         assert!(target.join("config/options.txt").is_file());
+    }
+
+    #[test]
+    fn test_reject_modpack_zip_slip_traversal() {
+        let dir = tempdir().unwrap();
+        let pack_path = dir.path().join("evil.mrpack");
+
+        {
+            let file = File::create(&pack_path).unwrap();
+            let mut zip = zip::ZipWriter::new(file);
+            let opts = SimpleFileOptions::default();
+
+            // Malicious Zip-Slip path attempt
+            zip.start_file("overrides/config/../../../../evil_outside.txt", opts).unwrap();
+            zip.write_all(b"malicious").unwrap();
+
+            // Valid entry
+            zip.start_file("overrides/config/safe.txt", opts).unwrap();
+            zip.write_all(b"safe").unwrap();
+
+            zip.finish().unwrap();
+        }
+
+        let target = dir.path().join("target");
+        let extracted = extract_compatible_assets_to_dir(&pack_path, &target).unwrap();
+        assert_eq!(extracted, 1);
+        assert!(target.join("config/safe.txt").is_file());
+        assert!(!dir.path().join("evil_outside.txt").exists(), "Zip-Slip path traversal succeeded!");
     }
 }

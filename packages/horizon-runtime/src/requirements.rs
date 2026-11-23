@@ -120,9 +120,9 @@ pub fn find_default_minecraft_dirs() -> Vec<PathBuf> {
 }
 
 pub fn check_minecraft_26_3(custom_path: Option<&Path>) -> CheckItem {
-    if let Some(path) = custom_path {
-        if path.is_file() {
-            if let Some(sha1) = compute_sha1(path) {
+    if let Some(path) = custom_path
+        && path.is_file()
+            && let Some(sha1) = compute_sha1(path) {
                 if sha1 == MINECRAFT_26_3_CLIENT_SHA1 {
                     return CheckItem::pass(
                         "Minecraft 26.3 Jar",
@@ -139,8 +139,6 @@ pub fn check_minecraft_26_3(custom_path: Option<&Path>) -> CheckItem {
                     .with_fix("choose_jar", None);
                 }
             }
-        }
-    }
 
     let home = dirs::home_dir().unwrap_or_else(std::env::temp_dir);
     let data = dirs::data_dir().unwrap_or_else(|| home.join(".local/share"));
@@ -162,17 +160,15 @@ pub fn check_minecraft_26_3(custom_path: Option<&Path>) -> CheckItem {
 	];
 
     for candidate in &candidate_locations {
-        if candidate.is_file() {
-            if let Some(sha1) = compute_sha1(candidate) {
-                if sha1 == MINECRAFT_26_3_CLIENT_SHA1 {
+        if candidate.is_file()
+            && let Some(sha1) = compute_sha1(candidate)
+                && sha1 == MINECRAFT_26_3_CLIENT_SHA1 {
                     return CheckItem::pass(
                         "Minecraft 26.3 Jar",
                         "Found official Minecraft 26.3 client jar in local launcher library.",
                     )
                     .with_path(&candidate.to_string_lossy());
                 }
-            }
-        }
     }
 
     CheckItem::fail(
@@ -282,14 +278,13 @@ pub fn check_resources_prepared() -> CheckItem {
 }
 
 pub fn check_account(account_name: Option<&str>) -> CheckItem {
-    if let Some(name) = account_name {
-        if !name.trim().is_empty() {
+    if let Some(name) = account_name
+        && !name.trim().is_empty() {
             return CheckItem::pass(
                 "Minecraft Account",
                 &format!("Active account: {name}"),
             );
         }
-    }
     CheckItem::fail(
         "Minecraft Account",
         "No active Minecraft account found in Gradle.",
@@ -363,8 +358,7 @@ pub fn check_gpu_compatibility() -> CheckItem {
     #[cfg(target_os = "linux")]
     {
         if let Ok(output) = Command::new("vulkaninfo").arg("--summary").output()
-        {
-            if output.status.success() {
+            && output.status.success() {
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 let mut device_name = String::new();
                 let mut driver_info = String::new();
@@ -386,11 +380,9 @@ pub fn check_gpu_compatibility() -> CheckItem {
                         }
                     } else if trimmed.starts_with("apiVersion")
                         && api_version.is_empty()
-                    {
-                        if let Some(val) = trimmed.split('=').nth(1) {
+                        && let Some(val) = trimmed.split('=').nth(1) {
                             api_version = val.trim().to_string();
                         }
-                    }
                 }
 
                 let summary = if !device_name.is_empty() {
@@ -412,7 +404,6 @@ pub fn check_gpu_compatibility() -> CheckItem {
 
                 return CheckItem::pass("Vulkan GPU", &summary);
             }
-        }
 
         let common_vulkan_libs = [
             "/usr/lib/x86_64-linux-gnu/libvulkan.so.1",

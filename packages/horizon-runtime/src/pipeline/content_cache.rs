@@ -11,11 +11,14 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::fs;
+use std::io::Read;
 use std::path::Path;
 
 /// Magic header bytes for Gradle pre-baked content caches.
 pub const CONTENT_CACHE_MAGIC: &[u8; 8] = b"GRADLE_C";
 pub const CONTENT_CACHE_VERSION: u32 = 1;
+/// Maximum allowed decompressed payload size (256 MB) to prevent zip-bomb / OOM attacks.
+pub const MAX_CACHE_PAYLOAD_SIZE: usize = 256 * 1024 * 1024;
 
 /// Single sprite location in the pre-stitched texture atlas.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -111,10 +114,22 @@ impl ContentCache {
         }
 
         let raw_len = u32::from_le_bytes(file_bytes[12..16].try_into().unwrap()) as usize;
+        if raw_len > MAX_CACHE_PAYLOAD_SIZE {
+            bail!(
+                "Content cache raw length {} exceeds maximum allowed quota of {} bytes",
+                raw_len,
+                MAX_CACHE_PAYLOAD_SIZE
+            );
+        }
         let compressed = &file_bytes[16..];
 
-        // Decompress with zstd
-        let decompressed = zstd::stream::decode_all(compressed)
+        // Guard against decompression bombs via bounded streaming decompression
+        let mut decoder = zstd::Decoder::new(compressed)
+            .context("Failed to initialize zstd decoder for content cache")?;
+        let mut decompressed = Vec::with_capacity(raw_len);
+        let mut bounded_reader = (&mut decoder).take((raw_len as u64) + 1);
+        bounded_reader
+            .read_to_end(&mut decompressed)
             .context("Failed to decompress zstd content cache")?;
 
         if decompressed.len() != raw_len {
@@ -179,5 +194,50 @@ mod tests {
 
         let loaded = ContentCache::read_cache(&cache_file).unwrap();
         assert_eq!(loaded, payload);
+    }
+
+    #[test]
+    fn test_reject_oversized_content_cache_quota() {
+        let dir = tempdir().unwrap();
+        let cache_file = dir.path().join("bomb.bin");
+
+        // Construct header with raw_len exceeding MAX_CACHE_PAYLOAD_SIZE (e.g. 512 MB)
+        let mut header = Vec::new();
+        header.extend_from_slice(CONTENT_CACHE_MAGIC);
+        header.extend_from_slice(&CONTENT_CACHE_VERSION.to_le_bytes());
+        let huge_len = (MAX_CACHE_PAYLOAD_SIZE as u32) + 1024;
+        header.extend_from_slice(&huge_len.to_le_bytes());
+        header.extend_from_slice(&[0u8; 16]); // dummy payload
+
+        std::fs::write(&cache_file, &header).unwrap();
+
+        let result = ContentCache::read_cache(&cache_file);
+        assert!(result.is_err());
+        let err_msg = result.unwrap_err().to_string();
+        assert!(err_msg.contains("exceeds maximum allowed quota"));
+    }
+
+    #[test]
+    fn test_reject_decompression_bomb_mismatch() {
+        let dir = tempdir().unwrap();
+        let cache_file = dir.path().join("bomb_stream.bin");
+
+        // Compress a 10KB payload
+        let large_payload = vec![b'A'; 10_000];
+        let compressed = zstd::stream::encode_all(&large_payload[..], 3).unwrap();
+
+        // But claim raw_len is only 100 bytes in the header
+        let mut header = Vec::new();
+        header.extend_from_slice(CONTENT_CACHE_MAGIC);
+        header.extend_from_slice(&CONTENT_CACHE_VERSION.to_le_bytes());
+        header.extend_from_slice(&100u32.to_le_bytes()); // lying header: claimed 100 bytes
+        header.extend_from_slice(&compressed);
+
+        std::fs::write(&cache_file, &header).unwrap();
+
+        let result = ContentCache::read_cache(&cache_file);
+        assert!(result.is_err());
+        let err_msg = result.unwrap_err().to_string();
+        assert!(err_msg.contains("Decompressed length mismatch"));
     }
 }

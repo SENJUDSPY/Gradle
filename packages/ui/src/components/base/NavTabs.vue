@@ -365,8 +365,8 @@ watch(
 
 <style scoped>
 .active-tab-indicator {
-	background: var(--brand-gradient, linear-gradient(135deg, #5b5bf0 0%, #3b82f6 50%, #22d3ee 100%));
-	box-shadow: 0 0 16px -2px rgba(91, 91, 240, 0.45);
+	background: var(--brand-gradient, linear-gradient(180deg, #6366F1 0%, #4F46E5 100%));
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
 }
 
 .navtabs-transition {

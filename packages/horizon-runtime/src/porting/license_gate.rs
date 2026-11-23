@@ -78,21 +78,20 @@ pub fn evaluate_repository_license(
     // 1. Search for dedicated license files
     for name in LICENSE_FILENAMES {
         let p = repo_root.join(name);
-        if p.is_file() {
-            if let Ok(content) = fs::read_to_string(&p) {
+        if p.is_file()
+            && let Ok(content) = fs::read_to_string(&p) {
                 found_file = Some(name.to_string());
                 license_text = content;
                 break;
             }
-        }
     }
 
     // 2. Search root README.md or build.gradle if no dedicated license file was found
     if found_file.is_none() {
         for fallback in &["README.md", "README", "build.gradle", "build.gradle.kts"] {
             let p = repo_root.join(fallback);
-            if p.is_file() {
-                if let Ok(content) = fs::read_to_string(&p) {
+            if p.is_file()
+                && let Ok(content) = fs::read_to_string(&p) {
                     let lower = content.to_lowercase();
                     if lower.contains("license") || lower.contains("all rights reserved") {
                         found_file = Some(fallback.to_string());
@@ -100,7 +99,6 @@ pub fn evaluate_repository_license(
                         break;
                     }
                 }
-            }
         }
     }
 

@@ -58,7 +58,8 @@
 	--ease-standard: cubic-bezier(0.2, 0, 0, 1);
 	--ease-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
 	--ease-exit: cubic-bezier(0.3, 0, 1, 1);
-	--ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	--ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-bounce: var(--ease-spring);
 	--duration-quick: 120ms;
 	--duration-standard: 220ms;
 	--duration-slow: 350ms;
@@ -70,12 +71,16 @@
 	--ease-hover: var(--ease-standard);
 	--ease-shared: var(--ease-standard);
 
-	// Ambient Glow & Elevation Tokens
-	--shadow-glow: 0 0 24px -2px rgba(91, 91, 240, 0.35);
-	--shadow-glow-cyan: 0 0 24px -2px rgba(34, 211, 238, 0.3);
-	--shadow-glow-subtle: 0 0 16px -2px rgba(91, 91, 240, 0.18);
-	--shadow-card-elevated: 0 10px 24px -4px rgba(0, 0, 0, 0.35), 0 0 16px -2px rgba(91, 91, 240, 0.15);
-	--shadow-card-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.3), 0 0 20px -2px rgba(91, 91, 240, 0.2);
+	// Hairline Border & Elevation Tokens
+	--border-hairline: 1px solid rgba(255, 255, 255, 0.08);
+	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.35), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+	--shadow-lg: 0 12px 28px -4px rgba(0, 0, 0, 0.45), 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+	--shadow-card-elevated: 0 6px 16px -2px rgba(0, 0, 0, 0.32), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
+	--shadow-card-hover: 0 10px 24px -4px rgba(0, 0, 0, 0.4), 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+	--shadow-glow: var(--shadow-md);
+	--shadow-glow-cyan: var(--shadow-md);
+	--shadow-glow-subtle: var(--shadow-sm);
 }
 
 html.light-mode {
@@ -89,12 +94,11 @@ body {
 	overflow: hidden;
 }
 
-// Subtle ambient brand depth for app viewport (under 8% opacity)
+// Subtle ambient brand depth for app viewport (under 5% opacity, neutral)
 .app-viewport {
 	background: radial-gradient(
 		circle at 85% 0%,
-		rgba(91, 91, 240, 0.06) 0%,
-		rgba(34, 211, 238, 0.02) 30%,
+		rgba(99, 102, 241, 0.04) 0%,
 		transparent 60%
 	);
 }
@@ -137,6 +141,7 @@ a {
 	padding-block: var(--gap-sm);
 	padding-inline: var(--gap-lg);
 	width: min-content;
+	font-variant-numeric: tabular-nums;
 
 	svg {
 		width: 1.1rem;
@@ -179,7 +184,8 @@ a {
 }
 
 .highlighted {
-	box-shadow: 0 0 1rem var(--color-brand) !important;
+	box-shadow: var(--shadow-md) !important;
+	outline: 2px solid var(--color-brand) !important;
 }
 
 .gecko {

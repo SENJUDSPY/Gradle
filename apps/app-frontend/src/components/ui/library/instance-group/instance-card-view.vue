@@ -111,12 +111,12 @@ const badgeInfo = computed(() => {
 				<p
 					ref="versionRef"
 					v-tooltip="truncatedTooltip(versionRef, `${instance.loader} ${instance.game_version}`)"
-					class="m-0 truncate text-sm font-medium capitalize leading-[18px] text-primary"
+					class="m-0 truncate text-sm font-medium capitalize leading-[18px] text-primary tabular-nums"
 				>
 					{{ instance.loader }} {{ instance.game_version }}
 				</p>
 				<span
-					class="status-badge inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase border border-solid"
+					class="status-badge inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase border border-solid tabular-nums"
 					:class="badgeInfo.class"
 				>
 					{{ badgeInfo.label }}
@@ -134,11 +134,11 @@ const badgeInfo = computed(() => {
 		0 1px 3px rgba(0, 0, 0, 0.12),
 		0 1px 2px rgba(0, 0, 0, 0.08);
 	transition:
-		transform 220ms cubic-bezier(0.2, 0, 0, 1),
-		box-shadow 220ms cubic-bezier(0.2, 0, 0, 1),
-		border-color 220ms cubic-bezier(0.2, 0, 0, 1),
-		background-color 220ms cubic-bezier(0.2, 0, 0, 1),
-		filter 220ms cubic-bezier(0.2, 0, 0, 1);
+		transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 180ms ease,
+		border-color 180ms ease,
+		background-color 180ms ease,
+		filter 180ms ease;
 	will-change: transform, box-shadow;
 
 	&:hover {
@@ -154,7 +154,7 @@ const badgeInfo = computed(() => {
 		box-shadow:
 			0 2px 8px -2px rgba(0, 0, 0, 0.25),
 			0 1px 3px rgba(0, 0, 0, 0.15);
-		transition-duration: 120ms;
+		transition-duration: 80ms;
 	}
 }
 

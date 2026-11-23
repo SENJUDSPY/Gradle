@@ -127,6 +127,8 @@
 	--color-brand-highlight: rgba(91, 91, 240, 0.15);
 	--color-brand-shadow: rgba(91, 91, 240, 0.35);
 
+	--border-hairline: 1px solid rgba(0, 0, 0, 0.08);
+
 	--shadow-inset-lg: inset 0px -2px 2px hsla(221, 39%, 91%, 0.1);
 	--shadow-inset: inset 0px -2px 2px hsla(221, 39%, 91%, 0.05);
 	--shadow-inset-sm: inset 0px -1px 2px hsla(221, 39%, 91%, 0.15);
@@ -135,13 +137,13 @@
 	--shadow-raised: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.05);
 	--shadow-floating: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -4px rgba(0, 0, 0, 0.05);
 	--shadow-card: rgba(0, 0, 0, 0.06) 0px 1px 3px 0px, rgba(0, 0, 0, 0.04) 0px 1px 2px 0px;
-	--shadow-glow: 0 4px 16px -2px rgba(0, 0, 0, 0.08);
-	--shadow-glow-cyan: 0 4px 16px -2px rgba(0, 0, 0, 0.08);
-	--shadow-glow-subtle: 0 2px 8px -1px rgba(0, 0, 0, 0.05);
-	--shadow-card-elevated: 0 8px 20px -4px rgba(11, 16, 32, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-	--shadow-card-hover: 0 12px 28px -4px rgba(11, 16, 32, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+	--shadow-glow: var(--shadow-md);
+	--shadow-glow-cyan: var(--shadow-md);
+	--shadow-glow-subtle: var(--shadow-sm);
+	--shadow-card-elevated: 0 4px 12px -2px rgba(11, 16, 32, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+	--shadow-card-hover: 0 8px 20px -4px rgba(11, 16, 32, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.06);
 
-	--brand-gradient: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+	--brand-gradient: linear-gradient(180deg, #6366F1 0%, #4F46E5 100%);
 	--brand-gradient-bg: rgba(79, 70, 229, 0.06);
 	--brand-gradient-strong-bg: linear-gradient(135deg, #F0F2F8 0%, #FFFFFF 100%);
 	--brand-gradient-button: rgba(255, 255, 255, 0.6);
@@ -153,7 +155,7 @@
 
 	--color-gradient-button-bg: linear-gradient(180deg, #FFFFFF 0%, #F0F2F8 100%);
 
-	--loading-bar-gradient: linear-gradient(to right, #5B5BF0 0%, #3B82F6 50%, #22D3EE 100%);
+	--loading-bar-gradient: linear-gradient(90deg, #4F46E5 0%, #6366F1 100%);
 
 	--splash-tint-top: rgba(91, 91, 240, 0.25);
 	--splash-tint-bottom: rgba(34, 211, 238, 0.25);
@@ -211,15 +213,17 @@ html {
 	--radius-full: 9999px;// (pills, avatars)
 	--radius-max: 9999px;
 
+	--border-hairline: 1px solid rgba(255, 255, 255, 0.08);
+
 	// Shadow Scale: sm (resting cards), md (hover, dropdowns), lg (modals)
-	--shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
-	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
-	--shadow-glow: 0 0 24px -2px rgba(91, 91, 240, 0.35);
-	--shadow-glow-cyan: 0 0 24px -2px rgba(34, 211, 238, 0.3);
-	--shadow-glow-subtle: 0 0 16px -2px rgba(91, 91, 240, 0.18);
-	--shadow-card-elevated: 0 10px 24px -4px rgba(0, 0, 0, 0.35), 0 0 16px -2px rgba(91, 91, 240, 0.15);
-	--shadow-card-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.3), 0 0 20px -2px rgba(91, 91, 240, 0.2);
+	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.35), 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+	--shadow-lg: 0 12px 28px -4px rgba(0, 0, 0, 0.45), 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+	--shadow-glow: var(--shadow-md);
+	--shadow-glow-cyan: var(--shadow-md);
+	--shadow-glow-subtle: var(--shadow-sm);
+	--shadow-card-elevated: 0 6px 16px -2px rgba(0, 0, 0, 0.32), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
+	--shadow-card-hover: 0 10px 24px -4px rgba(0, 0, 0, 0.4), 0 2px 6px 0 rgba(0, 0, 0, 0.2);
 
 	--color-tooltip-text: var(--color-contrast);
 	--color-tooltip-bg: var(--surface-3);
@@ -240,7 +244,8 @@ html {
 	--ease-standard: cubic-bezier(0.2, 0, 0, 1);
 	--ease-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
 	--ease-exit: cubic-bezier(0.3, 0, 1, 1);
-	--ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	--ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-bounce: var(--ease-spring);
 	--duration-quick: 120ms;
 	--duration-standard: 220ms;
 	--duration-slow: 350ms;
@@ -397,15 +402,16 @@ html {
 	--shadow-raised: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 1px 2px -1px rgba(0, 0, 0, 0.2);
 	--shadow-floating: 0px 10px 15px -3px rgba(0, 0, 0, 0.5), 0px 4px 6px -4px rgba(0, 0, 0, 0.4);
 
+	--border-hairline: 1px solid rgba(255, 255, 255, 0.08);
 	--shadow-card: rgba(0, 0, 0, 0.4) 0px 2px 8px 0px;
-	--shadow-glow: 0 4px 16px -2px rgba(0, 0, 0, 0.35);
-	--shadow-glow-cyan: 0 4px 16px -2px rgba(0, 0, 0, 0.35);
-	--shadow-glow-subtle: 0 2px 8px -1px rgba(0, 0, 0, 0.25);
-	--shadow-card-elevated: 0 8px 24px -4px rgba(0, 0, 0, 0.4), 0 2px 6px -1px rgba(0, 0, 0, 0.25);
-	--shadow-card-hover: 0 12px 32px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+	--shadow-glow: var(--shadow-md);
+	--shadow-glow-cyan: var(--shadow-md);
+	--shadow-glow-subtle: var(--shadow-sm);
+	--shadow-card-elevated: 0 6px 16px -2px rgba(0, 0, 0, 0.32), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
+	--shadow-card-hover: 0 10px 24px -4px rgba(0, 0, 0, 0.4), 0 2px 6px 0 rgba(0, 0, 0, 0.2);
 
-	--brand-gradient: linear-gradient(135deg, #5B5BF0 0%, #4F46E5 100%);
-	--brand-gradient-bg: rgba(91, 91, 240, 0.08);
+	--brand-gradient: linear-gradient(180deg, #6366F1 0%, #4F46E5 100%);
+	--brand-gradient-bg: rgba(99, 102, 241, 0.06);
 	--brand-gradient-strong-bg: linear-gradient(135deg, #121830 0%, #1A2142 100%);
 	--brand-gradient-button: rgba(255, 255, 255, 0.12);
 	--brand-gradient-border: #262E52;
@@ -416,7 +422,7 @@ html {
 
 	--color-gradient-button-bg: linear-gradient(180deg, #222B54 0%, #1A2142 100%);
 
-	--loading-bar-gradient: linear-gradient(to right, #5B5BF0 0%, #3B82F6 50%, #22D3EE 100%);
+	--loading-bar-gradient: linear-gradient(90deg, #4F46E5 0%, #6366F1 100%);
 
 	--splash-tint-top: rgba(91, 91, 240, 0.3);
 	--splash-tint-bottom: rgba(34, 211, 238, 0.2);
@@ -459,8 +465,8 @@ html {
 
 	--brand-gradient-bg: linear-gradient(
 		135deg,
-		rgba(91, 91, 240, 0.12) 0%,
-		rgba(34, 211, 238, 0.06) 100%
+		rgba(99, 102, 241, 0.08) 0%,
+		rgba(79, 70, 229, 0.04) 100%
 	);
 	--brand-gradient-strong-bg: linear-gradient(
 		135deg,

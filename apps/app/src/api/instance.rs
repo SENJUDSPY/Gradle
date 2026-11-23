@@ -252,15 +252,13 @@ impl Instance {
     pub async fn enrich_runtime(&mut self) {
         if let Ok(full_path) = theseus::instance::get_full_path(&self.id).await {
             let pref_file = full_path.join("instance_runtime.json");
-            if pref_file.exists() {
-                if let Ok(content) = tokio::fs::read_to_string(&pref_file).await {
-                    if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&content) {
-                        if let Some(r) = parsed.get("active_runtime").and_then(|v| v.as_str()) {
-                            self.runtime = Some(r.to_string());
-                            return;
-                        }
-                    }
-                }
+            if pref_file.exists()
+                && let Ok(content) = tokio::fs::read_to_string(&pref_file).await
+                && let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&content)
+                && let Some(r) = parsed.get("active_runtime").and_then(|v| v.as_str())
+            {
+                self.runtime = Some(r.to_string());
+                return;
             }
         }
         self.runtime = Some("horizon".to_string());
@@ -1272,14 +1270,12 @@ pub async fn instance_get_runtime(instance_id: &str) -> Result<String> {
     let instance_path = theseus::instance::get_full_path(instance_id).await?;
     let pref_file = instance_path.join("instance_runtime.json");
 
-    if pref_file.exists() {
-        if let Ok(content) = tokio::fs::read_to_string(&pref_file).await {
-            if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&content) {
-                if let Some(r) = parsed.get("active_runtime").and_then(|v| v.as_str()) {
-                    return Ok(r.to_string());
-                }
-            }
-        }
+    if pref_file.exists()
+        && let Ok(content) = tokio::fs::read_to_string(&pref_file).await
+        && let Ok(parsed) = serde_json::from_str::<serde_json::Value>(&content)
+        && let Some(r) = parsed.get("active_runtime").and_then(|v| v.as_str())
+    {
+        return Ok(r.to_string());
     }
 
     Ok("horizon".to_string())

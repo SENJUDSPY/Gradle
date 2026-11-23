@@ -94,15 +94,22 @@ impl<'a> WasmReader<'a> {
         let mut result = 0u32;
         let mut shift = 0;
         loop {
+            if shift >= 32 {
+                bail!("Invalid LEB128 u32 integer encoding: shift overflow");
+            }
             let byte = self.read_byte()?;
-            result |= ((byte & 0x7F) as u32) << shift;
+            let val = (byte & 0x7F) as u32;
+            if shift == 28 && (byte & 0x70) != 0 {
+                bail!("Invalid LEB128 u32 integer encoding: higher bits set on 5th byte");
+            }
+            result |= val << shift;
             if (byte & 0x80) == 0 {
                 break;
             }
-            shift += 7;
-            if shift >= 35 {
-                bail!("Invalid LEB128 u32 integer encoding");
+            if shift == 28 {
+                bail!("Invalid LEB128 u32 integer encoding: 5th byte continuation bit set");
             }
+            shift += 7;
         }
         Ok(result)
     }
@@ -135,11 +142,11 @@ impl WasmModValidator {
             bail!("Invalid WASM file: shorter than 8-byte header");
         }
 
-        if &wasm_bytes[0..4] != WASM_MAGIC {
+        if wasm_bytes[0..4] != WASM_MAGIC {
             bail!("Invalid WASM file: missing '\\0asm' magic signature");
         }
 
-        if &wasm_bytes[4..8] != WASM_VERSION_1 {
+        if wasm_bytes[4..8] != WASM_VERSION_1 {
             bail!("Unsupported WASM version: expected version 1");
         }
 
@@ -233,16 +240,24 @@ impl WasmModValidator {
             ));
         }
 
-        if let Some(max_pages) = max_memory_pages {
-            if (max_pages as u64) > max_allowed_pages {
-                memory_exceeded = true;
-                errors.push(format!(
-                    "Maximum memory {} pages ({} MB) exceeds declared limit of {} MB",
-                    max_pages,
-                    (max_pages as u64 * WASM_PAGE_SIZE_BYTES) / (1024 * 1024),
-                    manifest.capabilities.limits.max_memory_mb
-                ));
+        let max_pages = match max_memory_pages {
+            Some(pages) => pages,
+            None => {
+                // Modules omitting explicit maximum memory limit are capped to the sandbox limit
+                let capped = max_allowed_pages as u32;
+                max_memory_pages = Some(capped);
+                capped
             }
+        };
+
+        if (max_pages as u64) > max_allowed_pages {
+            memory_exceeded = true;
+            errors.push(format!(
+                "Maximum memory {} pages ({} MB) exceeds declared limit of {} MB",
+                max_pages,
+                (max_pages as u64 * WASM_PAGE_SIZE_BYTES) / (1024 * 1024),
+                manifest.capabilities.limits.max_memory_mb
+            ));
         }
 
         // Validate entrypoint export
@@ -505,5 +520,122 @@ entrypoint = "gradle_init"
         let report = WasmModValidator::validate(&wasm, &manifest).unwrap();
         assert!(!report.valid);
         assert!(report.missing_entrypoint.is_some());
+    }
+
+    fn make_wasm_with_memory_limits(initial_pages: u32, max_pages: Option<u32>) -> Vec<u8> {
+        let mut wasm = Vec::new();
+        wasm.extend_from_slice(&WASM_MAGIC);
+        wasm.extend_from_slice(&WASM_VERSION_1);
+
+        // Type Section: 1 function type () -> ()
+        wasm.push(1);
+        let type_sec = vec![1, 0x60, 0, 0];
+        wasm.push(type_sec.len() as u8);
+        wasm.extend_from_slice(&type_sec);
+
+        // Memory Section
+        wasm.push(5);
+        let mut mem_sec = Vec::new();
+        mem_sec.push(1); // 1 memory
+        if let Some(max) = max_pages {
+            mem_sec.push(1); // flags: has max
+            mem_sec.push(initial_pages as u8);
+            let mut v = max;
+            loop {
+                let byte = (v & 0x7F) as u8;
+                v >>= 7;
+                if v == 0 {
+                    mem_sec.push(byte);
+                    break;
+                } else {
+                    mem_sec.push(byte | 0x80);
+                }
+            }
+        } else {
+            mem_sec.push(0); // flags: no max
+            mem_sec.push(initial_pages as u8);
+        }
+        wasm.push(mem_sec.len() as u8);
+        wasm.extend_from_slice(&mem_sec);
+
+        // Export Section: gradle_init
+        wasm.push(7);
+        let mut exp_sec = Vec::new();
+        exp_sec.push(1);
+        exp_sec.push("gradle_init".len() as u8);
+        exp_sec.extend_from_slice(b"gradle_init");
+        exp_sec.push(0);
+        exp_sec.push(0);
+        wasm.push(exp_sec.len() as u8);
+        wasm.extend_from_slice(&exp_sec);
+
+        wasm
+    }
+
+    #[test]
+    fn test_reject_excessive_linear_memory_limit() {
+        // Declares max memory 1000 pages (~64 MB), but manifest limit is 16 MB (256 pages)
+        let wasm = make_wasm_with_memory_limits(2, Some(1000));
+        let manifest_toml = r#"
+[mod]
+id = "ram_hog"
+name = "RAM Hog"
+version = "1.0.0"
+
+[capabilities.limits]
+max_memory_mb = 16
+"#;
+        let manifest = GradleModManifest::parse_str(manifest_toml).unwrap();
+        let report = WasmModValidator::validate(&wasm, &manifest).unwrap();
+        assert!(!report.valid);
+        assert!(report.memory_exceeded);
+        assert!(report.errors.iter().any(|e| e.contains("exceeds declared limit of 16 MB")));
+    }
+
+    #[test]
+    fn test_enforce_wasm_memory_bounds_when_unspecified() {
+        // Module omits max limit (flags 0), initial = 2 pages
+        let wasm = make_wasm_with_memory_limits(2, None);
+        let manifest_toml = r#"
+[mod]
+id = "unbounded_mod"
+name = "Unbounded Mod"
+version = "1.0.0"
+
+[capabilities.limits]
+max_memory_mb = 32
+"#;
+        let manifest = GradleModManifest::parse_str(manifest_toml).unwrap();
+        let report = WasmModValidator::validate(&wasm, &manifest).unwrap();
+        assert!(report.valid, "Report errors: {:?}", report.errors);
+        assert_eq!(report.max_memory_pages, Some(512)); // 32 MB = 512 pages enforced
+        assert!(!report.memory_exceeded);
+    }
+
+    #[test]
+    fn test_reject_leb128_shift_overflow() {
+        let mut wasm = Vec::new();
+        wasm.extend_from_slice(&WASM_MAGIC);
+        wasm.extend_from_slice(&WASM_VERSION_1);
+
+        // Section 1 with malformed LEB128 size containing shift overflow sequence (6 bytes with 0x80)
+        wasm.push(1); // section id
+        wasm.extend_from_slice(&[0x80, 0x80, 0x80, 0x80, 0x80, 0x01]); // malformed LEB128 > 32 bits
+
+        let manifest_toml = r#"
+[mod]
+id = "overflow_test"
+name = "Overflow Test"
+version = "1.0.0"
+"#;
+        let manifest = GradleModManifest::parse_str(manifest_toml).unwrap();
+        let result = WasmModValidator::validate(&wasm, &manifest);
+        assert!(result.is_err(), "Expected error on malformed LEB128, got Ok");
+        let err_msg = result.unwrap_err().to_string();
+        assert!(
+            err_msg.contains("Invalid LEB128 u32 integer encoding"),
+            "Expected LEB128 error message, got: {}",
+            err_msg
+        );
     }
 }

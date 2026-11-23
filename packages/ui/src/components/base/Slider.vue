@@ -60,7 +60,7 @@
 				class="slider-track pointer-events-none absolute inset-x-0 top-1/2 h-[6px] -translate-y-1/2 rounded-full bg-surface-5"
 			>
 				<div
-					class="filled-slider-track h-full rounded-full bg-gradient-to-r from-[#5b5bf0] to-[#22d3ee] relative"
+					class="filled-slider-track h-full rounded-full bg-gradient-to-r from-[#6366F1] to-[#4F46E5] relative"
 					:style="{ width: `${currentPercentage}%` }"
 				>
 					<div
@@ -72,7 +72,7 @@
 
 		<span
 			v-if="currentValue !== null"
-			class="shrink-0 whitespace-nowrap py-2 leading-5 text-secondary"
+			class="shrink-0 whitespace-nowrap py-2 leading-5 text-secondary tabular-nums"
 			:class="labelSizeClass"
 		>
 			{{ maxLabel ?? formatValue(max) }}
@@ -317,7 +317,7 @@ function onInput(event: Event) {
 	transform-origin: center center;
 	transition:
 		transform var(--duration-standard, 220ms)
-			var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+			var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
 		box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 		border-color var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 }
@@ -326,6 +326,7 @@ function onInput(event: Event) {
 	-moz-appearance: textfield;
 	flex: none;
 	width: calc(var(--value-chars) * 1ch);
+	font-variant-numeric: tabular-nums;
 
 	&::-webkit-inner-spin-button,
 	&::-webkit-outer-spin-button {

@@ -397,8 +397,7 @@ async fn fetch_bytes_from_url(url: &str) -> Result<bytes::Bytes> {
         crate::ErrorKind::NetworkErrorOccurred {
             error: format!(
                 "Download timed out after {TIMEOUT_SECONDS} seconds"
-            )
-            .to_string(),
+            ),
         }
         .into()
     })?

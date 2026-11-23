@@ -141,8 +141,7 @@ defineExpose({ element })
 [data-button] {
 	transform: scale(1);
 	transition:
-		transform var(--duration-standard, 220ms)
-			var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+		transform 160ms var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
 		box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 		background-color var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 		border-color var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
@@ -154,8 +153,8 @@ defineExpose({ element })
 [data-button]:not(:disabled):not([aria-disabled='true']):active {
 	transform: scale(0.97);
 	transition:
-		transform var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
-		box-shadow var(--duration-quick, 120ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+		transform 80ms ease-out,
+		box-shadow 80ms ease-out;
 }
 
 .button-frame--base,
@@ -185,7 +184,7 @@ defineExpose({ element })
 .button-frame--colored:not(:disabled):not([aria-disabled='true']):focus-visible {
 	box-shadow:
 		0 4px 12px 0 rgba(0, 0, 0, 0.3),
-		0 0 14px -2px var(--button-color, rgba(0, 0, 0, 0.25));
+		0 1px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 .button-frame--colored:not(:disabled):not([aria-disabled='true']):active {
@@ -216,7 +215,8 @@ defineExpose({ element })
 	box-shadow:
 		0 1px 2px 0 rgba(0, 0, 0, 0.2),
 		inset 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-	transform: translateY(0.5px) scale(0.98);
+	transform: scale(0.97);
+	transition: transform 80ms ease-out;
 }
 
 .button-frame--danger {
@@ -230,8 +230,8 @@ defineExpose({ element })
 .button-frame--danger:not(:disabled):not([aria-disabled='true']):focus-visible {
 	filter: brightness(1.08);
 	box-shadow:
-		0 4px 12px 0 rgba(239, 68, 68, 0.35),
-		0 1px 3px 0 rgba(0, 0, 0, 0.35);
+		0 4px 12px 0 rgba(0, 0, 0, 0.35),
+		0 1px 3px 0 rgba(0, 0, 0, 0.25);
 }
 
 .button-frame--danger:not(:disabled):not([aria-disabled='true']):active {

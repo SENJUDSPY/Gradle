@@ -258,14 +258,14 @@ function openContextMenu(event: MouseEvent) {
 						</TagItem>
 					</div>
 					<div class="flex items-center gap-1.5 text-sm text-secondary">
-						<span class="flex items-center gap-1 truncate text-secondary">
+						<span class="flex items-center gap-1 truncate text-secondary tabular-nums">
 							{{ loader }}
 							{{ instance.game_version }}
 						</span>
 						<BulletDivider class="shrink-0" />
 						<div
 							v-tooltip="!newlyAdded ? formatDateTime(last_played.toDate()) : null"
-							class="w-fit shrink-0"
+							class="w-fit shrink-0 tabular-nums"
 							:class="{
 								'cursor-help smart-clickable:allow-pointer-events': !newlyAdded,
 							}"
@@ -319,7 +319,30 @@ function openContextMenu(event: MouseEvent) {
 	</div>
 </template>
 <style scoped>
+.clickable-card {
+	transition:
+		transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 180ms ease,
+		border-color 180ms ease;
+}
+
+.clickable-card:hover {
+	transform: translateY(-2px);
+	border-color: rgba(255, 255, 255, 0.16);
+	box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.32), 0 1px 3px 0 rgba(0, 0, 0, 0.18);
+}
+
 .clickable-card:has([data-no-card-click]:hover) {
 	--hover-brightness: 1;
+	transform: none;
+	box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.clickable-card,
+	.clickable-card:hover {
+		transform: none !important;
+		transition: none !important;
+	}
 }
 </style>

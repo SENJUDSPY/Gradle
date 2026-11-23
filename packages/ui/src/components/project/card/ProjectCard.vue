@@ -255,7 +255,7 @@ const props = defineProps<{
 }>()
 
 const baseCardStyle =
-	'w-full h-full border border-solid border-surface-5 overflow-hidden bg-surface-3 rounded-xl shadow-sm hover:shadow-md hover:border-brand/40 transition-all duration-200 smart-clickable:outline-on-focus smart-clickable:highlight-on-hover'
+	'project-card-frame w-full h-full border border-solid border-surface-5 overflow-hidden bg-surface-3 rounded-xl shadow-sm hover:shadow-md hover:border-surface-4 smart-clickable:outline-on-focus smart-clickable:highlight-on-hover'
 
 const updatedDate = computed(() =>
 	props.dateUpdated ? dayjs(props.dateUpdated).toDate() : undefined,
@@ -420,5 +420,25 @@ const cssColor = computed(() => {
 
 .placeholder-banner {
 	opacity: 0.7;
+}
+
+.project-card-frame {
+	transition:
+		transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 180ms ease,
+		border-color 180ms ease;
+}
+
+.project-card-frame:hover {
+	transform: translateY(-2px);
+	border-color: rgba(255, 255, 255, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.project-card-frame,
+	.project-card-frame:hover {
+		transform: none !important;
+		transition: none !important;
+	}
 }
 </style>

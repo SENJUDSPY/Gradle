@@ -46,6 +46,7 @@ impl DetectedLoader {
 /// The 4 strict compatibility buckets defined for Horizon
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[derive(Default)]
 pub enum CompatibilityBucket {
     #[serde(rename = "RESOURCE_ONLY")]
     ResourceOnly,
@@ -54,14 +55,10 @@ pub enum CompatibilityBucket {
     #[serde(rename = "NATIVE_PORT_AVAILABLE")]
     NativePortAvailable,
     #[serde(rename = "UNSUPPORTED")]
+    #[default]
     Unsupported,
 }
 
-impl Default for CompatibilityBucket {
-    fn default() -> Self {
-        Self::Unsupported
-    }
-}
 
 impl CompatibilityBucket {
     pub fn as_str(&self) -> &'static str {
@@ -272,8 +269,8 @@ pub fn analyze_jar_reader<R: Read + Seek>(
 
     if has_horizon_toml {
         loader = DetectedLoader::HorizonWasm;
-        if let Some(text) = read_entry_string(&mut archive, "horizon-mod.toml") {
-            if let Ok(toml_val) = toml::from_str::<toml::Value>(&text) {
+        if let Some(text) = read_entry_string(&mut archive, "horizon-mod.toml")
+            && let Ok(toml_val) = toml::from_str::<toml::Value>(&text) {
                 if let Some(id) = toml_val.get("id").and_then(|v| v.as_str()) {
                     mod_id = id.to_string();
                 }
@@ -284,11 +281,10 @@ pub fn analyze_jar_reader<R: Read + Seek>(
                     mod_version = ver.to_string();
                 }
             }
-        }
     } else if has_fabric_json {
         loader = DetectedLoader::Fabric;
-        if let Some(text) = read_entry_string(&mut archive, "fabric.mod.json") {
-            if let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
+        if let Some(text) = read_entry_string(&mut archive, "fabric.mod.json")
+            && let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
                 parse_fabric_json(
                     &json_val,
                     &mut mod_id,
@@ -300,11 +296,10 @@ pub fn analyze_jar_reader<R: Read + Seek>(
                     &mut dependencies,
                 );
             }
-        }
     } else if has_quilt_json {
         loader = DetectedLoader::Quilt;
-        if let Some(text) = read_entry_string(&mut archive, "quilt.mod.json") {
-            if let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
+        if let Some(text) = read_entry_string(&mut archive, "quilt.mod.json")
+            && let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
                 parse_quilt_json(
                     &json_val,
                     &mut mod_id,
@@ -316,7 +311,6 @@ pub fn analyze_jar_reader<R: Read + Seek>(
                     &mut dependencies,
                 );
             }
-        }
     } else if has_neoforge_toml || has_forge_toml {
         loader = if has_neoforge_toml {
             DetectedLoader::NeoForge
@@ -349,8 +343,8 @@ pub fn analyze_jar_reader<R: Read + Seek>(
         }
     } else if has_mcmod_info {
         loader = DetectedLoader::Forge;
-        if let Some(text) = read_entry_string(&mut archive, "mcmod.info") {
-            if let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
+        if let Some(text) = read_entry_string(&mut archive, "mcmod.info")
+            && let Ok(json_val) = serde_json::from_str::<serde_json::Value>(&text) {
                 parse_mcmod_info(
                     &json_val,
                     &mut mod_id,
@@ -360,12 +354,11 @@ pub fn analyze_jar_reader<R: Read + Seek>(
                     &mut dependencies,
                 );
             }
-        }
     }
 
     // Check MANIFEST.MF for extra Mixin configurations if not found yet
-    if has_manifest_mf && mixins.is_empty() {
-        if let Some(manifest_text) = read_entry_string(&mut archive, "META-INF/MANIFEST.MF") {
+    if has_manifest_mf && mixins.is_empty()
+        && let Some(manifest_text) = read_entry_string(&mut archive, "META-INF/MANIFEST.MF") {
             for line in manifest_text.lines() {
                 if let Some(mixins_val) = line.strip_prefix("MixinConfigs:") {
                     for m in mixins_val.split(',') {
@@ -377,7 +370,6 @@ pub fn analyze_jar_reader<R: Read + Seek>(
                 }
             }
         }
-    }
 
     // Fallbacks if mod id / name / version were absent
     if mod_id.is_empty() {
@@ -434,13 +426,11 @@ fn get_scan_cache() -> &'static parking_lot::RwLock<HashMap<String, ModJarAnalys
     SCAN_CACHE.get_or_init(|| {
         let cache_file = crate::releases::horizon_data_dir().join("compatibility_scan_cache.json");
         let mut map = HashMap::new();
-        if cache_file.is_file() {
-            if let Ok(data) = fs::read_to_string(&cache_file) {
-                if let Ok(deserialized) = serde_json::from_str::<HashMap<String, ModJarAnalysis>>(&data) {
+        if cache_file.is_file()
+            && let Ok(data) = fs::read_to_string(&cache_file)
+                && let Ok(deserialized) = serde_json::from_str::<HashMap<String, ModJarAnalysis>>(&data) {
                     map = deserialized;
                 }
-            }
-        }
         parking_lot::RwLock::new(map)
     })
 }
@@ -996,6 +986,7 @@ fn read_entry_string<R: Read + Seek>(archive: &mut ZipArchive<R>, name: &str) ->
     Some(string)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn parse_fabric_json(
     json: &serde_json::Value,
     mod_id: &mut String,
@@ -1039,8 +1030,8 @@ fn parse_fabric_json(
     }
 
     // Entrypoints
-    if let Some(ep) = json.get("entrypoints") {
-        if let Some(ep_obj) = ep.as_object() {
+    if let Some(ep) = json.get("entrypoints")
+        && let Some(ep_obj) = ep.as_object() {
             for (key, val) in ep_obj {
                 if let Some(arr) = val.as_array() {
                     for item in arr {
@@ -1055,9 +1046,9 @@ fn parse_fabric_json(
                 }
             }
         }
-    }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn parse_quilt_json(
     json: &serde_json::Value,
     mod_id: &mut String,
@@ -1073,11 +1064,10 @@ fn parse_quilt_json(
     if let Some(id) = loader.get("id").and_then(|v| v.as_str()) {
         *mod_id = id.to_string();
     }
-    if let Some(meta) = loader.get("metadata") {
-        if let Some(name) = meta.get("name").and_then(|v| v.as_str()) {
+    if let Some(meta) = loader.get("metadata")
+        && let Some(name) = meta.get("name").and_then(|v| v.as_str()) {
             *mod_name = name.to_string();
         }
-    }
     if let Some(version) = loader.get("version").and_then(json_to_string) {
         *mod_version = version;
     }
@@ -1131,6 +1121,7 @@ fn parse_quilt_json(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn parse_forge_toml(
     toml_val: &toml::Value,
     mod_id: &mut String,
@@ -1141,8 +1132,8 @@ fn parse_forge_toml(
     mixins: &mut Vec<String>,
     dependencies: &mut HashMap<String, String>,
 ) {
-    if let Some(mods_arr) = toml_val.get("mods").and_then(|v| v.as_array()) {
-        if let Some(first_mod) = mods_arr.first().and_then(|v| v.as_table()) {
+    if let Some(mods_arr) = toml_val.get("mods").and_then(|v| v.as_array())
+        && let Some(first_mod) = mods_arr.first().and_then(|v| v.as_table()) {
             if let Some(id) = first_mod.get("modId").and_then(|v| v.as_str()) {
                 *mod_id = id.to_string();
             }
@@ -1153,15 +1144,14 @@ fn parse_forge_toml(
                 *mod_version = ver.to_string();
             }
         }
-    }
 
     // Dependencies
     if let Some(deps_table) = toml_val.get("dependencies").and_then(|v| v.as_table()) {
         for (_owner_mod, dep_list) in deps_table {
             if let Some(arr) = dep_list.as_array() {
                 for dep in arr {
-                    if let Some(dep_tbl) = dep.as_table() {
-                        if let Some(dep_id) = dep_tbl.get("modId").and_then(|v| v.as_str()) {
+                    if let Some(dep_tbl) = dep.as_table()
+                        && let Some(dep_id) = dep_tbl.get("modId").and_then(|v| v.as_str()) {
                             let range = dep_tbl
                                 .get("versionRange")
                                 .and_then(|v| v.as_str())
@@ -1172,7 +1162,6 @@ fn parse_forge_toml(
                             }
                             dependencies.insert(dep_id.to_string(), range);
                         }
-                    }
                 }
             }
         }
@@ -1258,7 +1247,7 @@ fn infer_mod_id_from_filename(filename: &str) -> String {
         .trim_end_matches(".zip");
 
     // Remove trailing version like -1.2.3 or _v1.0
-    if let Some(idx) = base.find(|c: char| c == '-' || c == '+') {
+    if let Some(idx) = base.find(['-', '+']) {
         base[..idx].to_string()
     } else {
         base.to_string()

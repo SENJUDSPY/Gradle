@@ -78,7 +78,7 @@ defineOptions({
 	}
 
 	&:active:not(.disabled) {
-		transform: translateY(1px) scale(0.94);
+		transform: scale(0.97);
 		transition-duration: 80ms;
 	}
 
@@ -89,14 +89,14 @@ defineOptions({
 		transform: none !important;
 	}
 
-	// Secondary Layer: Glowing backplate on active
+	// Secondary Layer: Clean monochromatic pill backplate on active
 	&::before {
 		content: '';
 		position: absolute;
 		inset: 0;
 		background: var(
 			--brand-gradient,
-			linear-gradient(135deg, #5b5bf0 0%, #3b82f6 50%, #22d3ee 100%)
+			linear-gradient(180deg, #6366F1 0%, #4F46E5 100%)
 		);
 		border-radius: var(--radius-md, 12px);
 		opacity: 0;
@@ -105,7 +105,7 @@ defineOptions({
 		transition:
 			opacity var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 			transform var(--duration-standard, 220ms)
-				var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+				var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
 			box-shadow var(--duration-standard, 220ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	}
@@ -130,7 +130,7 @@ defineOptions({
 		opacity: 0;
 		transition:
 			transform var(--duration-standard, 240ms)
-				var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)),
+				var(--ease-spring, cubic-bezier(0.16, 1, 0.3, 1)),
 			opacity var(--duration-quick, 140ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1)),
 			height var(--duration-standard, 240ms) var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
 	}
@@ -176,7 +176,7 @@ defineOptions({
 		box-shadow:
 			0 1px 3px rgba(0, 0, 0, 0.25),
 			inset 0 1px 0 rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.12);
 	}
 
 	&::after {
@@ -195,7 +195,8 @@ defineOptions({
 	}
 
 	&:active:not(.disabled) {
-		transform: translateY(0.5px) scale(0.98);
+		transform: scale(0.97);
+		transition-duration: 80ms;
 	}
 }
 

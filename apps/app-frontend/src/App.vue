@@ -1809,7 +1809,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 			</div>
 			<div
 				id="background-teleport-target"
-				class="absolute h-full -z-10 rounded-tl-[--radius-xl] overflow-hidden"
+				class="absolute h-full -z-10 overflow-hidden"
 				:style="{
 					width: 'calc(100% - var(--right-bar-width))',
 				}"
@@ -1834,7 +1834,7 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 				{{ formatMessage(messages.authUnreachableBody) }}
 			</Admonition>
 			<RouterView v-slot="{ Component }">
-				<Transition name="page-view" mode="out-in">
+				<Transition name="page-view">
 					<Suspense
 						v-if="Component"
 						:key="
@@ -1963,7 +1963,6 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	bottom: 0;
 	height: calc(100vh - var(--top-bar-height));
 	background-color: var(--color-bg);
-	border-top-left-radius: var(--radius-xl);
 	outline: none !important;
 	overflow: hidden;
 
@@ -1979,16 +1978,13 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 }
 
 .loading-indicator-container {
-	border-top-left-radius: var(--radius-xl);
 	overflow: hidden;
 
 	:deep(.modrinth-loading-bar) {
-		box-shadow:
-			0 0 12px 1px var(--color-brand-shadow, rgba(91, 91, 240, 0.45)),
-			0 0 24px 2px rgba(34, 211, 238, 0.25);
-		animation: loading-pulse 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
 		position: relative;
 		overflow: hidden;
+		background: var(--brand-gradient, linear-gradient(180deg, #6366F1 0%, #4F46E5 100%));
 
 		&::after {
 			content: '';
@@ -1997,21 +1993,11 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 			background: linear-gradient(
 				90deg,
 				transparent 0%,
-				rgba(255, 255, 255, 0.45) 50%,
+				rgba(255, 255, 255, 0.35) 50%,
 				transparent 100%
 			);
-			animation: loading-shimmer 1.8s cubic-bezier(0.2, 0, 0, 1) infinite;
+			animation: loading-shimmer 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 		}
-	}
-}
-
-@keyframes loading-pulse {
-	0%,
-	100% {
-		filter: brightness(1) drop-shadow(0 0 4px var(--color-brand-accent, #22d3ee));
-	}
-	50% {
-		filter: brightness(1.2) drop-shadow(0 0 10px var(--color-brand, #5b5bf0));
 	}
 }
 
@@ -2024,36 +2010,26 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	}
 }
 
-// View transitions: cross-fade + subtle vertical slide (MD3 curves, 260ms / 180ms)
-.page-view-enter-active {
-	transition:
-		opacity var(--duration-standard, 260ms) var(--ease-entrance, cubic-bezier(0.05, 0.7, 0.1, 1)),
-		transform var(--duration-standard, 260ms) var(--ease-entrance, cubic-bezier(0.05, 0.7, 0.1, 1));
-	will-change: opacity, transform;
-}
-
+// Parallel spring cross-fade (duration: 0.18s)
+.page-view-enter-active,
 .page-view-leave-active {
 	transition:
-		opacity var(--duration-quick, 180ms) var(--ease-exit, cubic-bezier(0.3, 0, 1, 1)),
-		transform var(--duration-quick, 180ms) var(--ease-exit, cubic-bezier(0.3, 0, 1, 1));
+		opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+		transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 	will-change: opacity, transform;
 }
 
 .page-view-enter-from {
 	opacity: 0;
-	transform: translateY(8px);
+	transform: translateY(4px);
 }
 
 .page-view-leave-to {
 	opacity: 0;
-	transform: translateY(-6px);
+	transform: translateY(-4px);
 }
 
 .disable-advanced-rendering {
-	&.app-contents::before {
-		box-shadow: none;
-	}
-
 	*,
 	:deep(*) {
 		box-shadow: none !important;
@@ -2069,65 +2045,26 @@ provideAppUpdateDownloadProgress(appUpdateDownload)
 	scrollbar-gutter: stable;
 }
 
-.app-contents::before {
-	z-index: 30;
-	content: '';
-	position: fixed;
-	left: var(--left-bar-width);
-	top: var(--top-bar-height);
-	right: calc(-1 * var(--left-bar-width));
-	bottom: calc(-1 * var(--left-bar-width));
-	border-radius: var(--radius-xl);
-	box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1) inset;
-	border: none;
-	pointer-events: none;
-	transition: box-shadow var(--duration-standard, 220ms) ease;
-}
-
 @media (prefers-reduced-motion: no-preference) {
 	.nav-button-animated-enter-active {
-		transition: all var(--duration-slow, 300ms)
-			var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275));
+		transition:
+			opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+			transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.nav-button-animated-leave-active {
-		transition: all var(--duration-standard, 200ms) var(--ease-exit, cubic-bezier(0.3, 0, 1, 1));
-	}
-
-	.nav-button-animated-enter-active {
-		position: relative;
-	}
-
-	.nav-button-animated-enter-active::before {
-		content: '';
-		inset: 0;
-		border-radius: 100vw;
-		background-color: var(--color-brand-highlight);
-		position: absolute;
-		animation: pop 0.4s var(--ease-bounce, cubic-bezier(0.175, 0.885, 0.32, 1.275)) forwards;
-		opacity: 0;
-	}
-
-	@keyframes pop {
-		0% {
-			scale: 0.5;
-		}
-		50% {
-			opacity: 0.5;
-		}
-		100% {
-			scale: 1.5;
-		}
+		transition:
+			opacity 0.16s cubic-bezier(0.3, 0, 1, 1),
+			transform 0.16s cubic-bezier(0.3, 0, 1, 1);
 	}
 
 	.nav-button-animated-enter-from {
-		scale: 0.5;
-		translate: -2rem 0;
+		transform: scale(0.96) translateX(-0.5rem);
 		opacity: 0;
 	}
 
 	.nav-button-animated-leave-to {
-		scale: 0.75;
+		transform: scale(0.96);
 		opacity: 0;
 	}
 
