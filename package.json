@@ -1,6 +1,6 @@
 {
 	"name": "@modrinth/monorepo",
-	"version": "0.0.0",
+	"version": "1.1.0",
 	"private": true,
 	"scripts": {
 		"app:dev": "turbo run dev --filter=@modrinth/app",
